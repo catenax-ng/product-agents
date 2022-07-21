@@ -8,6 +8,11 @@ We provide three implementations for different profiles
 - [Provisioning Agent](provisioning) An agent implementation for provider-side deployment which will bind typical backend data sources to the dataspace.
 - [Remoting Agent](remoting) An agent implementation for binding simple remote (REST) services to the dataspace.
 
+## Notice
+
+* see copyright notice in the top folder
+* see license file in the top folder
+* see authors file in the top folder
 
 
 
