@@ -12,10 +12,6 @@ WORKDIR /opt/ontop
 ARG jdbcDriver=repo/h2-2.1.214.jar 
 COPY ${jdbcDriver} jdbc/
 
-# run with docker --build-arg=path_to_my_driver to establish a different driver
-ARG initialData=resources/uni1.db
-#COPY ${initialData} /database/
-
 # Additional Java debugging options
 ARG JAVA_TOOL_OPTIONS ""
 
