@@ -34,5 +34,5 @@ ENTRYPOINT java -cp ./lib/*:./jdbc/* -Dlogback.configurationFile=file:./log/logb
         --ontology=${ONTOLOGY} \
         --mapping=${MAPPING} \
         --properties=${SETTINGS} \
-        --cors-allowed-origins=* \
-        --lazy # if needed
+        --dev \ 
+        --cors-allowed-origins=* 
