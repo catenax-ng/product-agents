@@ -12,6 +12,9 @@ WORKDIR /opt/ontop
 ARG jdbcDriver=repo/h2-2.1.214.jar 
 COPY ${jdbcDriver} jdbc/
 
+ARG sqlFiles=resources/dtc.sql
+COPY ${sqlFiles} /data/
+
 # Additional Java debugging options
 ARG JAVA_TOOL_OPTIONS ""
 
