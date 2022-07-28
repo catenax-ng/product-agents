@@ -22,10 +22,13 @@ ARG JAVA_TOOL_OPTIONS ""
 EXPOSE 8080
 
 # These are the environment variables pointing 
-# to the mapping input
-ENV ONTOLOGY=/input/ontology.ttl
-ENV MAPPING=/input/mapping.obda
-ENV SETTINGS=/input/settings.properties
+# to the mapping input      
+ENV ONTOP_ONTOLOGY_FILE=/input/ontology.ttl
+ENV ONTOP_MAPPING_FILE=/input/mapping.obda
+ENV ONTOP_PROPERTIES_FILE=/input/settings.properties
+ENV ONTOP_PORTAL_FILE=/input/portal.toml
+ENV ONTOP_CORS_ALLOWED_ORIGINS=*
+ENV ONTOP_DEV_MODE=true
 
 # Run Ontop Agent with CORS disabled (we expect an ingress layer anyway)
 # TODO check security settings
@@ -34,8 +37,9 @@ ENV SETTINGS=/input/settings.properties
 
 ENTRYPOINT java -cp ./lib/*:./jdbc/* -Dlogback.configurationFile=file:./log/logback.xml \
         it.unibz.inf.ontop.cli.Ontop endpoint \
-        --ontology=${ONTOLOGY} \
-        --mapping=${MAPPING} \
-        --properties=${SETTINGS} \
+        --ontology=${ONTOP_ONTOLOGY_FILE} \
+        --mapping=${ONTOP_MAPPING_FILE} \
+        --properties=${ONTOP_PROPERTIES_FILE} \
+        --portal ${ONTOP_PORTAL_FILE} \
         --dev \ 
-        --cors-allowed-origins=* 
+        --cors-allowed-origins=${ONTOP_CORS_ALLOWED_ORIGINS}
