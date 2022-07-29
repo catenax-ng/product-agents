@@ -289,11 +289,18 @@ INSERT INTO "dtc"."content" ("bpnl","number","id","code","description","possible
   ('BPNL00000003COJN',0,'0151b5ea-5e47-47a3-9060-d4101dba8e4b','P012E','Saugdrucksensor für Turbolader/Aufladungskompressor - zeitweilige Stromkreisunterbrechungen','Kabelbaum, Saugdrucksensor für Turbolader/Aufladungskompressor, Motorsteuergerät','2022-05-11T11:16:15.609804Z',0),
   ('BPNL00000003COJN',0,'5bed5b1e-ba37-4223-9b84-320852369ac3','P0130','Beheizte Lambdasonde 1, Zylinderreihe 1 - Fehlfunktion Stromkreis','Heizelement funktionslos, schlechte Kontaktierung, Kabelbaum, beheizte Lambdasonde','2022-05-11T11:16:15.614993Z',0),
   ('BPNL00000003COJN',0,'9cdaf7e8-119f-48aa-961b-ccdf321e424f','P0131','Beheizte Lambdasonde 1, Zylinderreihe 1 - Spannung zu niedrig','Auslassseitige Undichtigkeit, Kurzschluss an Masse im Kabelbaum, beheizte Lambdasonde, Motorsteuergerät','2022-05-11T11:16:15.625637Z',0),
+  ('BPNL00000003COJN',0,'d93d9398-4e46-4dc7-9e29-de9c2597ae7b','P079B','Getriebereibelement B - Schlupf festgestellt','Automatikgetriebe, Automatikgetriebeöl','2022-05-11T11:16:23.280418Z',2),
   ('BPNL00000003COJN',0,'a237e958-dc23-43c4-9b4a-c24178867e6b','P0132','Beheizte Lambdasonde 1, Zylinderreihe 1 - Spannung zu hoch','Kurzschluss an Plus im Kabelbaum, beheizte Lambdasonde, Motorsteuergerät','2022-05-11T11:16:15.636014Z',0),
+  ('BPNL00000003COJN',0,'d0e2f6c7-de4d-4d4b-9242-b4ec8a23842e','P079C','Getriebereibelement C - Schlupf festgestellt','Automatikgetriebe, Automatikgetriebeöl','2022-05-11T11:16:23.285926Z',2),
   ('BPNL00000003COJN',0,'e10cdabe-3f5c-4450-83c9-c7fd4988bce9','P0133','Beheizte Lambdasonde 1, Zylinderreihe 1 - träges Ausregelverhalten','Heizelement funktionslos, Kabelbaum, beheizte Lambdasonde','2022-05-11T11:16:15.645814Z',0),
+  ('BPNL00000003COJN',0,'84dc90dc-19a1-407b-b498-7c80a42bf4dd','P079D','Getriebereibelement D - Schlupf festgestellt','Automatikgetriebe, Automatikgetriebeöl','2022-05-11T11:16:23.293448Z',2),
   ('BPNL00000003COJN',0,'954b7d53-ad0a-4e38-b1eb-67cb3636732e','P0134','Beheizte Lambdasonde 1, Zylinderreihe 1 - funktionslos','Kabelbaum unterbrochen, Heizelement funktionslos, beheizte Lambdasonde','2022-05-11T11:16:15.655168Z',0),
+  ('BPNL00000003COJN',0,'cfbc6e1c-4c5b-4e7a-8a05-f717588cdc69','P079E','Getriebereibelement E - Schlupf festgestellt','Automatikgetriebe, Automatikgetriebeöl','2022-05-11T11:16:23.297781Z',2),
   ('BPNL00000003COJN',0,'c8874f97-5c6b-4ec5-8896-a1a16d7d5038','P0135','Beheizte Lambdasonde 1, Zylinderreihe 1, Heizregelung - Fehlfunktion Stromkreis','Sicherung, Kabelbaum, beheizte Lambdasonde, Motorsteuergerät','2022-05-11T11:16:15.664450Z',0),
+  ('BPNL00000003COJN',0,'e3048c9a-b6d4-4428-b54b-38e3e3dbe4e6','P079F','Getriebereibelement F - Schlupf festgestellt','Automatikgetriebe, Automatikgetriebeöl','2022-05-11T11:16:23.302074Z',2),
+  ('BPNL00000003COJN',0,'192b65bf-a83b-4a6d-9bf9-0a5ac0a1baad','P07A1','Getriebereibelement H - Schlupf festgestellt','Automatikgetriebe, Automatikgetriebeöl','2022-05-11T11:16:23.313415Z',2),
   ('BPNL00000003COJN',0,'15d00f3b-bc1d-4219-bb53-1961ea0646dc','P0136','Beheizte Lambdasonde 2, Zylinderreihe 1 - Fehlfunktion Stromkreis','Heizelement funktionslos, Kabelbaum, beheizte Lambdasonde, Motorsteuergerät','2022-05-11T11:16:15.669558Z',0),
+  ('BPNL00000003COJN',0,'077f4e8a-efaf-4c20-bfd9-3a15f6dca769','P079A','Getriebereibelement A - Schlupf festgestellt','Automatikgetriebe, Automatikgetriebeöl','2022-05-11T11:16:23.275591Z',2),
   ('BPNL00000003COJN',0,'d1b25663-47a0-45db-ae96-f77ca8a79e9e','P0137','Beheizte Lambdasonde 2, Zylinderreihe 1 - Spannung zu niedrig','Auslassseitige Undichtigkeit, Kurzschluss an Masse im Kabelbaum, beheizte Lambdasonde, Motorsteuergerät','2022-05-11T11:16:15.680191Z',0),
   ('BPNL00000003COJN',0,'47d67ef5-8611-4fbc-a56e-3af2a465aba1','P0138','Beheizte Lambdasonde 2, Zylinderreihe 1 - Spannung zu hoch','Kurzschluss an Plus im Kabelbaum, beheizte Lambdasonde, Motorsteuergerät','2022-05-11T11:16:15.689728Z',0),
   ('BPNL00000003COJN',0,'383d737a-36e5-47d1-ab62-f0129493b7f7','P0139','Beheizte Lambdasonde 2, Zylinderreihe 1 - träges Ausregelverhalten','Heizelement funktionslos, Kabelbaum, beheizte Lambdasonde','2022-05-11T11:16:15.701171Z',0),
@@ -415,7 +422,6 @@ INSERT INTO "dtc"."content" ("bpnl","number","id","code","description","possible
   ('BPNL00000003COJN',0,'ba94156c-1a3d-4d1a-96c3-34107da9ea73','P0215','Kraftstoff-Abschaltmagnetventil - Fehlfunktion Stromkreis','Kabelbaum, Kraftstoff-Abschaltmagnetventil, Motorsteuergerät','2022-05-11T11:16:16.442677Z',0),
   ('BPNL00000003COJN',0,'88d49731-7ea7-4d52-8ef3-fabb2411e44e','P0216','Kraftstoff-Einspritzregelung - Fehlfunktion Stromkreis','Kabelbaum, Einspritzregelung-Magnetventil, Motorsteuergerät','2022-05-11T11:16:16.447857Z',0),
   ('BPNL00000003COJN',0,'0facf145-6333-46e2-b18d-258b5fd95f41','P0217','Motor-Überhitzung','Kabelbaum, Motorkühlsystem, Kühlmittelthermostat, Kühlmitteltemperatursensor','2022-05-11T11:16:16.453609Z',0),
-  ('BPNL00000003COJN',0,'df7d0016-e2a2-43a8-9b36-4dfa70950093','P0218','Getriebe-Überhitzung','Kabelbaum, Getriebeöltemperatursensor, Motorsteuergerät','2022-05-11T11:16:16.458722Z',0),
   ('BPNL00000003COJN',0,'5fbd363e-6289-4604-a30a-865fcae78c2a','P0219','Motor-Überdrehzahl','Fehlerhafter Gangwechsel','2022-05-11T11:16:16.463954Z',0),
   ('BPNL00000003COJN',0,'1f11882d-ae8b-4f62-a598-ace5a46d8e16','P021A','Einspritzregelung, Zylinder 7','Kurbelwinkelsensor, Nockenwellenpositionssensor, mechanische Fehlfunktion','2022-05-11T11:16:16.468816Z',0),
   ('BPNL00000003COJN',0,'85fa34cf-1e11-42ac-8316-5086c6b6e8b0','P021B','Einspritzregelung, Zylinder 8','Kurbelwinkelsensor, Nockenwellenpositionssensor, mechanische Fehlfunktion','2022-05-11T11:16:16.473609Z',0),
@@ -424,6 +430,7 @@ INSERT INTO "dtc"."content" ("bpnl","number","id","code","description","possible
   ('BPNL00000003COJN',0,'c1e7a7be-2e52-45c0-88e7-728d78fc9fdc','P021E','Einspritzregelung, Zylinder 11','Kurbelwinkelsensor, Nockenwellenpositionssensor, mechanische Fehlfunktion','2022-05-11T11:16:16.489072Z',0),
   ('BPNL00000003COJN',0,'b0673a21-eed8-4e64-a6f6-5e4ded396a9d','P021F','Einspritzregelung, Zylinder 12','Kurbelwinkelsensor, Nockenwellenpositionssensor, mechanische Fehlfunktion','2022-05-11T11:16:16.493752Z',0),
   ('BPNL00000003COJN',0,'4562cf5f-e2b5-4174-b088-9e8545bea857','P0220','Drosselklappenpotenziometer B/Fahrpedalsensor B - Fehlfunktion Stromkreis','Kabelbaum, Drosselklappenpotenziometer/Fahrpedalsensor, Motorsteuergerät','2022-05-11T11:16:16.498393Z',0),
+  ('BPNL00000003COJN',0,'df7d0016-e2a2-43a8-9b36-4dfa70950093','P0218','Getriebe-Überhitzung','Kabelbaum, Getriebeöltemperatursensor, Motorsteuergerät, Automatikgetriebe','2022-05-11T11:16:16.458722Z',1),
   ('BPNL00000003COJN',0,'54e9c741-8402-4a83-aa9d-844067c15cf0','P0221','Drosselklappenpotenziometer B/Fahrpedalsensor B - Bereichs-/Funktionsfehler','Einstellung Fahrpedalzug, Drosselklappenpotenziometer/Fahrpedalsensor','2022-05-11T11:16:16.508383Z',0),
   ('BPNL00000003COJN',0,'a43dabc3-20b1-4f08-9d39-1318481c50d6','P0222','Drosselklappenpotenziometer B/Fahrpedalsensor B - Eingangssignal zu niedrig','Kurzschluss an Masse im Kabelbaum, Drosselklappenpotenziometer/Fahrpedalsensor, Motorsteuergerät','2022-05-11T11:16:16.519716Z',0),
   ('BPNL00000003COJN',0,'1c9556da-c1af-4208-bd50-4292dfaa1948','P0223','Drosselklappenpotenziometer B/Fahrpedalsensor B - Eingangssignal zu hoch','Kurzschluss an Plus im Kabelbaum, Drosselklappenpotenziometer/Fahrpedalsensor, Motorsteuergerät','2022-05-11T11:16:16.531833Z',0),
@@ -432,6 +439,7 @@ INSERT INTO "dtc"."content" ("bpnl","number","id","code","description","possible
   ('BPNL00000003COJN',0,'4d720e81-77f3-4dea-990f-a6ffde98a39f','P0226','Drosselklappenpotenziometer C/Fahrpedalsensor C - Bereichs-/Funktionsfehler','Einstellung Fahrpedalzug, Drosselklappenpotenziometer/Fahrpedalsensor','2022-05-11T11:16:16.568011Z',0),
   ('BPNL00000003COJN',0,'b809c933-2b3a-4686-8e58-1a4361767722','P0227','Drosselklappenpotenziometer C/Fahrpedalsensor C - Eingangssignal zu niedrig','Kurzschluss an Masse im Kabelbaum, Drosselklappenpotenziometer/Fahrpedalsensor, Motorsteuergerät','2022-05-11T11:16:16.578868Z',0),
   ('BPNL00000003COJN',0,'a03460c2-afc6-4355-9606-7d74b2f9793e','P0228','Drosselklappenpotenziometer C/Fahrpedalsensor C - Eingangssignal zu hoch','Kurzschluss an Plus im Kabelbaum, Drosselklappenpotenziometer/Fahrpedalsensor, Motorsteuergerät','2022-05-11T11:16:16.588697Z',0),
+  ('BPNL00000003COJN',0,'5fd6ff2e-0fc3-4ebb-a1c2-c2c8118746a6','P07A0','Getriebereibelement G - Schlupf festgestellt','Automatikgetriebe, Automatikgetriebeöl','2022-05-11T11:16:23.309062Z',2),
   ('BPNL00000003COJN',0,'16c83da0-fe08-48a6-bbbf-88da78e8a8da','P0229','Drosselklappenpotenziometer C/Fahrpedalsensor C - zeitweilige Stromkreisunterbrechungen','Kabelbaum, schlechte Kontaktierung, Drosselklappenpotenziometer/Fahrpedalsensor, Motorsteuergerät','2022-05-11T11:16:16.604611Z',0),
   ('BPNL00000003COJN',0,'f8f96e1d-f137-42d2-b716-c13db0546ef2','P022A','Turboladeluftkühler-Bypass-Stellglied A - offener Stromkreis','Kabelbaum, Ladeluftkühler-Bypass-Stellglied, Motorsteuergerät','2022-05-11T11:16:16.614397Z',0),
   ('BPNL00000003COJN',0,'bcf9ff83-3c92-4b60-9ff8-75b3bfa5ab90','P022B','Steuerung Turboladeluftkühler-Bypass-Stellglied A - Signal zu niedrig','Kabelbaum, Ladeluftkühler-Bypass-Stellglied, Motorsteuergerät','2022-05-11T11:16:16.619236Z',0),
@@ -457,7 +465,6 @@ INSERT INTO "dtc"."content" ("bpnl","number","id","code","description","possible
   ('BPNL00000003COJN',0,'ea7968ed-c2aa-4955-94e9-84206d665aaf','P023F','Kraftstoffpumpe, sekundär - offener Stromkreis','Kabelbaum, Kraftstoffpumpe, Kraftstoffpumpenrelais, Motorsteuergerät','2022-05-11T11:16:16.766005Z',0),
   ('BPNL00000003COJN',0,'f7b2f281-c9c5-4232-895c-e25414b9d7b1','P0240','Saugrohrdrucksensor B, Turboladersystem - Bereichs-/Funktionsfehler','Einlass-/auslassseitige Undichtigkeit, Schlauchverbindung(en), Saugrohrdrucksensor','2022-05-11T11:16:16.770592Z',0),
   ('BPNL00000003COJN',0,'0408ea81-34f1-43fd-bf07-f5c2701209b4','P0241','Saugrohrdrucksensor B, Turboladersystem - Eingangssignal zu niedrig','Kurzschluss an Masse im Kabelbaum, Saugrohrdrucksensor, Motorsteuergerät','2022-05-11T11:16:16.781298Z',0),
-  ('BPNL00000003COJN',0,'5fd6ff2e-0fc3-4ebb-a1c2-c2c8118746a6','P07A0','Getriebereibelement G - Schlupf festgestellt','-','2022-05-11T11:16:23.309062Z',0),
   ('BPNL00000003COJN',0,'e4bfbf2e-4492-4b4b-946f-fe277d0e5811','P0242','Saugrohrdrucksensor B, Turboladersystem - Eingangssignal zu hoch','Kurzschluss an Plus im Kabelbaum, Saugrohrdrucksensor, Motorsteuergerät','2022-05-11T11:16:16.789840Z',0),
   ('BPNL00000003COJN',0,'b9c82718-cda1-49c5-84c5-fd28bc87c069','P0243','Motoraufladungskompressor-Bypassventil A - Fehlfunktion Stromkreis','Kabelbaum, Motoraufladungskompressor-Bypassventil, Motorsteuergerät','2022-05-11T11:16:16.799884Z',0),
   ('BPNL00000003COJN',0,'0fb73b89-9461-4cfe-a550-e6c2f07310b0','P0244','Motoraufladungskompressor-Bypassventil A - Bereichs-/Funktionsfehler','Motoraufladungskompressor-Bypassventil','2022-05-11T11:16:16.808600Z',0),
@@ -652,7 +659,6 @@ INSERT INTO "dtc"."content" ("bpnl","number","id","code","description","possible
   ('BPNL00000003COJN',0,'c111d44b-908f-4e6a-bcf3-9eb4384bdc7c','P0316','Fehlzündung während Motorstart festgestellt - erste 1000 Motorumdrehungen','Mechanische Motorstörung, Kabelbaum, Zündung/Kraftstoffsystem, Einspritzventil/-düse','2022-05-11T11:16:17.842337Z',0),
   ('BPNL00000003COJN',0,'89627489-9ee0-498f-addf-7f7399d12131','P0317','Systemkomponenten "Fahrbahnunebenheit" nicht erkannt','Kabelbaum, Motorsteuergerät','2022-05-11T11:16:17.846775Z',0),
   ('BPNL00000003COJN',0,'0a7ae0a6-16d8-4ead-83bc-19df15dda8d1','P0318','Fahrbahnsensor A - Fehlfunktion Stromkreis','Kabelbaum, Fahrbahnsensor A, mechanische Fehlfunktion','2022-05-11T11:16:17.851605Z',0),
-  ('BPNL00000003COJN',0,'192b65bf-a83b-4a6d-9bf9-0a5ac0a1baad','P07A1','Getriebereibelement H - Schlupf festgestellt','-','2022-05-11T11:16:23.313415Z',0),
   ('BPNL00000003COJN',0,'033e86b2-1655-418c-b157-a2b0c6aae4cc','P0320','Kurbelwinkelsensor/Drehzahlsensor - Fehlfunktion Stromkreis','Kabelbaum, Kurbelwinkelsensor/Drehzahlsensor, Motorsteuergerät','2022-05-11T11:16:17.861658Z',0),
   ('BPNL00000003COJN',0,'51fc755f-72c4-4dfb-b4e2-683f59d7811d','P0321','Kurbelwinkelsensor/Drehzahlsensor - Bereichs-/Funktionsfehler','Luftspalt, Verunreinigung durch metallischen Abrieb, Sensor/Impulsgeber lose, Kabelbaum, Kurbelwinkelsensor/Drehzahlsensor','2022-05-11T11:16:17.866347Z',0),
   ('BPNL00000003COJN',0,'b277db8f-6f2d-4ee6-9199-707263895355','P0322','Kurbelwinkelsensor/Drehzahlsensor - kein Signal','Kabelbaum, Kurbelwinkelsensor/Drehzahlsensor, Motorsteuergerät','2022-05-11T11:16:17.870895Z',0),
@@ -1356,7 +1362,6 @@ INSERT INTO "dtc"."content" ("bpnl","number","id","code","description","possible
   ('BPNL00000003COJN',0,'e27046cd-c125-4f7f-8768-29f151a39c05','P06AB','Motorsteuergerät/Getriebesteuergerät, Sensor interne Gerätetemperatur B - Fehlfunktion Stromkreis','Kabelbaum, Motorsteuergerät, Getriebesteuergerät','2022-05-11T11:16:22.192128Z',0),
   ('BPNL00000003COJN',0,'6a1d42c9-34e7-4fe8-ad9f-bf1d29a825ca','P06AC','Motorsteuergerät/Getriebesteuergerät, Sensor interne Gerätetemperatur B - Bereichs-/Funktionsfehler Stromkreis','Kabelbaum, Motorsteuergerät, Getriebesteuergerät','2022-05-11T11:16:22.197911Z',0),
   ('BPNL00000003COJN',0,'6edfc9f5-cdf1-423e-89fa-eaa421598f09','P06AD','Motorsteuergerät/Getriebesteuergerät, Sensor interne Gerätetemperatur B - Signal zu niedrig','Kabelbaum, Motorsteuergerät, Getriebesteuergerät','2022-05-11T11:16:22.202178Z',0),
-  ('BPNL00000003COJN',0,'cfbc6e1c-4c5b-4e7a-8a05-f717588cdc69','P079E','Getriebereibelement E - Schlupf festgestellt','-','2022-05-11T11:16:23.297781Z',0),
   ('BPNL00000003COJN',0,'7c9d382b-c67d-4643-8d9e-1f4bd8a4ea54','P06AE','Motorsteuergerät/Getriebesteuergerät, Sensor interne Gerätetemperatur B - Signal zu hoch','Kabelbaum, Motorsteuergerät, Getriebesteuergerät','2022-05-11T11:16:22.206787Z',0),
   ('BPNL00000003COJN',0,'3170d470-de2d-4aae-94e5-c2abfa3a8847','P06AF','Drehmomentregelung - Betriebsmodus "Motorzwangsabschaltung"','Kabelbaum, Motorsteuergerät, Getriebesteuergerät','2022-05-11T11:16:22.211814Z',0),
   ('BPNL00000003COJN',0,'40859d23-3421-4950-8ca7-b49dfcd73354','P06B0','Sensor-Versorgungsspannung A - offener Stromkreis','Kabelbaum, Motorsteuergerät, Getriebesteuergerät','2022-05-11T11:16:22.216305Z',0),
@@ -1529,7 +1534,6 @@ INSERT INTO "dtc"."content" ("bpnl","number","id","code","description","possible
   ('BPNL00000003COJN',0,'25a11a89-0068-428e-bcb8-354b2662cbb7','P0773','Fahrbereich-Magnetventil E - elektrischer Teil','Kabelbaum, Schaltmagnetventil, Motorsteuergerät/Antriebsstrangsteuergerät/Getriebesteuergerät','2022-05-11T11:16:23.052423Z',0),
   ('BPNL00000003COJN',0,'69725f4d-3e72-40b7-97b9-785461dac2a5','P0774','Fahrbereich-Magnetventil E - zeitweilige Stromkreisunterbrechungen','Kabelbaum, schlechte Kontaktierung, Schaltmagnetventil, Motorsteuergerät/Antriebsstrangsteuergerät/Getriebesteuergerät','2022-05-11T11:16:23.057824Z',0),
   ('BPNL00000003COJN',0,'efc19fa2-7d28-48e1-a7cb-0885026114b9','P0775','Druckregel-Magnetventil B - Fehlfunktion','Druckregel-Magnetventil','2022-05-11T11:16:23.067805Z',0),
-  ('BPNL00000003COJN',0,'e3048c9a-b6d4-4428-b54b-38e3e3dbe4e6','P079F','Getriebereibelement F - Schlupf festgestellt','-','2022-05-11T11:16:23.302074Z',0),
   ('BPNL00000003COJN',0,'312b9182-c2c2-4c32-932d-ed76ba276b19','P0776','Druckregel-Magnetventil B - Fehlfunktion oder ständig deaktiviert','Kabelbaum, Druckregel-Magnetventil','2022-05-11T11:16:23.072311Z',0),
   ('BPNL00000003COJN',0,'56dc6715-b46c-444d-a8b2-7aff50de30c1','P0777','Druckregel-Magnetventil B - ständig aktiviert','Kabelbaum, Druckregel-Magnetventil','2022-05-11T11:16:23.076954Z',0),
   ('BPNL00000003COJN',0,'49b2c97a-6938-4794-8f4c-d74d6d780b6e','P0778','Druckregel-Magnetventil B - elektrische Fehlfunktion','Kabelbaum, Druckregel-Magnetventil','2022-05-11T11:16:23.081369Z',0),
@@ -1566,10 +1570,6 @@ INSERT INTO "dtc"."content" ("bpnl","number","id","code","description","possible
   ('BPNL00000003COJN',0,'5d9615c4-c873-4aa0-9098-dc75ba18d2e3','P0797','Getriebeöldruck-Magnetventil C - ständig aktiviert','Kabelbaum, schlechte Kontaktierung, Getriebeöldruck-Magnetventil, Motorsteuergerät/Antriebsstrangsteuergerät/Getriebesteuergerät','2022-05-11T11:16:23.257510Z',0),
   ('BPNL00000003COJN',0,'245fb1c4-5430-4cb1-bb7d-5c60eb87ee2d','P0798','Getriebeöldruck-Magnetventil C - elektrische Fehlfunktion','Kabelbaum, schlechte Kontaktierung, Getriebeöldruck-Magnetventil, Motorsteuergerät/Antriebsstrangsteuergerät/Getriebesteuergerät','2022-05-11T11:16:23.263798Z',0),
   ('BPNL00000003COJN',0,'4edbdade-e1fe-4ddb-b020-7005c42fc6d3','P0799','Getriebeöldruck-Magnetventil C - zeitweilige Stromkreisunterbrechungen','Kabelbaum, schlechte Kontaktierung, Motorsteuergerät/Antriebsstrangsteuergerät/Getriebesteuergerät','2022-05-11T11:16:23.270998Z',0),
-  ('BPNL00000003COJN',0,'077f4e8a-efaf-4c20-bfd9-3a15f6dca769','P079A','Getriebereibelement A - Schlupf festgestellt','-','2022-05-11T11:16:23.275591Z',0),
-  ('BPNL00000003COJN',0,'d93d9398-4e46-4dc7-9e29-de9c2597ae7b','P079B','Getriebereibelement B - Schlupf festgestellt','-','2022-05-11T11:16:23.280418Z',0),
-  ('BPNL00000003COJN',0,'d0e2f6c7-de4d-4d4b-9242-b4ec8a23842e','P079C','Getriebereibelement C - Schlupf festgestellt','-','2022-05-11T11:16:23.285926Z',0),
-  ('BPNL00000003COJN',0,'84dc90dc-19a1-407b-b498-7c80a42bf4dd','P079D','Getriebereibelement D - Schlupf festgestellt','-','2022-05-11T11:16:23.293448Z',0),
   ('BPNL00000003COJN',0,'18e05c7c-7625-46be-bbb4-73910690a1af','P07A3','Getriebereibelement A - ständig aktiviert','-','2022-05-11T11:16:23.323348Z',0),
   ('BPNL00000003COJN',0,'19702e99-d697-4f7d-86cd-583783227f14','P07A4','Getriebereibelement B - Fehlfunktion oder ständig deaktiviert','-','2022-05-11T11:16:23.330261Z',0),
   ('BPNL00000003COJN',0,'7a743afd-e10b-4c6a-9d11-cb7fafecedc6','P07A5','Getriebereibelement B - ständig aktiviert','-','2022-05-11T11:16:23.334466Z',0),
@@ -2127,7 +2127,7 @@ INSERT INTO "dtc"."content" ("bpnl","number","id","code","description","possible
   ('BPNL00000003COJN',0,'096a1171-1c49-45ef-b73d-f81a63d81387','P0AF1','Temperatursensor für Antriebsmotor-Inverter A - zeitweilige Stromkreisunterbrechungen','-','2022-05-11T11:16:26.460452Z',0),
   ('BPNL00000003COJN',0,'4b847746-01b2-4bdc-ac37-71642058d62f','P0AF2','Temperatursensor für Antriebsmotor-Inverter B - Fehlfunktion Stromkreis','-','2022-05-11T11:16:26.464911Z',0),
   ('BPNL00000003COJN',0,'a6cf5a1f-78d9-48d4-8a0d-c75671f37d67','P0AF3','Temperatursensor für Antriebsmotor-Inverter B - Bereichs-/Funktionsfehler Stromkreis','-','2022-05-11T11:16:26.469173Z',0),
-  ('BPNL00000003COJN',0,'c96eade7-e794-4d85-aeb8-5dbb97b91b13','P0AF4','Temperatursensor für Antriebsmotor-Inverter B - Signal zu niedrig',' ','2022-05-11T11:16:26.473795Z',0),
+  ('BPNL00000003COJN',0,'c96eade7-e794-4d85-aeb8-5dbb97b91b13','P0AF4','Temperatursensor für Antriebsmotor-Inverter B - Signal zu niedrig',' ','2022-05-11T11:16:26.473795Z',0),
   ('BPNL00000003COJN',0,'c93506b8-4d29-4816-929e-0db57ce46236','P0AF5','Temperatursensor für Antriebsmotor-Inverter B - Signal zu hoch','-','2022-05-11T11:16:26.478149Z',0),
   ('BPNL00000003COJN',0,'f4e40085-2e7b-4650-a70c-a95a4d642a5f','P0AF6','Temperatursensor für Antriebsmotor-Inverter B - zeitweilige Stromkreisunterbrechungen','-','2022-05-11T11:16:26.482994Z',0),
   ('BPNL00000003COJN',0,'c7550b95-ab3f-462f-a7d1-049ebd77a5f4','P0AF7','14-V-Versorgungsmodul - interne Gerätetemperatur zu hoch','-','2022-05-11T11:16:26.487761Z',0),
@@ -2449,7 +2449,7 @@ INSERT INTO "dtc"."content" ("bpnl","number","id","code","description","possible
   ('BPNL00000003COJN',0,'4df57232-0cb8-4eeb-bd6e-da2c22400020','P0C34','Hybridantriebsbatterie-Temperatursensor F - Bereichs-/Funktionsfehler Stromkreis','-','2022-05-11T11:16:28.040510Z',0),
   ('BPNL00000003COJN',0,'ac7dd30b-d293-470a-9571-35b660df2f71','P0C35','Hybridantriebsbatterie-Temperatursensor F - Signal zu niedrig','-','2022-05-11T11:16:28.044666Z',0),
   ('BPNL00000003COJN',0,'3ec41e32-2103-4426-86fd-6412e8ab4f77','P0C36','Hybridantriebsbatterie-Temperatursensor F - Signal zu hoch','-','2022-05-11T11:16:28.049333Z',0),
-  ('BPNL00000003COJN',0,'787573ac-56cb-47ba-88e1-e0fb1e02bdbf','P0C37','Hybridantriebsbatterie-Temperatursensor F - zeitweilige Stromkreisunterbrechungen',' ','2022-05-11T11:16:28.053765Z',0),
+  ('BPNL00000003COJN',0,'787573ac-56cb-47ba-88e1-e0fb1e02bdbf','P0C37','Hybridantriebsbatterie-Temperatursensor F - zeitweilige Stromkreisunterbrechungen',' ','2022-05-11T11:16:28.053765Z',0),
   ('BPNL00000003COJN',0,'cb1e01b4-cc43-44bd-b194-798283d2fc2e','P0C38','DC/DC-Wandler-Temperatursensor A - Fehlfunktion Stromkreis','-','2022-05-11T11:16:28.058082Z',0),
   ('BPNL00000003COJN',0,'3aada6bf-3590-4d9e-8fd2-02ac5608c230','P0C39','DC/DC-Wandler-Temperatursensor A - Bereichs-/Funktionsfehler Stromkreis','-','2022-05-11T11:16:28.063795Z',0),
   ('BPNL00000003COJN',0,'2d715e22-a547-4715-91af-78a9e73fb845','P0C3A','DC/DC-Wandler-Temperatursensor A - Signal zu niedrig','-','2022-05-11T11:16:28.068115Z',0),
@@ -2622,13 +2622,15 @@ INSERT INTO "dtc"."part" ("bpnl","number","entityGuid","enDenomination","classif
 ,('BPNL00000003COJN',0,'554ec015-b06e-4f6b-b9b3-6e6e37cfb3b4','starter','Powertrain.Engine & emissions control','Part','Powertrain')
 ,('BPNL00000003COJN',0,'e3ea9640-04f4-412f-aaa2-1013bcc905e6','coolant thermostat','HVAC.hvac','Part','HVAC')
 ,('BPNL00000003COJN',0,'517477d3-2d79-494d-a8ca-b1da9a1f19ca','accelerator pedal','Body.Interior','Part','Body')
+,('BPNL00000003COJN',0,'e6be2370-6497-41bf-9f99-de8aead8f30f','automatic transmission','Powertrain.Transmission','Part','Powertrain')
+,('BPNL00000003COJN',0,'9a72a020-72dd-4415-ae04-451f61db3142','automatic transmission fluid','General information.Liquids','Operating fluid','General information')
+,('BPNL00000003COJN',0,'17261ec2-82c2-449b-a58d-588b74f5a2f5','transmission oil','General information.Liquids','Operating fluid','General information')
 ,('BPNL00000003COJN',0,'60fde6ac-3155-44ab-9636-7d4886fd8857','injection pump','Powertrain.Engine & emissions control','Part','Powertrain')
 ,('BPNL00000003COJN',0,'53a63aa3-6cec-483f-90c9-7f9dbbc2d997','secondary air injection','Powertrain.Engine & emissions control','System','Powertrain')
 ,('BPNL00000003COJN',0,'ee818f0f-e1cb-45d0-bfab-cd049fd923ba','fuel filler flap','Body.Openings & closings','Part','Body')
 ,('BPNL00000003COJN',0,'e311aa83-ccf4-48c8-a436-b43b7f61ef81','cylinder head','Powertrain.Engine & emissions control','Part','Powertrain')
 ,('BPNL00000003COJN',0,'342347b7-d78b-4c9f-b9be-6422977d8a79','oil temperature','Powertrain.Engine & emissions control','Other','Powertrain')
 ,('BPNL00000003COJN',0,'ba39189f-6f18-4a54-94bd-c9301ba54540','engine oil temperature sensor','Powertrain.Engine & emissions control','Part','Powertrain')
-,('BPNL00000003COJN',0,'17261ec2-82c2-449b-a58d-588b74f5a2f5','transmission oil','General information.Liquids','Operating fluid','General information')
 ,('BPNL00000003COJN',0,'caeda0e4-11eb-4112-9649-9ba2a4309803','transmission oil temperature sensor','Powertrain.Engine & emissions control','Part','Powertrain')
 ,('BPNL00000003COJN',0,'ab4fa3f4-0b8a-4e1d-a2db-06fdc4d3492f','fuel line','Powertrain.Engine & emissions control','Part','Powertrain')
 ,('BPNL00000003COJN',0,'489b0e63-83f1-49ad-9f8a-12b2bfc23e27','diesel','Powertrain.Engine & emissions control','Function','Powertrain')
@@ -3384,19 +3386,40 @@ INSERT INTO "dtc"."content_part" ("part_entityGuid","dtc_id") VALUES
 ,('ddd15703-21c8-4eac-b6f4-8c640c6180da','9cdaf7e8-119f-48aa-961b-ccdf321e424f')
 ,('07f4ef9d-607c-4c83-80ec-47c25fe7d248','9cdaf7e8-119f-48aa-961b-ccdf321e424f')
 ,('bc2d7f80-422d-45a6-ab28-77ac441a63c4','9cdaf7e8-119f-48aa-961b-ccdf321e424f')
+,('e6be2370-6497-41bf-9f99-de8aead8f30f','d93d9398-4e46-4dc7-9e29-de9c2597ae7b')
+,('9a72a020-72dd-4415-ae04-451f61db3142','d93d9398-4e46-4dc7-9e29-de9c2597ae7b')
+,('17261ec2-82c2-449b-a58d-588b74f5a2f5','d93d9398-4e46-4dc7-9e29-de9c2597ae7b')
 ,('ddd15703-21c8-4eac-b6f4-8c640c6180da','a237e958-dc23-43c4-9b4a-c24178867e6b')
 ,('07f4ef9d-607c-4c83-80ec-47c25fe7d248','a237e958-dc23-43c4-9b4a-c24178867e6b')
 ,('bc2d7f80-422d-45a6-ab28-77ac441a63c4','a237e958-dc23-43c4-9b4a-c24178867e6b')
+,('e6be2370-6497-41bf-9f99-de8aead8f30f','d0e2f6c7-de4d-4d4b-9242-b4ec8a23842e')
+,('9a72a020-72dd-4415-ae04-451f61db3142','d0e2f6c7-de4d-4d4b-9242-b4ec8a23842e')
+,('17261ec2-82c2-449b-a58d-588b74f5a2f5','d0e2f6c7-de4d-4d4b-9242-b4ec8a23842e')
 ,('ddd15703-21c8-4eac-b6f4-8c640c6180da','e10cdabe-3f5c-4450-83c9-c7fd4988bce9')
 ,('bc2d7f80-422d-45a6-ab28-77ac441a63c4','e10cdabe-3f5c-4450-83c9-c7fd4988bce9')
+,('e6be2370-6497-41bf-9f99-de8aead8f30f','84dc90dc-19a1-407b-b498-7c80a42bf4dd')
+,('9a72a020-72dd-4415-ae04-451f61db3142','84dc90dc-19a1-407b-b498-7c80a42bf4dd')
+,('17261ec2-82c2-449b-a58d-588b74f5a2f5','84dc90dc-19a1-407b-b498-7c80a42bf4dd')
 ,('ddd15703-21c8-4eac-b6f4-8c640c6180da','954b7d53-ad0a-4e38-b1eb-67cb3636732e')
 ,('bc2d7f80-422d-45a6-ab28-77ac441a63c4','954b7d53-ad0a-4e38-b1eb-67cb3636732e')
+,('e6be2370-6497-41bf-9f99-de8aead8f30f','cfbc6e1c-4c5b-4e7a-8a05-f717588cdc69')
+,('9a72a020-72dd-4415-ae04-451f61db3142','cfbc6e1c-4c5b-4e7a-8a05-f717588cdc69')
+,('17261ec2-82c2-449b-a58d-588b74f5a2f5','cfbc6e1c-4c5b-4e7a-8a05-f717588cdc69')
 ,('ddd15703-21c8-4eac-b6f4-8c640c6180da','c8874f97-5c6b-4ec5-8896-a1a16d7d5038')
 ,('07f4ef9d-607c-4c83-80ec-47c25fe7d248','c8874f97-5c6b-4ec5-8896-a1a16d7d5038')
 ,('bc2d7f80-422d-45a6-ab28-77ac441a63c4','c8874f97-5c6b-4ec5-8896-a1a16d7d5038')
+,('e6be2370-6497-41bf-9f99-de8aead8f30f','e3048c9a-b6d4-4428-b54b-38e3e3dbe4e6')
+,('9a72a020-72dd-4415-ae04-451f61db3142','e3048c9a-b6d4-4428-b54b-38e3e3dbe4e6')
+,('17261ec2-82c2-449b-a58d-588b74f5a2f5','e3048c9a-b6d4-4428-b54b-38e3e3dbe4e6')
+,('e6be2370-6497-41bf-9f99-de8aead8f30f','192b65bf-a83b-4a6d-9bf9-0a5ac0a1baad')
+,('9a72a020-72dd-4415-ae04-451f61db3142','192b65bf-a83b-4a6d-9bf9-0a5ac0a1baad')
+,('17261ec2-82c2-449b-a58d-588b74f5a2f5','192b65bf-a83b-4a6d-9bf9-0a5ac0a1baad')
 ,('ddd15703-21c8-4eac-b6f4-8c640c6180da','15d00f3b-bc1d-4219-bb53-1961ea0646dc')
 ,('07f4ef9d-607c-4c83-80ec-47c25fe7d248','15d00f3b-bc1d-4219-bb53-1961ea0646dc')
 ,('bc2d7f80-422d-45a6-ab28-77ac441a63c4','15d00f3b-bc1d-4219-bb53-1961ea0646dc')
+,('e6be2370-6497-41bf-9f99-de8aead8f30f','077f4e8a-efaf-4c20-bfd9-3a15f6dca769')
+,('9a72a020-72dd-4415-ae04-451f61db3142','077f4e8a-efaf-4c20-bfd9-3a15f6dca769')
+,('17261ec2-82c2-449b-a58d-588b74f5a2f5','077f4e8a-efaf-4c20-bfd9-3a15f6dca769')
 ,('ddd15703-21c8-4eac-b6f4-8c640c6180da','d1b25663-47a0-45db-ae96-f77ca8a79e9e')
 ,('07f4ef9d-607c-4c83-80ec-47c25fe7d248','d1b25663-47a0-45db-ae96-f77ca8a79e9e')
 ,('bc2d7f80-422d-45a6-ab28-77ac441a63c4','d1b25663-47a0-45db-ae96-f77ca8a79e9e')
@@ -3702,11 +3725,6 @@ INSERT INTO "dtc"."content_part" ("part_entityGuid","dtc_id") VALUES
 ,('83f24db5-32e0-4c1a-9d85-c649de5dfd50','0facf145-6333-46e2-b18d-258b5fd95f41')
 ,('ddd15703-21c8-4eac-b6f4-8c640c6180da','0facf145-6333-46e2-b18d-258b5fd95f41')
 ,('e3ea9640-04f4-412f-aaa2-1013bcc905e6','0facf145-6333-46e2-b18d-258b5fd95f41')
-,('17261ec2-82c2-449b-a58d-588b74f5a2f5','df7d0016-e2a2-43a8-9b36-4dfa70950093')
-,('342347b7-d78b-4c9f-b9be-6422977d8a79','df7d0016-e2a2-43a8-9b36-4dfa70950093')
-,('ddd15703-21c8-4eac-b6f4-8c640c6180da','df7d0016-e2a2-43a8-9b36-4dfa70950093')
-,('07f4ef9d-607c-4c83-80ec-47c25fe7d248','df7d0016-e2a2-43a8-9b36-4dfa70950093')
-,('caeda0e4-11eb-4112-9649-9ba2a4309803','df7d0016-e2a2-43a8-9b36-4dfa70950093')
 ,('b0443218-47e1-4b2d-b4fb-1272a39b8499','1f11882d-ae8b-4f62-a598-ace5a46d8e16')
 ,('b0443218-47e1-4b2d-b4fb-1272a39b8499','85fa34cf-1e11-42ac-8316-5086c6b6e8b0')
 ,('b0443218-47e1-4b2d-b4fb-1272a39b8499','9d6ef26a-9867-4c86-bc5a-95e4e4b6eaae')
@@ -3717,6 +3735,12 @@ INSERT INTO "dtc"."content_part" ("part_entityGuid","dtc_id") VALUES
 ,('ddd15703-21c8-4eac-b6f4-8c640c6180da','4562cf5f-e2b5-4174-b088-9e8545bea857')
 ,('10cedc5f-717a-4800-b837-d250cce7c101','4562cf5f-e2b5-4174-b088-9e8545bea857')
 ,('07f4ef9d-607c-4c83-80ec-47c25fe7d248','4562cf5f-e2b5-4174-b088-9e8545bea857')
+,('17261ec2-82c2-449b-a58d-588b74f5a2f5','df7d0016-e2a2-43a8-9b36-4dfa70950093')
+,('342347b7-d78b-4c9f-b9be-6422977d8a79','df7d0016-e2a2-43a8-9b36-4dfa70950093')
+,('ddd15703-21c8-4eac-b6f4-8c640c6180da','df7d0016-e2a2-43a8-9b36-4dfa70950093')
+,('07f4ef9d-607c-4c83-80ec-47c25fe7d248','df7d0016-e2a2-43a8-9b36-4dfa70950093')
+,('caeda0e4-11eb-4112-9649-9ba2a4309803','df7d0016-e2a2-43a8-9b36-4dfa70950093')
+,('e6be2370-6497-41bf-9f99-de8aead8f30f','df7d0016-e2a2-43a8-9b36-4dfa70950093')
 ,('517477d3-2d79-494d-a8ca-b1da9a1f19ca','54e9c741-8402-4a83-aa9d-844067c15cf0')
 ,('10cedc5f-717a-4800-b837-d250cce7c101','54e9c741-8402-4a83-aa9d-844067c15cf0')
 ,('517477d3-2d79-494d-a8ca-b1da9a1f19ca','a43dabc3-20b1-4f08-9d39-1318481c50d6')
@@ -3745,6 +3769,9 @@ INSERT INTO "dtc"."content_part" ("part_entityGuid","dtc_id") VALUES
 ,('ddd15703-21c8-4eac-b6f4-8c640c6180da','a03460c2-afc6-4355-9606-7d74b2f9793e')
 ,('10cedc5f-717a-4800-b837-d250cce7c101','a03460c2-afc6-4355-9606-7d74b2f9793e')
 ,('07f4ef9d-607c-4c83-80ec-47c25fe7d248','a03460c2-afc6-4355-9606-7d74b2f9793e')
+,('e6be2370-6497-41bf-9f99-de8aead8f30f','5fd6ff2e-0fc3-4ebb-a1c2-c2c8118746a6')
+,('9a72a020-72dd-4415-ae04-451f61db3142','5fd6ff2e-0fc3-4ebb-a1c2-c2c8118746a6')
+,('17261ec2-82c2-449b-a58d-588b74f5a2f5','5fd6ff2e-0fc3-4ebb-a1c2-c2c8118746a6')
 ,('517477d3-2d79-494d-a8ca-b1da9a1f19ca','16c83da0-fe08-48a6-bbbf-88da78e8a8da')
 ,('ddd15703-21c8-4eac-b6f4-8c640c6180da','16c83da0-fe08-48a6-bbbf-88da78e8a8da')
 ,('10cedc5f-717a-4800-b837-d250cce7c101','16c83da0-fe08-48a6-bbbf-88da78e8a8da')
