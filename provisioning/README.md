@@ -2,6 +2,8 @@
 
 This is a folder providing the FOSS implementations of a Hey Catena! agent for provider-side deployment which will bind typical backend data sources to the dataspace.
 
+It relies on the [Ontop Virtual Knowledge Graph System](https://ontop-vkg.org) for mapping relational data sources into knowledge graphs (or rather: for translating SparQL queries into SQL queries).
+
 ## Containerizing
 
 ```console
