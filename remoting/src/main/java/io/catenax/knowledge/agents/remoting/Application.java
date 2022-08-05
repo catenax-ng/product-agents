@@ -37,5 +37,13 @@ public class Application {
             Model model = QueryResults.asModel(statements);
             Rio.write(model, System.out, RDFFormat.TURTLE);
         }
+        rep = new SailRepository(new RemotingSail(""));
+        try (RepositoryConnection conn = rep.getConnection()) {
+            conn.add(john, RDF.TYPE, FOAF.PERSON);
+            conn.add(john, RDFS.LABEL, Values.literal("John"));
+            RepositoryResult<Statement> statements = conn.getStatements(null, null, null);
+            Model model = QueryResults.asModel(statements);
+            Rio.write(model, System.out, RDFFormat.TURTLE);
+        }
     }
 }
