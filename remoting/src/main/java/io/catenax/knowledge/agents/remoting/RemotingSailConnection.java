@@ -14,6 +14,8 @@ import org.eclipse.rdf4j.query.algebra.TupleExpr;
 import org.eclipse.rdf4j.query.BindingSet;
 import org.eclipse.rdf4j.query.Dataset;
 import org.eclipse.rdf4j.query.QueryEvaluationException;
+import org.eclipse.rdf4j.common.iteration.AbstractCloseableIteration;
+import org.eclipse.rdf4j.model.impl.SimpleNamespace;
 
 /**
  * Implements a connection to a remote service
@@ -48,7 +50,19 @@ public class RemotingSailConnection extends AbstractSailConnection {
 
     @Override
     protected CloseableIteration<? extends Namespace, SailException> getNamespacesInternal() {
-        return null;
+        return new AbstractCloseableIteration<Namespace,SailException>() {
+            java.util.Iterator<java.util.Map.Entry<String,String>> iterator=namespaces.entrySet().iterator();
+            public void remove() {
+                iterator.remove();
+            }
+            public Namespace next() {
+                java.util.Map.Entry<String,String> nextEntry=iterator.next();
+                return new SimpleNamespace(nextEntry.getKey(),nextEntry.getValue());               
+            }
+            public boolean hasNext() {
+                return iterator.hasNext();
+            }
+        };
     }
 
     @Override
@@ -58,19 +72,52 @@ public class RemotingSailConnection extends AbstractSailConnection {
     @Override
 	protected CloseableIteration<? extends BindingSet, QueryEvaluationException> evaluateInternal(
 			TupleExpr tupleExpr, Dataset dataset, BindingSet bindings, boolean includeInferred) throws SailException {
-                return null;
+                return new AbstractCloseableIteration<BindingSet,QueryEvaluationException>() {
+                    
+                    public void remove() {
+                    }
+
+                    public BindingSet next() {
+                        return null;             
+                    }
+                    public boolean hasNext() {
+                        return false;
+                    }
+                };
             }
 
     @Override
 	protected CloseableIteration<? extends Resource, SailException> getContextIDsInternal()
 			throws SailException {
-                return null;
+                return new AbstractCloseableIteration<Resource,SailException>() {
+                    
+                    public void remove() {
+                    }
+
+                    public Resource next() {
+                        return null;             
+                    }
+                    public boolean hasNext() {
+                        return false;
+                    }
+                };
             }
 
     @Override
 	protected CloseableIteration<? extends Statement, SailException> getStatementsInternal(Resource subj,
 			IRI pred, Value obj, boolean includeInferred, Resource... contexts) throws SailException {
-            return null;
+                return new AbstractCloseableIteration<Statement,SailException>() {
+                    
+                    public void remove() {
+                    }
+
+                    public Statement next() {
+                        return null;             
+                    }
+                    public boolean hasNext() {
+                        return false;
+                    }
+                };
         }
 
 
