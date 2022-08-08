@@ -5,7 +5,7 @@
 # See license file in the top folder
 #
 
-FROM ontop/ontop-endpoint
+FROM ontop/ontop-endpoint:4.2.1
 
 # Security issue A1SLDT-828
 RUN groupadd ontop
@@ -49,11 +49,4 @@ ENV ONTOP_DEV_MODE=true
 # TODO what about multiple "artifacts" = endpoints?
 # TODO Telemetry, instrumentation and debugging
 
-ENTRYPOINT java -cp ./lib/*:./jdbc/* -Dlogback.configurationFile=file:./log/logback.xml \
-        it.unibz.inf.ontop.cli.Ontop endpoint \
-        --ontology=${ONTOP_ONTOLOGY_FILE} \
-        --mapping=${ONTOP_MAPPING_FILE} \
-        --properties=${ONTOP_PROPERTIES_FILE} \
-        --portal ${ONTOP_PORTAL_FILE} \
-        --dev \ 
-        --cors-allowed-origins=${ONTOP_CORS_ALLOWED_ORIGINS}
+ENTRYPOINT ["java", "-cp", "./lib/*:./jdbc/*","-Dlogback.configurationFile=file:./log/logback.xml", "it.unibz.inf.ontop.cli.Ontop","endpoint","--ontology=${ONTOP_ONTOLOGY_FILE}","--mapping=${ONTOP_MAPPING_FILE}","--properties=${ONTOP_PROPERTIES_FILE}","--portal","${ONTOP_PORTAL_FILE}","--dev","--cors-allowed-origins=${ONTOP_CORS_ALLOWED_ORIGINS}"]
