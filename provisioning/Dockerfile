@@ -8,15 +8,15 @@
 FROM ontop/ontop-endpoint:4.2.1
 
 # Security issue A1SLDT-828
-RUN groupadd ontop
-RUN useradd -g ontop -ms /bin/sh ontop
-RUN chown -R ontop:ontop /opt/ontop
-RUN mkdir /data
-RUN chown -R ontop:ontop /data
-RUN mkdir /input
-RUN chown -R ontop:ontop /input
-RUN mkdir /database
-RUN chown -R ontop:ontop /database
+RUN groupadd ontop && \
+    useradd -g ontop -ms /bin/sh ontop && \
+    chown -R ontop:ontop /opt/ontop && \
+    mkdir /data && \
+    chown -R ontop:ontop /data && \
+    mkdir /input && \
+    chown -R ontop:ontop /input && \
+    mkdir /database && \
+    chown -R ontop:ontop /database
 
 WORKDIR /opt/ontop
 USER ontop
@@ -43,6 +43,7 @@ ENV ONTOP_PORTAL_FILE=/input/portal.toml
 ENV ONTOP_CORS_ALLOWED_ORIGINS=*
 ENV ONTOP_DEV_MODE=true
 
+HEALTHCHECK NONE
 
 # Run Ontop Agent with CORS disabled (we expect an ingress layer anyway)
 # TODO check security settings
