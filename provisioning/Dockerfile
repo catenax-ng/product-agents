@@ -6,7 +6,20 @@
 #
 
 FROM ontop/ontop-endpoint
+
+# Security issue A1SLDT-828
+RUN groupadd ontop
+RUN useradd -g ontop -ms /bin/sh ontop
+RUN chown -R ontop:ontop /opt/ontop
+RUN mkdir /data
+RUN chown -R ontop:ontop /data
+RUN mkdir /input
+RUN chown -R ontop:ontop /input
+RUN mkdir /database
+RUN chown -R ontop:ontop /database
+
 WORKDIR /opt/ontop
+USER ontop
 
 # run with docker --build-arg=path_to_my_driver to establish a different driver
 ARG jdbcDriver=repo/h2-2.1.214.jar 
@@ -29,6 +42,7 @@ ENV ONTOP_PROPERTIES_FILE=/input/settings.properties
 ENV ONTOP_PORTAL_FILE=/input/portal.toml
 ENV ONTOP_CORS_ALLOWED_ORIGINS=*
 ENV ONTOP_DEV_MODE=true
+
 
 # Run Ontop Agent with CORS disabled (we expect an ingress layer anyway)
 # TODO check security settings
