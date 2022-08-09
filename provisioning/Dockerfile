@@ -43,6 +43,7 @@ ENV ONTOP_PORTAL_FILE=/input/portal.toml
 ENV ONTOP_CORS_ALLOWED_ORIGINS=*
 ENV ONTOP_DEV_MODE=true
 
+# TODO Should have a healthcheck
 HEALTHCHECK NONE
 
 # Run Ontop Agent with CORS disabled (we expect an ingress layer anyway)

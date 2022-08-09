@@ -16,6 +16,13 @@ mvn package
 java -jar target/agents.remoting-0.5.1-SNAPSHOT.jar
 ```
 
+## Containerizing
+
+```console
+docker build -t ghcr.io/catenax-ng/product-knowledge/dataspace/remoting-agent:0.5.2 .
+```
+
+
 ## Notice
 
 * see copyright notice in the top folder
