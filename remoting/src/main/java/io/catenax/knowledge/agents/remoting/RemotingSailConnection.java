@@ -26,6 +26,9 @@ import org.eclipse.rdf4j.model.impl.SimpleNamespace;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Map;
+import java.util.HashMap;
+
 /**
  * Implements a connection to a remote service
  * This is the main magic for hiding functions as graphs.
@@ -34,7 +37,7 @@ public class RemotingSailConnection extends AbstractSailConnection {
     /** logger */
     protected Logger logger = LoggerFactory .getLogger(getClass());
     /** namespaces map */
-    protected java.util.Map<String,String> namespaces=new java.util.HashMap<String,String>();
+    protected Map<String,String> namespaces=new HashMap<String,String>();
     /** link to the sail / service wrapper */
     protected RemotingSail remotingSail;
 
@@ -129,33 +132,6 @@ public class RemotingSailConnection extends AbstractSailConnection {
     }
 
     /**
-     * helper to climb a query tree, prepare the invocations
-     * and map variables.
-     * @param tree
-     */
-    protected void climb(TupleExpr tree) throws SailException {
-        if(tree instanceof QueryRoot) {
-            QueryRoot query=(QueryRoot) tree;
-            logger.debug(String.format("Need to query"));
-            climb(query.getArg());
-        } else if(tree instanceof Projection) {
-            Projection projection=(Projection) tree;
-            logger.debug(String.format("Need to project to %s",projection.getProjectionElemList()));
-            climb(projection.getArg());
-        } else if(tree instanceof Join) {
-            logger.debug(String.format("Need to join"));
-            Join join=(Join) tree;
-            climb(join.getLeftArg());
-            climb(join.getRightArg()); 
-        } else if(tree instanceof StatementPattern) {
-            StatementPattern statement=(StatementPattern) tree;
-            logger.debug(String.format("Need to process statement pattern %s",statement));
-        } else {
-            throw new SailException(String.format("No support for tuple expression %s",tree));
-        }
-    }
-
-    /**
      * is that the actual query part?
      */
     @Override
@@ -164,7 +140,8 @@ public class RemotingSailConnection extends AbstractSailConnection {
                 if(logger.isInfoEnabled()) {
                     logger.info(String.format("Evaluating tuples %s on dataset %s and bindings %s (including inferred %b) connection to the remoting sail %s wrapping url %s",tupleExpr,dataset,bindings,includeInferred,remotingSail,remotingSail.url));
                 }
-                climb(tupleExpr);
+                RemotingQueryModelVisitor visitor=new RemotingQueryModelVisitor(this);
+                tupleExpr.visit(visitor);
                 return new AbstractCloseableIteration<BindingSet,QueryEvaluationException>() {
                     
                     public void remove() {
