@@ -5,7 +5,7 @@
 
     <groupId>io.catenax.knowledge</groupId>
     <artifactId>agents.remoting</artifactId>
-    <version>0.5.1-SNAPSHOT</version>
+    <version>0.5.2-SNAPSHOT</version>
     <description>Catena-X Remoting Knowledge Agent</description>
     <url>http://catena-x.net/</url>
 

@@ -6,6 +6,7 @@
 #
 
 FROM ontop/ontop-endpoint:4.2.1
+MAINTAINER Catena-X Team Knowledge Agents (https://catenax-ng.github.io/product-knowledge/)
 
 # Security issue A1SLDT-828
 RUN groupadd ontop && \
