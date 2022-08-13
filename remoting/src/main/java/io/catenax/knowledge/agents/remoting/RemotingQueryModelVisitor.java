@@ -9,12 +9,18 @@ package io.catenax.knowledge.agents.remoting;
 import org.eclipse.rdf4j.query.algebra.*;
 import org.eclipse.rdf4j.sail.SailException;
 import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.model.impl.SimpleIRI;
+import org.eclipse.rdf4j.query.BindingSet;
+import org.eclipse.rdf4j.query.impl.MapBindingSet;
+import org.eclipse.rdf4j.model.Value;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Map;
 import java.util.HashMap;
+import java.util.List;
+import java.util.ArrayList;
 
 /**
  * The query processing is done while visiting 
@@ -22,15 +28,22 @@ import java.util.HashMap;
 public class RemotingQueryModelVisitor implements QueryModelVisitor<SailException> {
 
 	/** the state */
-	protected Map<Var,Invocation> invocations=new java.util.HashMap<Var,Invocation>();
+	protected Map<Value,Invocation> invocations=new HashMap<Value,Invocation>();
+
+    /** the result */
+    protected MapBindingSet bindings=new MapBindingSet();
 	
     /** the logger */
     protected Logger logger = LoggerFactory.getLogger(getClass());
 	/** the connection */
 	protected RemotingSailConnection connection;
-	
+
+    /**
+     * create a new visitor
+     * @param connection
+     */
 	public RemotingQueryModelVisitor(RemotingSailConnection connection) {
-		this.connection=connection;
+		this.connection=connection;        
 	}
 
 	public void meet(QueryRoot node) throws SailException {
@@ -275,11 +288,27 @@ public class RemotingQueryModelVisitor implements QueryModelVisitor<SailExceptio
 	public void meet(Projection node) throws SailException {
 		logger.debug(String.format("Visiting a projection"));
 		node.getArg().visit(this);
+        for(Invocation invocation : invocations.values()) {
+            int result=0;
+            for(Value arg : invocation.inputs.values()) {
+                result+=Integer.parseInt(arg.stringValue());
+            }
+            invocation.result=connection.remotingSail.getValueFactory().createLiteral(result);
+            for(Var output : invocation.outputs.keySet()) {
+                bindings.addBinding(output.getName(),invocation.result);
+            }
+        }
 		node.getProjectionElemList().visit(this);
     }
 
 	public void meet(ProjectionElem node) throws SailException {
 		logger.debug(String.format("Visiting a projection element"));
+        if(!bindings.hasBinding(node.getTargetName())) {
+            if(!bindings.hasBinding(node.getSourceName())) {
+                throw new SailException(String.format("Could not bind source var %s to target var %s. It has not been bound",node.getSourceName(),node.getTargetName()));
+            }
+            bindings.addBinding(node.getTargetName(),bindings.getValue(node.getSourceName()));
+        } 
     }
 
     public void meet(ProjectionElemList node) throws SailException {
@@ -324,24 +353,44 @@ public class RemotingQueryModelVisitor implements QueryModelVisitor<SailExceptio
             if(!object.hasValue() || !object.getValue().isIRI()) {
                 throw new SailException(String.format("No support for non-IRI invocation type binding %s",object));
             }
+            IRI objectIRI = (IRI) object.getValue();
+            // TODO lookup configuration 
             Var subject = statement.getSubjectVar();
-            Invocation invocation = invocations.get(subject);
+            if(!subject.hasValue() ) {
+                IRI invocationIri=connection.remotingSail.getValueFactory().createIRI(objectIRI.getNamespace(),String.valueOf(invocations.size()));
+                bindings.addBinding(subject.getName(),invocationIri);
+                subject=new Var(subject.getName(),invocationIri);
+            } else {
+                if(!subject.getValue().isIRI()) {
+                    throw new SailException(String.format("No support for non-IRI invocation subject binding %s",subject));
+                }
+                if(!((IRI)subject.getValue()).getNamespace().equals(objectIRI.getNamespace())) {
+                    throw new SailException(String.format("No support for non-IRI invocation subject binding %s",subject));
+                }
+            }
+            Invocation invocation = invocations.get(subject.getValue());
             if(invocation!=null) {
-                if(!invocation.service.equals(object.getValue())) {
-                    throw new SailException(String.format("Could not rebind invocation %s with type %s to type %s",subject,invocation.service,object.getValue()));
+                if(!invocation.service.equals(objectIRI)) {
+                    throw new SailException(String.format("Could not rebind invocation %s with type %s to type %s",subject.getValue(),invocation.service,object.getValue()));
                 }
             } else {
                 invocation=new Invocation();
-                invocation.service=(IRI) object.getValue();
-                logger.debug(String.format("Registering a new invocation %s for service type %s",subject,invocation.service));
-                invocations.put(subject,invocation);
+                invocation.service=objectIRI;
+                logger.debug(String.format("Registering a new invocation %s for service type %s",subject.getValue(),invocation.service));
+                invocations.put(subject.getValue(),invocation);
             }
         } else {
             Var subject = statement.getSubjectVar();
-            if(!invocations.containsKey(subject)) {
+            if(!subject.hasValue()) {
+                if(!bindings.hasBinding(subject.getName())) {
+                    throw new SailException(String.format("Subject variable %s not bound to invocation.",subject.getName()));
+                } 
+                subject=new Var(subject.getName(),bindings.getValue(subject.getName()));
+            }
+            if(!invocations.containsKey(subject.getValue())) {
                 throw new SailException(String.format("Trying to bind argument predicate %s to non existant invocation %s. Maybe you need to switch statement order such that rdf:type precedes any other bindings.",predicate.getValue().stringValue(),subject));
             }
-            Invocation invocation=invocations.get(subject);
+            Invocation invocation=invocations.get(subject.getValue());
             IRI argument=(IRI) predicate.getValue();
             // input or output binding
             if(!object.hasValue()) {
@@ -349,7 +398,7 @@ public class RemotingQueryModelVisitor implements QueryModelVisitor<SailExceptio
                     throw new SailException(String.format("Could not bind output predicate %s twice to invocation %s",argument,subject));
                 }
                 logger.debug(String.format("Binding output %s of invocation %s to var %s",argument,subject,object));
-                invocation.outputs.put(argument,object);
+                invocation.outputs.put(object,argument);
             } else {
                 if(invocation.inputs.containsKey(argument)) {
                     throw new SailException(String.format("Could not bind input predicate %s twice to invocation %s",argument,subject));

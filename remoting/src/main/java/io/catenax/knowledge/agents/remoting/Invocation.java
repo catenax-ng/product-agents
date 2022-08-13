@@ -17,7 +17,14 @@ import org.eclipse.rdf4j.query.algebra.Var;
  * keeps the state of an ongoing invocation
  */
 public class Invocation {
+    /** the type of service invoked */
     public IRI service;
+    /** unique key for the invocation */
+    public IRI key;
+    /** input bindings */
     public Map<IRI,Value> inputs=new HashMap<IRI,Value>();
-    public Map<IRI,Var> outputs=new HashMap<IRI,Var>();
+    /** output bindings */
+    public Map<Var,IRI> outputs=new HashMap<Var,IRI>();
+    /** the actual result as a value */
+    public Value result;
 }

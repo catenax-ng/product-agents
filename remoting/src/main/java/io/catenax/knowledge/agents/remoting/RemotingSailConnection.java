@@ -142,16 +142,21 @@ public class RemotingSailConnection extends AbstractSailConnection {
                 }
                 RemotingQueryModelVisitor visitor=new RemotingQueryModelVisitor(this);
                 tupleExpr.visit(visitor);
+
                 return new AbstractCloseableIteration<BindingSet,QueryEvaluationException>() {
                     
+                    java.util.Iterator<BindingSet> allBindings=java.util.List.of((BindingSet) visitor.bindings).iterator();
+
                     public void remove() {
+                        allBindings.remove();
                     }
 
                     public BindingSet next() {
-                        return null;             
+                        return allBindings.next();       
                     }
+
                     public boolean hasNext() {
-                        return false;
+                        return allBindings.hasNext();
                     }
                 };
             }

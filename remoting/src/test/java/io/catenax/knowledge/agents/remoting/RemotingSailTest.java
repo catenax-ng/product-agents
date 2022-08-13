@@ -22,6 +22,7 @@ import org.eclipse.rdf4j.common.iteration.Iterations;
 import org.eclipse.rdf4j.rio.*;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -54,6 +55,12 @@ public class RemotingSailTest {
 		    assertEquals("output",names[1],"Correct binding name 2");
             java.util.List<BindingSet> bindings = Iterations.asList(result);
 		    assertEquals(1,bindings.size(),"Correct number of bindings");
+            BindingSet firstBindingSet=bindings.get(0);
+            assertTrue(firstBindingSet.getBindingNames().contains("invocation"),"Found invocation binding");
+            assertTrue(firstBindingSet.getValue("invocation").stringValue().startsWith("https://github.com/catenax-ng/product-knowledge/ontology/prognosis.ttl#"),"Invocation binding has the right prefix");
+            assertEquals(2,firstBindingSet.size(),"Correct number of variables in binding 0");
+            assertTrue(firstBindingSet.getBindingNames().contains("output"),"Found output binding");
+            assertEquals("3",firstBindingSet.getValue("output").stringValue());
         }
     }
 }
