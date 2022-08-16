@@ -49,7 +49,7 @@ public class RemotingSailConnection extends AbstractSailConnection {
         super(remotingSail);
         this.remotingSail=remotingSail;
         if(logger.isInfoEnabled()) {
-            logger.info(String.format("Creating a new connection to the remoting sail %s wrapping url %s",remotingSail,remotingSail.url));
+            logger.info(String.format("Creating a new connection to the remoting sail %s wrapping config %s",remotingSail,remotingSail.config));
         }
     }
 
@@ -59,7 +59,7 @@ public class RemotingSailConnection extends AbstractSailConnection {
     @Override
     protected void clearNamespacesInternal() {
         if(logger.isDebugEnabled()) {
-            logger.debug(String.format("Clearing connection namespaces to the remoting sail %s wrapping url %s",remotingSail,remotingSail.url));
+            logger.debug(String.format("Clearing connection namespaces to the remoting sail %s wrapping config %s",remotingSail,remotingSail.config));
         }
         namespaces.clear();
     }
@@ -71,7 +71,7 @@ public class RemotingSailConnection extends AbstractSailConnection {
     protected void removeNamespaceInternal(String prefix) {
        String oldValue=namespaces.remove(prefix);
        if(logger.isDebugEnabled()) {
-         logger.debug(String.format("Removed namespace prefix %s (previous value %s) to the remoting sail %s wrapping url %s",prefix,oldValue,remotingSail,remotingSail.url));
+         logger.debug(String.format("Removed namespace prefix %s (previous value %s) to the remoting sail %s wrapping config %s",prefix,oldValue,remotingSail,remotingSail.config));
        }
     }
 
@@ -82,7 +82,7 @@ public class RemotingSailConnection extends AbstractSailConnection {
     protected void setNamespaceInternal(String prefix, String value) {
         String oldValue=namespaces.put(prefix,value);
         if(logger.isDebugEnabled()) {
-            logger.debug(String.format("Set namespace prefix %s to value %s (previous value was %s) to the remoting sail %s wrapping url %s",prefix,value,oldValue,remotingSail,remotingSail.url));
+            logger.debug(String.format("Set namespace prefix %s to value %s (previous value was %s) to the remoting sail %s wrapping config %s",prefix,value,oldValue,remotingSail,remotingSail.config));
         }
     }
 
@@ -93,7 +93,7 @@ public class RemotingSailConnection extends AbstractSailConnection {
     protected String getNamespaceInternal(String prefix) {
         String value= namespaces.get(prefix);
         if(logger.isDebugEnabled()) {
-            logger.debug(String.format("Resolve namespace prefix %s to value %s to the remoting sail %s wrapping url %s",prefix,value,remotingSail,remotingSail.url));
+            logger.debug(String.format("Resolve namespace prefix %s to value %s to the remoting sail %s wrapping config %s",prefix,value,remotingSail,remotingSail.config));
         }
         return value;
     }
@@ -104,7 +104,7 @@ public class RemotingSailConnection extends AbstractSailConnection {
     @Override
     protected CloseableIteration<? extends Namespace, SailException> getNamespacesInternal() {
         if(logger.isDebugEnabled()) {
-            logger.debug(String.format("Iterate namespaces to the remoting sail %s wrapping url %s",remotingSail,remotingSail.url));
+            logger.debug(String.format("Iterate namespaces to the remoting sail %s wrapping config %s",remotingSail,remotingSail.config));
         }
         return new AbstractCloseableIteration<Namespace,SailException>() {
             java.util.Iterator<java.util.Map.Entry<String,String>> iterator=namespaces.entrySet().iterator();
@@ -127,7 +127,7 @@ public class RemotingSailConnection extends AbstractSailConnection {
     @Override
     protected void closeInternal() throws SailException {
         if(logger.isInfoEnabled()) {
-            logger.info(String.format("Closing connection to the remoting sail %s wrapping url %s",remotingSail,remotingSail.url));
+            logger.info(String.format("Closing connection to the remoting sail %s wrapping config %s",remotingSail,remotingSail.config));
         }
     }
 
@@ -138,7 +138,7 @@ public class RemotingSailConnection extends AbstractSailConnection {
 	protected CloseableIteration<? extends BindingSet, QueryEvaluationException> evaluateInternal(
 			TupleExpr tupleExpr, Dataset dataset, BindingSet bindings, boolean includeInferred) throws SailException {
                 if(logger.isInfoEnabled()) {
-                    logger.info(String.format("Evaluating tuples %s on dataset %s and bindings %s (including inferred %b) connection to the remoting sail %s wrapping url %s",tupleExpr,dataset,bindings,includeInferred,remotingSail,remotingSail.url));
+                    logger.info(String.format("Evaluating tuples %s on dataset %s and bindings %s (including inferred %b) connection to the remoting sail %s wrapping config %s",tupleExpr,dataset,bindings,includeInferred,remotingSail,remotingSail.config));
                 }
                 RemotingQueryModelVisitor visitor=new RemotingQueryModelVisitor(this);
                 tupleExpr.visit(visitor);
@@ -168,7 +168,7 @@ public class RemotingSailConnection extends AbstractSailConnection {
 	protected CloseableIteration<? extends Resource, SailException> getContextIDsInternal()
 			throws SailException {
                 if(logger.isInfoEnabled()) {
-                    logger.info(String.format("Iterating resources for connection on remoting sail %s wrapping url %s",remotingSail,remotingSail.url));
+                    logger.info(String.format("Iterating resources for connection on remoting sail %s wrapping config %s",remotingSail,remotingSail.config));
                 }
                 return new AbstractCloseableIteration<Resource,SailException>() {
                     
@@ -191,7 +191,7 @@ public class RemotingSailConnection extends AbstractSailConnection {
 	protected CloseableIteration<? extends Statement, SailException> getStatementsInternal(Resource subj,
 			IRI pred, Value obj, boolean includeInferred, Resource... contexts) throws SailException {
                 if(logger.isInfoEnabled()) {
-                    logger.info(String.format("Returning all statements on subject %s for predicate %s and object %s (including inferred %b) in contexts %s for connection to the remoting sail %s wrapping url %s",subj,pred,obj,includeInferred,contexts,remotingSail,remotingSail.url));
+                    logger.info(String.format("Returning all statements on subject %s for predicate %s and object %s (including inferred %b) in contexts %s for connection to the remoting sail %s wrapping config %s",subj,pred,obj,includeInferred,contexts,remotingSail,remotingSail.config));
                 }
                 return new AbstractCloseableIteration<Statement,SailException>() {
                     
@@ -214,7 +214,7 @@ public class RemotingSailConnection extends AbstractSailConnection {
     @Override
 	protected long sizeInternal(Resource... contexts) throws SailException {
         if(logger.isInfoEnabled()) {
-            logger.info(String.format("Returning siteo for contexts %s for connection to the remoting sail %s wrapping url %s",contexts,remotingSail,remotingSail.url));
+            logger.info(String.format("Returning siteo for contexts %s for connection to the remoting sail %s wrapping config %s",contexts,remotingSail,remotingSail.config));
         }
         return -1;
     }
@@ -225,7 +225,7 @@ public class RemotingSailConnection extends AbstractSailConnection {
     @Override
 	protected void startTransactionInternal() throws SailException {
         if(logger.isInfoEnabled()) {
-            logger.info(String.format("Start transaction on connection to the remoting sail %s wrapping url %s",remotingSail,remotingSail.url));
+            logger.info(String.format("Start transaction on connection to the remoting sail %s wrapping config %s",remotingSail,remotingSail.config));
         }
     }
 
@@ -235,7 +235,7 @@ public class RemotingSailConnection extends AbstractSailConnection {
     @Override
 	protected void commitInternal() throws SailException {
         if(logger.isInfoEnabled()) {
-            logger.info(String.format("Commit transaction on connection to the remoting sail %s wrapping url %s",remotingSail,remotingSail.url));
+            logger.info(String.format("Commit transaction on connection to the remoting sail %s wrapping config %s",remotingSail,remotingSail.config));
         }
     }
 
@@ -245,7 +245,7 @@ public class RemotingSailConnection extends AbstractSailConnection {
     @Override
 	protected void rollbackInternal() throws SailException {
         if(logger.isInfoEnabled()) {
-            logger.info(String.format("Rollback transaction on connection to the remoting sail %s wrapping url %s",remotingSail,remotingSail.url));
+            logger.info(String.format("Rollback transaction on connection to the remoting sail %s wrapping config %s",remotingSail,remotingSail.config));
         }
     }
 
@@ -256,7 +256,7 @@ public class RemotingSailConnection extends AbstractSailConnection {
 	protected void addStatementInternal(Resource subj, IRI pred, Value obj, Resource... contexts)
 			throws SailException {
                 if(logger.isInfoEnabled()) {
-                    logger.info(String.format("Adding statements on subject %s for predicate %s and object %s in contexts %s for connection to the remoting sail %s wrapping url %s",subj,pred,obj,contexts,remotingSail,remotingSail.url));
+                    logger.info(String.format("Adding statements on subject %s for predicate %s and object %s in contexts %s for connection to the remoting sail %s wrapping config %s",subj,pred,obj,contexts,remotingSail,remotingSail.config));
                 }
     }
 
@@ -264,14 +264,14 @@ public class RemotingSailConnection extends AbstractSailConnection {
 	protected void removeStatementsInternal(Resource subj, IRI pred, Value obj, Resource... contexts)
 			throws SailException {
                 if(logger.isInfoEnabled()) {
-                    logger.info(String.format("Remove statements on subject %s for predicate %s and object %s in contexts %s for connection to the remoting sail %s wrapping url %s",subj,pred,obj,contexts,remotingSail,remotingSail.url));
+                    logger.info(String.format("Remove statements on subject %s for predicate %s and object %s in contexts %s for connection to the remoting sail %s wrapping config %s",subj,pred,obj,contexts,remotingSail,remotingSail.config));
                 }
     }
 	
     @Override
     protected void clearInternal(Resource... contexts) throws SailException {
         if(logger.isInfoEnabled()) {
-            logger.info(String.format("Clearcontexts %s for connection to the remoting sail %s wrapping url %s",contexts,remotingSail,remotingSail.url));
+            logger.info(String.format("Clearcontexts %s for connection to the remoting sail %s wrapping config %s",contexts,remotingSail,remotingSail.config));
         }
     }
 

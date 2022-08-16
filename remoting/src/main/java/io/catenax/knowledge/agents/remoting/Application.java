@@ -38,7 +38,21 @@ public class Application {
             Model model = QueryResults.asModel(statements);
             Rio.write(model, System.out, RDFFormat.TURTLE);
         }
-        rep = new SailRepository(new RemotingSail(""));
+        RemotingSailConfig rsc=new RemotingSailConfig(RemotingSailFactory.SAIL_TYPE);
+        InvocationConfig ic=new InvocationConfig();
+        rsc.invocations.put("https://github.com/catenax-ng/product-knowledge/ontology/prognosis.ttl#Invocation",ic);
+        ic.targetUri="class:io.catenax.knowledge.agents.remoting.TestFunction#test";
+        ic.output="https://github.com/catenax-ng/product-knowledge/ontology/prognosis.ttl#output";
+        ArgumentConfig ac=new ArgumentConfig();
+        ac.argumentName = "arg0";
+        ic.arguments.put("https://github.com/catenax-ng/product-knowledge/ontology/prognosis.ttl#input-1",ac);
+        ac=new ArgumentConfig();
+        ac.argumentName = "arg1";
+        ic.arguments.put("https://github.com/catenax-ng/product-knowledge/ontology/prognosis.ttl#input-2",ac);
+        
+        rsc.validate();
+
+        rep = new SailRepository(new RemotingSail(rsc));
         try (RepositoryConnection conn = rep.getConnection()) {
             //conn.add(john, RDF.TYPE, FOAF.PERSON);
             //conn.add(john, RDFS.LABEL, Values.literal("John"));

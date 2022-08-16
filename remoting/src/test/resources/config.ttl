@@ -1,0 +1,36 @@
+#
+# Rdf4j configuration for a function repository
+#
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>.
+@prefix rep: <http://www.openrdf.org/config/repository#>.
+@prefix sr: <http://www.openrdf.org/config/repository/sail#>.
+@prefix sail: <http://www.openrdf.org/config/sail#>.
+@prefix sp: <http://spinrdf.org/sp#>.
+@prefix cxfx: <https://github.com/catenax-ng/product-knowledge/ontology/fx.ttl#>.
+@prefix cxprognosis: <https://github.com/catenax-ng/product-knowledge/ontology/prognosis.ttl#>.
+
+[] rdf:type rep:Repository ;
+   rep:repositoryID "prognosis" ;
+   rdfs:label "Prognosis Function" ;
+   rep:repositoryImpl [
+      rep:repositoryType "openrdf:SailRepository" ;
+      sr:sailImpl [
+         sail:sailType "io.catenax.knowledge:Remoting" ;
+         cxfx:supportsInvocation cxprognosis:Prognosis;
+      ]
+   ].
+
+cxprognosis:Prognosis rdf:type cxfx:Function;
+  cxfx:targetUri "class:io.catenax.knowledge.agents.remoting.TestFunction#test";
+  cxfx:input cxprognosis:input-1;
+  cxfx:input cxprognosis:input-2;
+  cxfx:output cxprognosis:output.
+
+cxprognosis:input-1 rdf:type cxfx:Argument;
+   cxfx:argumentName "arg0".
+
+cxprognosis:input-2 rdf:type cxfx:Argument;
+   cxfx:argumentName "arg1".
+
+cxprognosis:output rdf:type cxfx:ReturnValue.

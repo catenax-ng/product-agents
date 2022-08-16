@@ -31,6 +31,7 @@ RUN	mkdir -p /var/rdf4j && \
     chown -R tomcat /var/rdf4j /usr/local/tomcat && \
 	chmod a+x /usr/local/tomcat /usr/local/tomcat/bin /usr/local/tomcat/bin/catalina.sh
 
+COPY resources/web/logging.properties /usr/local/tomcat/conf/logging.properties
 COPY resources/web/server.xml /usr/local/tomcat/conf/server.xml
 COPY resources/web/web.xml /usr/local/tomcat/conf/web.xml
 

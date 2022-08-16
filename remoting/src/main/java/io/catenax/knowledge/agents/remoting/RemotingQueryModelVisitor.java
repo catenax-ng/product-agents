@@ -289,11 +289,7 @@ public class RemotingQueryModelVisitor implements QueryModelVisitor<SailExceptio
 		logger.debug(String.format("Visiting a projection"));
 		node.getArg().visit(this);
         for(Invocation invocation : invocations.values()) {
-            int result=0;
-            for(Value arg : invocation.inputs.values()) {
-                result+=Integer.parseInt(arg.stringValue());
-            }
-            invocation.result=connection.remotingSail.getValueFactory().createLiteral(result);
+            invocation.execute(connection);
             for(Var output : invocation.outputs.keySet()) {
                 bindings.addBinding(output.getName(),invocation.result);
             }
@@ -368,14 +364,18 @@ public class RemotingQueryModelVisitor implements QueryModelVisitor<SailExceptio
                     throw new SailException(String.format("No support for non-IRI invocation subject binding %s",subject));
                 }
             }
+            InvocationConfig ic=connection.remotingSail.config.invocations.get(objectIRI.stringValue());
+            if(ic==null) {
+                throw new SailException(String.format("Function %s was not configured",objectIRI));
+            }
             Invocation invocation = invocations.get(subject.getValue());
             if(invocation!=null) {
-                if(!invocation.service.equals(objectIRI)) {
+                if(!invocation.service.equals(ic)) {
                     throw new SailException(String.format("Could not rebind invocation %s with type %s to type %s",subject.getValue(),invocation.service,object.getValue()));
                 }
             } else {
                 invocation=new Invocation();
-                invocation.service=objectIRI;
+                invocation.service=ic;
                 logger.debug(String.format("Registering a new invocation %s for service type %s",subject.getValue(),invocation.service));
                 invocations.put(subject.getValue(),invocation);
             }
@@ -394,12 +394,18 @@ public class RemotingQueryModelVisitor implements QueryModelVisitor<SailExceptio
             IRI argument=(IRI) predicate.getValue();
             // input or output binding
             if(!object.hasValue()) {
-                if(invocation.outputs.containsKey(argument)) {
+                if(!invocation.service.output.equals(argument.stringValue())) {
+                    throw new SailException(String.format("Predicate %s is no output predicate for invocation %s",argument,subject));
+                }
+                if(invocation.outputs.containsKey(object)) {
                     throw new SailException(String.format("Could not bind output predicate %s twice to invocation %s",argument,subject));
                 }
                 logger.debug(String.format("Binding output %s of invocation %s to var %s",argument,subject,object));
                 invocation.outputs.put(object,argument);
             } else {
+                if(!invocation.service.arguments.containsKey(argument.stringValue())) {
+                    throw new SailException(String.format("Predicate %s is no input predicate for invocation %s",argument,subject));
+                }
                 if(invocation.inputs.containsKey(argument)) {
                     throw new SailException(String.format("Could not bind input predicate %s twice to invocation %s",argument,subject));
                 }

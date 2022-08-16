@@ -23,19 +23,16 @@ public class RemotingSail extends AbstractSail {
     protected Logger logger = LoggerFactory.getLogger(getClass());
 
     /** the remoting target */
-    protected String url;
-    /** a factory for values */
-    protected ValueFactory valueFactory;
+    protected RemotingSailConfig config;
 
     /**
      * creates the remoting sail
      * @param url to the target service
      */
-    public RemotingSail(String url) {
-       this.url=url;
-       this.valueFactory=SimpleValueFactory.getInstance();
-       if(logger.isDebugEnabled()) {
-        logger.debug(String.format("Starting remoting inference on url %s with value factory %s",this.url,this.valueFactory));
+    public RemotingSail(RemotingSailConfig config) {
+        this.config=config;
+        if(logger.isDebugEnabled()) {
+        logger.debug(String.format("Starting remoting inference on config %s",this.config));
        }
     }
 
@@ -46,7 +43,7 @@ public class RemotingSail extends AbstractSail {
     @Override
     protected RemotingSailConnection getConnectionInternal() throws SailException {
         if(logger.isTraceEnabled()) {
-            logger.trace(String.format("returning a new remoting connection to %s",url));
+            logger.trace(String.format("returning a new remoting connection to config %s",this.config));
         }
         return new RemotingSailConnection(this);
     }
@@ -57,7 +54,7 @@ public class RemotingSail extends AbstractSail {
     @Override
     protected void shutDownInternal() {
         if(logger.isTraceEnabled()) {
-            logger.trace(String.format("shutting down remoting to %s",url));
+            logger.trace(String.format("shutting down remoting to %s",this.config));
         }
     }
 
@@ -66,7 +63,7 @@ public class RemotingSail extends AbstractSail {
      */
     @Override
     public ValueFactory getValueFactory() {
-        return valueFactory;
+        return config.vf;
     }
 
     /**

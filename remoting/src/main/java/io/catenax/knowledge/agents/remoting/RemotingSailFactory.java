@@ -71,11 +71,7 @@ public class RemotingSailFactory implements SailFactory {
                             + originalConfig.getClass().getCanonicalName() + ". ");
         }
         RemotingSailConfig config = (RemotingSailConfig)originalConfig;
-        String remotingUrl = config.getUrl();
-        if(logger.isDebugEnabled()) {
-            logger.debug(String.format("About to creating a Remoting SAIL to url %s",remotingUrl));
-        }       
-        RemotingSail sail = new RemotingSail(remotingUrl);
+        RemotingSail sail = new RemotingSail(config);
         return sail;
        
     }
