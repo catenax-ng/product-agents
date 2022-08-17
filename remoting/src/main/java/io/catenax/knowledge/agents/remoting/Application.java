@@ -42,13 +42,14 @@ public class Application {
         InvocationConfig ic=new InvocationConfig();
         rsc.invocations.put("https://github.com/catenax-ng/product-knowledge/ontology/prognosis.ttl#Invocation",ic);
         ic.targetUri="class:io.catenax.knowledge.agents.remoting.TestFunction#test";
-        ic.output="https://github.com/catenax-ng/product-knowledge/ontology/prognosis.ttl#output";
         ArgumentConfig ac=new ArgumentConfig();
         ac.argumentName = "arg0";
         ic.arguments.put("https://github.com/catenax-ng/product-knowledge/ontology/prognosis.ttl#input-1",ac);
         ac=new ArgumentConfig();
         ac.argumentName = "arg1";
         ic.arguments.put("https://github.com/catenax-ng/product-knowledge/ontology/prognosis.ttl#input-2",ac);
+        ReturnValueConfig rc=new ReturnValueConfig();
+        ic.outputs.put("https://github.com/catenax-ng/product-knowledge/ontology/prognosis.ttl#output",rc);
         
         rsc.validate();
 

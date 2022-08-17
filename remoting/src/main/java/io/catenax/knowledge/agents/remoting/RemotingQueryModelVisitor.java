@@ -290,8 +290,8 @@ public class RemotingQueryModelVisitor implements QueryModelVisitor<SailExceptio
 		node.getArg().visit(this);
         for(Invocation invocation : invocations.values()) {
             invocation.execute(connection);
-            for(Var output : invocation.outputs.keySet()) {
-                bindings.addBinding(output.getName(),invocation.result);
+            for(Map.Entry<Var,IRI> output : invocation.outputs.entrySet()) {
+                bindings.addBinding(output.getKey().getName(),invocation.convertOutputToValue(connection.remotingSail.config.vf,output.getValue()));
             }
         }
 		node.getProjectionElemList().visit(this);
@@ -394,7 +394,7 @@ public class RemotingQueryModelVisitor implements QueryModelVisitor<SailExceptio
             IRI argument=(IRI) predicate.getValue();
             // input or output binding
             if(!object.hasValue()) {
-                if(!invocation.service.output.equals(argument.stringValue())) {
+                if(!invocation.service.outputs.containsKey(argument.stringValue())) {
                     throw new SailException(String.format("Predicate %s is no output predicate for invocation %s",argument,subject));
                 }
                 if(invocation.outputs.containsKey(object)) {

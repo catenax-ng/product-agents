@@ -60,6 +60,16 @@ public class RemotingSailConfig extends AbstractSailImplConfig {
     /**
      * constant
      */
+    public static String PATH_ATTRIBUTE="valuePath";
+
+    /**
+     * constant
+     */
+    public static String TYPE_RELATION="dataType";
+
+    /**
+     * constant
+     */
     public static String OUTPUT_ATTRIBUTE="output";
 
     /**
@@ -83,6 +93,8 @@ public class RemotingSailConfig extends AbstractSailImplConfig {
     protected IRI INPUT_PREDICATE=vf.createIRI(CONFIG_NAMESPACE, INPUT_ATTRIBUTE);
     protected IRI OUTPUT_PREDICATE=vf.createIRI(CONFIG_NAMESPACE, OUTPUT_ATTRIBUTE);
     protected IRI ARGUMENT_NAME_PREDICATE=vf.createIRI(CONFIG_NAMESPACE, ARGUMENT_ATTRIBUTE);
+    protected IRI RETURN_PATH_PREDICATE=vf.createIRI(CONFIG_NAMESPACE, PATH_ATTRIBUTE);
+    protected IRI DATA_TYPE_PREDICATE=vf.createIRI(CONFIG_NAMESPACE, TYPE_RELATION);
     protected IRI A_PREDICATE=vf.createIRI("http://www.w3.org/1999/02/22-rdf-syntax-ns#","type");
     protected IRI FUNCTION_CLASS=vf.createIRI(CONFIG_NAMESPACE,FUNCTION_NAME);
     protected IRI ARGUMENT_CLASS=vf.createIRI(CONFIG_NAMESPACE,ARGUMENT_NAME);
@@ -136,18 +148,23 @@ public class RemotingSailConfig extends AbstractSailImplConfig {
         } 
         Resource repoNode = super.export(model);
         for(Map.Entry<String,InvocationConfig> func : invocations.entrySet()) {
-            BNode functionNode = vf.createBNode(func.getKey());
-		    model.add(repoNode,SUPPORTS_INVOCATION_PREDICATE,vf.createIRI(functionNode.getID()));
+            IRI functionNode = vf.createIRI(func.getKey());
+		    model.add(repoNode,SUPPORTS_INVOCATION_PREDICATE,functionNode);
             model.add(functionNode,A_PREDICATE,FUNCTION_CLASS);
             model.add(functionNode,TARGET_URI_PREDICATE,vf.createLiteral(func.getValue().targetUri));
             for(Map.Entry<String,ArgumentConfig> arg: func.getValue().arguments.entrySet()) {
-                BNode argumentNode = vf.createBNode(arg.getKey());
-                model.add(functionNode,INPUT_PREDICATE,vf.createIRI(argumentNode.getID()));
+                IRI argumentNode = vf.createIRI(arg.getKey());
+                model.add(functionNode,INPUT_PREDICATE,argumentNode);
                 model.add(argumentNode,A_PREDICATE,ARGUMENT_CLASS);
                 model.add(argumentNode,ARGUMENT_NAME_PREDICATE,vf.createLiteral(arg.getValue().argumentName));
             }
-            model.add(functionNode,OUTPUT_PREDICATE,vf.createIRI(func.getValue().output));
-            model.add(vf.createBNode(func.getValue().output),A_PREDICATE,RETURN_CLASS);
+            for(Map.Entry<String,ReturnValueConfig> arg: func.getValue().outputs.entrySet()) {
+                IRI argumentNode = vf.createIRI(arg.getKey());
+                model.add(functionNode,OUTPUT_PREDICATE,argumentNode);
+                model.add(argumentNode,A_PREDICATE,ARGUMENT_CLASS);
+                model.add(argumentNode,RETURN_PATH_PREDICATE,vf.createLiteral(arg.getValue().path));
+                model.add(argumentNode,DATA_TYPE_PREDICATE,vf.createIRI(arg.getValue().dataType));
+            }
         }
         return repoNode;
     }
@@ -188,8 +205,23 @@ public class RemotingSailConfig extends AbstractSailImplConfig {
                         ifPresent(argumentName -> ac.argumentName=argumentName.stringValue());
                     }
                 );
-            Models.objectIRI(model.filter(functionNode,OUTPUT_PREDICATE,null)).
-                ifPresent(output -> ic.output=output.stringValue());
+            model.getStatements(functionNode,OUTPUT_PREDICATE,null).forEach(
+                    outputStatement -> {
+                        if(logger.isDebugEnabled()) {
+                            logger.debug(String.format("About to process output from statement %s.",outputStatement));
+                        } 
+                        if(!outputStatement.getObject().isIRI()) {
+                            throw new SailConfigException(String.format("Object of the %s predicate must be IRI but was %s",INPUT_PREDICATE,outputStatement.getObject()));    
+                        }
+                        IRI outputNode=(IRI) outputStatement.getObject();
+                        ReturnValueConfig rc=new ReturnValueConfig();
+                        ic.outputs.put(outputNode.stringValue(),rc);
+                        Models.objectLiteral(model.filter(outputNode,RETURN_PATH_PREDICATE,null)).
+                        ifPresent(path -> rc.path=path.stringValue());
+                        Models.objectIRI(model.filter(outputNode,DATA_TYPE_PREDICATE,null)).
+                        ifPresent(dataType -> rc.dataType=dataType.stringValue());
+                    }
+            );
         });
     }
 

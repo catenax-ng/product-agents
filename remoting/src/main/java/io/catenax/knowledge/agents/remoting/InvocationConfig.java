@@ -19,7 +19,7 @@ import java.util.HashMap;
  */
 public class InvocationConfig {
     /** regexp to check invocation */
-    public static Pattern classPattern=Pattern.compile("class:(?<class>[a-zA-Z0-9\\.]+)#(?<method>[a-zA-Z0-9]+)");
+    public static Pattern classPattern=Pattern.compile("(?<classType>class):(?<class>[a-zA-Z0-9\\.]+)#(?<method>[a-zA-Z0-9]+)|(?<restType>https?)://(?<url>[a-zA-Z0-9\\.:/%#]+)");
 
     /** url of the target service */
     protected String targetUri = null;
@@ -30,7 +30,10 @@ public class InvocationConfig {
      */
     protected Map<String,ArgumentConfig> arguments= new java.util.HashMap<String,ArgumentConfig>();
     
-    protected String output=null;
+    /**
+     * map of outputs
+     */
+    protected Map<String,ReturnValueConfig> outputs=new java.util.HashMap<String,ReturnValueConfig>();
 
     public void validate() throws SailConfigException {
         if (targetUri==null || targetUri.length()==0) {
@@ -40,10 +43,10 @@ public class InvocationConfig {
         if(!matcher.matches()) {
             throw new SailConfigException(String.format("REST service URL %s has no supported format.",targetUri));
         }
-        if (output==null || output.length()==0) {
-            throw new SailConfigException("REST service has no output binding.");
-        } 
         for(Map.Entry<String,ArgumentConfig> arg: arguments.entrySet()) {
+            arg.getValue().validate();
+        }
+        for(Map.Entry<String,ReturnValueConfig> arg: outputs.entrySet()) {
             arg.getValue().validate();
         }
     }
