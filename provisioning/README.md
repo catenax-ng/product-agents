@@ -1,14 +1,194 @@
 # Catena-X Knowledge Agents (Hey Catena!) Provisioning Agent
 
-This is a folder providing the FOSS implementations of a Hey Catena! agent for provider-side deployment which will bind typical backend data sources to the dataspace.
+This is a folder providing the FOSS implementation of a Hey Catena! Agent (=SparQL Endpoint) for provider-side deployment.
 
-## Containerizing
+This Provisioning Agent will bind typical (relational) backend data sources such as SQL-based data bases and data lakes in a secure manner 
+to the dataspace.
+
+## Architecture
+
+The Provisioning Agent uses the [OnTop Virtual Knowledge Graph](https://ontop-vkg.org/) system.
+
+According to their homepage: "... exposes the content of arbitrary relational databases as knowledge graphs. These graphs are virtual, which means that data remains in the data sources instead of being moved to another database."
+
+Ontop operates on three W3C standards and one ANSI standard. It translates
+
+* incoming queries in [SparQL 1.1](https://www.w3.org/TR/sparql11-query/)
+* using a mapping in [R2RML](https://www.w3.org/TR/r2rml/) (or the slightly simpler Ontop Mapping Language - OBDA)
+* over an ontology in [OWL 2 QL](https://www.w3.org/TR/owl2-profiles/#OWL_2_QL)
+* into [SQL](https://datacadamia.com/data/type/relation/sql/ansi) queries.
+
+The [Ontop CLI](https://ontop-vkg.org/tutorial/endpoint/endpoint-cli.html) is a Java/Spring application which must
+be extended with an appropriate JDBC driver.
+
+The Ontop CLI can host only one endpoint per port, if you want to expose different ontologies, mappings or database sources,
+you must configure another endpoint=port. See <a href="#Containerizing">Containerizing</a> for an example.
+
+### Security
+
+Besides the authentication of the Ontop engine at the relational database via jdbc (one url/user per endpoint), there is no 
+additional (row-level) security mechanism.
+
+Hence we recommend to apply a role-based approach.
+
+For any accessing role:
+- define a separate database schema with appropriately filtered views
+- define a separate endpoint/port/mapping.
+
+See <a href="#Containerizing">Containerizing</a> for an example.
+
+## Deployment & Usage
+
+### Containerizing
+
+To build the docker image, please invoke this command
 
 ```console
-docker build -t ghcr.io/catenax-ng/product-knowledge/dataspace/provisioning-agent:0.5.1 .
+docker build -t ghcr.io/catenax-ng/product-knowledge/dataspace/provisioning-agent:0.5.2 .
 ```
 
-## Interact with the Provisioning Agent
+The image contains
+* the Ontop CLI distribution
+* an H2 in-memory database
+* a large SQL file for sample database initialisation (until we find a more easy way of deployment)
+
+To run the docker image, you could invoke this command
+
+```console
+docker run -p 8080:8080 \
+  -v $(pwd)/resources/university.ttl:/input/ontology.ttl \
+  -v $(pwd)/resources/university-role1.obda:/input/mapping.obda \
+  -v $(pwd)/resources/university-role1.properties:/input/settings.properties \
+  -v $(pwd)/resources/university.sql:/tmp/university.sql \
+  ghcr.io/catenax-ng/product-knowledge/dataspace/provisioning-agent:0.5.2
+````
+
+Afterwards, you should be able to access the [local SparQL endpoint](http://localhost:8080/) via
+the browser or by directly invoking a query
+
+```console
+curl --location --request POST 'http://localhost:8080/sparql' \
+--header 'Content-Type: application/sparql-query' \
+--header 'Accept: application/json' \
+--data-raw 'PREFIX : <http://example.org/voc#>
+
+SELECT ?x
+WHERE {
+   ?x a :Professor .
+}'
+```
+
+You may manipulate any of the following environment variables to configure the image behaviour.
+Note that there is no builtin security (ssl/auth) for the exposed endpoints.
+This must be provided by hiding them in an appropriate service network layer.
+
+| ENVIRONMENT VARIABLE        | Required  | Example                                                                | Description                          | List |
+|---	                        |---	      |---	                                                                   |---                                   | ---  |
+| JAVA_TOOL_OPTIONS           |           | -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:8090   | JMV (Debugging option)               | X    | 
+| ONTOP_PORT                  |           | 8080 (default)                                                         | A port number                        | X    |
+| ONTOP_ONTOLOGY_FILE         |           | /input/ontology.ttl (default)                                          | Path to ontology file (ttl or xml)   | X    |
+| ONTOP_MAPPING_FILE          |           | /input/mapping.obda (default)                                          | Path to mapping file (obda)          | X    |
+| ONTOP_PROPERTIES_FILE       |           | /input/settings.properties (default)                                   | Path to settings file (properties)   | X    |
+| ONTOP_PORTAL_FILE           |           | /input/portal.toml                                                     | Path to portal config (toml)         | X    |
+| ONTOP_CORS_ALLOWED_ORIGINS  |           | * (default)                                                            | CORS domain name                     |      |
+| ONTOP_DEV_MODE              |           | true (default)                                                         | Redeploy endpoint on file changes    | X    |
+
+Here is an example which exposes two endpoints for two different roles (database users, restricted mappings but same ontology)
+
+```console
+docker run -p 8080:8080 -p 8082:8082 \
+  -v $(pwd)/resources/university.ttl:/input/ontology.ttl \
+  -v $(pwd)/resources/university-role1.obda:/input/role1.obda \
+  -v $(pwd)/resources/university-role1.properties:/input/role1.properties \
+  -v $(pwd)/resources/university-role2.obda:/input/role2.obda \
+  -v $(pwd)/resources/university-role2.properties:/input/role2.properties \
+  -v $(pwd)/resources/university.sql:/tmp/university.sql \
+  -e ONTOP_PORT="8080 8082" \
+  -e ONTOP_ONTOLOGY_FILE="/input/ontology.ttl /input/ontology.ttl" \
+  -e ONTOP_MAPPING_FILE="/input/role1.obda /input/role2.obda" \
+  -e ONTOP_PROPERTIES_FILE="/input/role1.properties /input/role2.properties" \
+  -e ONTOP_DEV_MODE="false false" \
+  ghcr.io/catenax-ng/product-knowledge/dataspace/provisioning-agent:0.5.2
+````
+
+Accessing entities spanning two schemas using the first role/endpoint delivers a greater count
+
+```console
+curl --location --request POST 'http://localhost:8080/sparql' \
+--header 'Content-Type: application/sparql-query' \
+--header 'Accept: application/json' \
+--data-raw 'PREFIX : <http://example.org/voc#>
+
+SELECT (COUNT(DISTINCT ?x) as ?count)
+WHERE {
+   ?x a :Course .
+}'
+```
+
+```json
+{
+  "head" : {
+    "vars" : [
+      "count"
+    ]
+  },
+  "results" : {
+    "bindings" : [
+      {
+        "count" : {
+          "datatype" : "http://www.w3.org/2001/XMLSchema#integer",
+          "type" : "literal",
+          "value" : "12"
+        }
+      }
+    ]
+  }
+}
+```
+
+Accessing entities using the restricted role/endpoint delivers a smaller count
+
+```console
+curl --location --request POST 'http://localhost:8082/sparql' \
+--header 'Content-Type: application/sparql-query' \
+--header 'Accept: application/json' \
+--data-raw 'PREFIX : <http://example.org/voc#>
+
+SELECT (COUNT(DISTINCT ?x) as ?count)
+WHERE {
+   ?x a :Course .
+}'
+```
+
+```json
+{
+  "head" : {
+    "vars" : [
+      "count"
+    ]
+  },
+  "results" : {
+    "bindings" : [
+      {
+        "count" : {
+          "datatype" : "http://www.w3.org/2001/XMLSchema#integer",
+          "type" : "literal",
+          "value" : "6"
+        }
+      }
+    ]
+  }
+}
+```
+
+### Deployment
+
+An example how to deploy the image can be found 
+* in the [Docker Compose](../../../infrastructure/docker-compose.yml) recipe as well as 
+* in the [Helm Chart](../../../infrastructure/templates/oem-provider.yaml) template.
+
+
+### Interact with the Provisioning Agent
 
 Once started (either locally on port 8080 or in a forwarded port from github codespaces via [docker compose](../../../infrastructure/README.md) you will be able 
 to access a SPARQL Console:

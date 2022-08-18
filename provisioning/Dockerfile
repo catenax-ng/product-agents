@@ -8,7 +8,7 @@
 FROM ontop/ontop-endpoint:4.2.1
 
 #start script needs special root treatmnt
-COPY resources/start.sh /opt/ontop/.
+COPY resources/entrypoint.sh /opt/ontop/.
 
 # Security issue A1SLDT-828
 RUN groupadd ontop && \
@@ -20,7 +20,7 @@ RUN groupadd ontop && \
     chown -R ontop:ontop /input && \
     mkdir /database && \
     chown -R ontop:ontop /database && \
-    chmod 755 /opt/ontop/start.sh
+    chmod 755 /opt/ontop/entrypoint.sh
 
 WORKDIR /opt/ontop
 USER ontop
@@ -38,18 +38,20 @@ ARG JAVA_TOOL_OPTIONS ""
 # ontop uses this as the default port
 EXPOSE 8080
 
-# These are the environment variables pointing to the mapping input      
+# These are the environment variables pointing to the various settings
+# To disable a setting simply leave it empty
+# To enable different settings for multiple endpoints simply separate the options with a space
+ENV ONTOP_PORT=8080
 ENV ONTOP_ONTOLOGY_FILE=/input/ontology.ttl
 ENV ONTOP_MAPPING_FILE=/input/mapping.obda
 ENV ONTOP_PROPERTIES_FILE=/input/settings.properties
-ENV ONTOP_PORTAL_FILE=/input/portal.toml
+ENV ONTOP_PORTAL_FILE=""
 ENV ONTOP_CORS_ALLOWED_ORIGINS="*"
 ENV ONTOP_DEV_MODE=true
-ENV ONTOP_PORT=8080
 
 # Run Ontop Agent with CORS disabled (we expect an ingress layer anyway)
 # TODO check security settings
 # TODO Telemetry, instrumentation and debugging
-ENTRYPOINT ["./start.sh"]
+ENTRYPOINT ["./entrypoint.sh"]
 
         
