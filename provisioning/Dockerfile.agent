@@ -13,6 +13,7 @@ COPY resources/entrypoint.sh /opt/ontop/.
 # Security issue A1SLDT-828
 RUN groupadd ontop && \
     useradd -g ontop -ms /bin/sh ontop && \
+    mkdir /opt/ontop/jdbc && \
     chown -R ontop:ontop /opt/ontop && \
     mkdir /data && \
     chown -R ontop:ontop /data && \
@@ -20,15 +21,20 @@ RUN groupadd ontop && \
     chown -R ontop:ontop /input && \
     mkdir /database && \
     chown -R ontop:ontop /database && \
-    chmod 755 /opt/ontop/entrypoint.sh
+    chmod 755 /opt/ontop/entrypoint.sh 
+
+# run with docker --build-arg dremioDownload=download_url to establish a different driver
+ARG dremioDownload=https://download.dremio.com/jdbc-driver/dremio-jdbc-driver-LATEST.jar
+RUN wget -q "${dremioDownload}" -O /opt/ontop/jdbc/dremio-jdbc-driver-LATEST.jar
 
 WORKDIR /opt/ontop
 USER ontop
 
-# run with docker --build-arg=path_to_my_driver to establish a different driver
+# run with docker --build-arg jdbcDriver=path_to_my_driver to establish a different driver
 ARG jdbcDriver=repo/h2-2.1.214.jar 
 COPY ${jdbcDriver} jdbc/
 
+# run with docker --build-arg sqlFiles=initial_sql to establish a different sql file
 ARG sqlFiles=resources/dtc.sql
 COPY ${sqlFiles} /data/
 

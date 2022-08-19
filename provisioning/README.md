@@ -5,18 +5,22 @@ This is a folder providing the FOSS implementation of a Hey Catena! Agent (=Spar
 This Provisioning Agent will bind typical (relational) backend data sources such as SQL-based data bases and data lakes in a secure manner 
 to the dataspace.
 
+Highly-scaleable replacements for (not only) the role of the Provisioning Agent are:
+* [GraphDB](https://www.ontotext.com/products/graphdb/)
+* [Neptune](https://aws.amazon.com/de/neptune/)
+
 ## Architecture
 
-The Provisioning Agent uses the [OnTop Virtual Knowledge Graph](https://ontop-vkg.org/) system.
+The FOSS Provisioning Agent uses the [OnTop Virtual Knowledge Graph](https://ontop-vkg.org/) system.
 
 According to their homepage: "... exposes the content of arbitrary relational databases as knowledge graphs. These graphs are virtual, which means that data remains in the data sources instead of being moved to another database."
 
-Ontop operates on three W3C standards and one ANSI standard. It translates
+Ontop operates on four standards: three W3C standards and one ANSI standard. It translates
 
-* incoming queries in [SparQL 1.1](https://www.w3.org/TR/sparql11-query/)
-* using a mapping in [R2RML](https://www.w3.org/TR/r2rml/) (or the slightly simpler Ontop Mapping Language - OBDA)
-* over an ontology in [OWL 2 QL](https://www.w3.org/TR/owl2-profiles/#OWL_2_QL)
-* into [SQL](https://datacadamia.com/data/type/relation/sql/ansi) queries.
+* incoming *Queries* in [SparQL 1.1](https://www.w3.org/TR/sparql11-query/)
+* using a *Mapping* in [R2RML](https://www.w3.org/TR/r2rml/) (or the slightly simpler Ontop Mapping Language - OBDA)
+* from an *Ontology* in [OWL 2 QL](https://www.w3.org/TR/owl2-profiles/#OWL_2_QL)
+* into [*SQL*](https://datacadamia.com/data/type/relation/sql/ansi) queries.
 
 The [Ontop CLI](https://ontop-vkg.org/tutorial/endpoint/endpoint-cli.html) is a Java/Spring application which must
 be extended with an appropriate JDBC driver.
@@ -37,14 +41,22 @@ For any accessing role:
 
 See <a href="#Containerizing">Containerizing</a> for an example.
 
+### Data Sources and Scaleablility
+
+For the sample deployments, we use single agent container with an embedded database (H2) and/or a second database virtualization container (Dremio Community Edition) using preloaded files.
+
+Practical deployments will 
+* scale and balance the agent containers (for which the lifecycle hooks are already provided).
+* use an enterprise-level database (Postgres Service) or database virtualization infrastructure (Dremio Enterprise, Denodo, Teii) that is backed by an appropriate storage system (ADSL, S3, Netapp).
+
 ## Deployment & Usage
 
-### Containerizing
+### Containerizing (Provisioning Agent)
 
-To build the docker image, please invoke this command
+To build the docker image of the Agent, please invoke this command
 
 ```console
-docker build -t ghcr.io/catenax-ng/product-knowledge/dataspace/provisioning-agent:0.5.2 .
+docker build -t ghcr.io/catenax-ng/product-knowledge/dataspace/provisioning-agent:0.5.2 -f Dockerfile.agent .
 ```
 
 The image contains
@@ -180,6 +192,36 @@ WHERE {
   }
 }
 ```
+
+### Containerizing (Backend)
+
+To build the docker image of the Database Virtualization Layer, please invoke this command
+
+```console
+docker build -t ghcr.io/catenax-ng/product-knowledge/dataspace/dremio:22.0 -f Dockerfile.backend .
+```
+
+The image contains
+* the Dremio OSS distribution
+* some JSON files for sample provisioning
+
+To run the docker image, you could invoke this command
+
+```console
+docker run -p 9047:9047 -p 31010:31010 -p 45678:45678 \
+  ghcr.io/catenax-ng/product-knowledge/dataspace/dremio:22.0
+````
+
+When the image is run for the first time you need to setup an admin user:
+
+```console
+curl 'http://localhost:9047/apiv2/bootstrap/firstuser' -X PUT \
+      -H 'Authorization: _dremionull' -H 'Content-Type: application/json' \
+     --data-binary '{"userName":"foo","firstName":"foo","lastName":"bar","email":"foo@bar.com","createdAt":1526186430755,"password":"bananas4ever"}'
+````
+
+Now you could login to the [Dremio console](http://localhost:9047) and add a 
+new source to the local filesystem (via )
 
 ### Deployment
 
