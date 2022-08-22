@@ -1,6 +1,8 @@
 # Catena-X Knowledge Agents (Hey Catena!) Remoting Agent
 
-This is a folder providing the FOSS implementations of a Hey Catena! agent that binds simple remote (REST) services to the dataspace.
+The Remoting Agent will bind typical backend services in a secure manner to the dataspace.
+
+This is a folder providing the FOSS implementations of a Hey Catena! Remoting Agent that binds Java classes and simple remote (REST) services to the dataspace.
 
 ## Architecture
 
@@ -11,7 +13,6 @@ The [Remoting SAIL](src/main/java/io/catenax/knowledge/agents/remoting/RemotingS
 The Remoting SAIL is [configured](src/main/java/io/catenax/knowledge/agents/remoting/RemotingSailConfig.java) by declaring the functions and their binding (determined by a targetUri property). Currently, there are two bindings available
 * Class Binding (targetUri follows the pattern "class:<className/>#<methodName/>") 
 * REST Binding (targetUri follows the pattern "https?://<url>")
-
 
 
 ## Deployment
