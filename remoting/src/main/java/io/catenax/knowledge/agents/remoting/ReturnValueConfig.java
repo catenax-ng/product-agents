@@ -13,7 +13,7 @@ public class ReturnValueConfig {
       */
      protected String dataType="http://www.w3.org/2001/XMLSchema#string";
 
-     public void validate() throws SailConfigException {
+     public void validate(String context) throws SailConfigException {
         switch(dataType) {
             case "http://www.w3.org/2001/XMLSchema#double":
                 break;
@@ -24,7 +24,7 @@ public class ReturnValueConfig {
             case "http://www.w3.org/2001/XMLSchema#string":
                 break;
             default:
-                throw new SailConfigException(String.format("Data type %s is not supported.",dataType));
+                throw new SailConfigException(String.format("Data type %s is not supported in return value %s.",dataType,context));
          }
      }
 }

@@ -28,6 +28,7 @@ RUN	mkdir -p /var/rdf4j && \
 	unzip /usr/local/tomcat/webapps/rdf4j-workbench.war -d /usr/local/tomcat/webapps/rdf4j-workbench && \
     rm /usr/local/tomcat/webapps/rdf4j-server.war && \
     rm /usr/local/tomcat/webapps/rdf4j-workbench.war && \
+    wget -q "https://repo1.maven.org/maven2/org/apache/httpcomponents/httpmime/4.5.13/httpmime-4.5.13.jar" -O /usr/local/tomcat/webapps/rdf4j-server/WEB-INF/lib/httpmime-4.5.13.jar && \
     chown -R tomcat /var/rdf4j /usr/local/tomcat && \
 	chmod a+x /usr/local/tomcat /usr/local/tomcat/bin /usr/local/tomcat/bin/catalina.sh
 

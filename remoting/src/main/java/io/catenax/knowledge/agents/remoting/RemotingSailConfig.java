@@ -9,7 +9,6 @@ package io.catenax.knowledge.agents.remoting;
 import org.eclipse.rdf4j.sail.config.AbstractSailImplConfig;
 import org.eclipse.rdf4j.sail.config.SailConfigException;
 import org.eclipse.rdf4j.model.*;
-import org.eclipse.rdf4j.model.vocabulary.SP;
 import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 import org.eclipse.rdf4j.model.util.Models;
 
@@ -82,6 +81,11 @@ public class RemotingSailConfig extends AbstractSailImplConfig {
      */
     public static String URL_ATTRIBUTE="targetUri";
 
+    /**
+     * constant
+     */
+    public static String METHOD_ATTRIBUTE="invocationMethod";
+
     /** when interacting with parser/exporter */
     protected ValueFactory vf = SimpleValueFactory.getInstance();
 
@@ -90,6 +94,7 @@ public class RemotingSailConfig extends AbstractSailImplConfig {
      */
     protected IRI SUPPORTS_INVOCATION_PREDICATE=vf.createIRI(CONFIG_NAMESPACE,INVOCATION_PROPERTY);
     protected IRI TARGET_URI_PREDICATE=vf.createIRI(CONFIG_NAMESPACE, URL_ATTRIBUTE);
+    protected IRI INVOCATION_METHOD_PREDICATE=vf.createIRI(CONFIG_NAMESPACE, METHOD_ATTRIBUTE);
     protected IRI INPUT_PREDICATE=vf.createIRI(CONFIG_NAMESPACE, INPUT_ATTRIBUTE);
     protected IRI OUTPUT_PREDICATE=vf.createIRI(CONFIG_NAMESPACE, OUTPUT_ATTRIBUTE);
     protected IRI ARGUMENT_NAME_PREDICATE=vf.createIRI(CONFIG_NAMESPACE, ARGUMENT_ATTRIBUTE);
@@ -134,7 +139,7 @@ public class RemotingSailConfig extends AbstractSailImplConfig {
         } 
         super.validate();
         for(Map.Entry<String,InvocationConfig> configs:invocations.entrySet()) {
-            configs.getValue().validate();
+            configs.getValue().validate(configs.getKey());
         }
     }
 
@@ -152,6 +157,7 @@ public class RemotingSailConfig extends AbstractSailImplConfig {
 		    model.add(repoNode,SUPPORTS_INVOCATION_PREDICATE,functionNode);
             model.add(functionNode,A_PREDICATE,FUNCTION_CLASS);
             model.add(functionNode,TARGET_URI_PREDICATE,vf.createLiteral(func.getValue().targetUri));
+            model.add(functionNode,INVOCATION_METHOD_PREDICATE,vf.createLiteral(func.getValue().method));
             for(Map.Entry<String,ArgumentConfig> arg: func.getValue().arguments.entrySet()) {
                 IRI argumentNode = vf.createIRI(arg.getKey());
                 model.add(functionNode,INPUT_PREDICATE,argumentNode);
@@ -190,6 +196,8 @@ public class RemotingSailConfig extends AbstractSailImplConfig {
             invocations.put(functionNode.stringValue(),ic);
             Models.objectLiteral(model.filter(functionNode,TARGET_URI_PREDICATE,null)).
                 ifPresent(targetUri -> ic.targetUri=targetUri.stringValue());
+            Models.objectLiteral(model.filter(functionNode,INVOCATION_METHOD_PREDICATE,null)).
+                ifPresent(invocationMethod -> ic.method=invocationMethod.stringValue());
             model.getStatements(functionNode,INPUT_PREDICATE,null).forEach(
                     argumentStatement -> {
                         if(logger.isDebugEnabled()) {
