@@ -11,8 +11,8 @@ FROM ontop/ontop-endpoint:4.2.1
 COPY resources/entrypoint.sh /opt/ontop/.
 
 # Security issue A1SLDT-828
-RUN groupadd ontop && \
-    useradd -g ontop -ms /bin/sh ontop && \
+RUN groupadd -g 30000 ontop && \
+    useradd -u 10000 -g ontop -ms /bin/sh ontop && \
     mkdir /opt/ontop/jdbc && \
     chown -R ontop:ontop /opt/ontop && \
     mkdir /data && \
