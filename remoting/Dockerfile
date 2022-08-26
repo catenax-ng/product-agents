@@ -15,7 +15,13 @@ ARG JAVA_TOOL_OPTIONS ""
 # TODO Should have a healthcheck
 HEALTHCHECK NONE
 
-RUN apt update
+ARG HTTP_PROXY=""
+RUN if [[ -n "${HTTP_PROXY}"  ]]; then echo "Acquire::http::Proxy \"${HTTP_PROXY}\"" >> /etc/apt/apt.conf.d/proxy.conf; fi
+RUN if [[ -n "${HTTP_PROXY}" ]]; then echo "Acquire::https::Proxy \"${HTTP_PROXY}\"" >> /etc/apt/apt.conf.d/proxy.conf; fi
+RUN apt-get -y upgrade
+RUN apt-get -y update
+RUN if [[ -n "${HTTP_PROXY}"  ]]; then rm -f /etc/apt/apt.conf.d/proxy.conf; fi
+
 RUN apt install unzip
 RUN adduser --system tomcat
 
