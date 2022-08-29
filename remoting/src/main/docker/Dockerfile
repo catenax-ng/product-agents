@@ -15,25 +15,23 @@ ARG JAVA_TOOL_OPTIONS ""
 # TODO Should have a healthcheck
 HEALTHCHECK NONE
 
-RUN apt update
-RUN apt install unzip
-RUN adduser --system tomcat
-
-RUN	rm -rf /usr/local/tomcat/webapps/* 
+RUN apt update && \
+    apt install unzip && \
+    addgroup --system --gid 30000 tomcat && \
+    adduser --ingroup tomcat --uid 10000 tomcat && \
+    rm -rf /usr/local/tomcat/webapps/*
 
 COPY repo/*.war /usr/local/tomcat/webapps/.
 
-RUN	mkdir -p /var/rdf4j/server/logs && \
-    mkdir -p /var/rdf4j/server/conf && \
+RUN	mkdir -p /var/rdf4j/server/conf && \
     mkdir -p /var/rdf4j/server/repositories && \
-    touch /var/rdf4j/server/logs/no.log && \
-	unzip /usr/local/tomcat/webapps/rdf4j-server.war -d /usr/local/tomcat/webapps/rdf4j-server && \
+    unzip /usr/local/tomcat/webapps/rdf4j-server.war -d /usr/local/tomcat/webapps/rdf4j-server && \
 	unzip /usr/local/tomcat/webapps/rdf4j-workbench.war -d /usr/local/tomcat/webapps/rdf4j-workbench && \
     rm /usr/local/tomcat/webapps/rdf4j-server.war && \
     rm /usr/local/tomcat/webapps/rdf4j-workbench.war && \
     wget -q "https://repo1.maven.org/maven2/org/apache/httpcomponents/httpmime/4.5.13/httpmime-4.5.13.jar" -O /usr/local/tomcat/webapps/rdf4j-server/WEB-INF/lib/httpmime-4.5.13.jar && \
-    chown -R tomcat /var/rdf4j /usr/local/tomcat && \
-	chmod a+x /usr/local/tomcat /usr/local/tomcat/bin /usr/local/tomcat/bin/catalina.sh
+    chown -R tomcat:tomcat /var/rdf4j /usr/local/tomcat && \
+	chmod a+x /usr/local/tomcat /usr/local/tomcat/bin /usr/local/tomcat/bin/catalina.sh /var/rdf4j/server
 
 COPY resources/web/logging.properties /usr/local/tomcat/conf/logging.properties
 COPY resources/web/server.xml /usr/local/tomcat/conf/server.xml
