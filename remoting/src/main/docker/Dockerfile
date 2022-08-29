@@ -24,6 +24,9 @@ RUN	rm -rf /usr/local/tomcat/webapps/*
 COPY repo/*.war /usr/local/tomcat/webapps/.
 
 RUN	mkdir -p /var/rdf4j/server/logs && \
+    mkdir -p /var/rdf4j/server/conf && \
+    mkdir -p /var/rdf4j/server/repositories && \
+    touch /var/rdf4j/server/logs/no.log && \
 	unzip /usr/local/tomcat/webapps/rdf4j-server.war -d /usr/local/tomcat/webapps/rdf4j-server && \
 	unzip /usr/local/tomcat/webapps/rdf4j-workbench.war -d /usr/local/tomcat/webapps/rdf4j-workbench && \
     rm /usr/local/tomcat/webapps/rdf4j-server.war && \
