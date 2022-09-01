@@ -14,11 +14,18 @@ ARG JAVA_TOOL_OPTIONS ""
 # TODO Should have a healthcheck
 HEALTHCHECK NONE
 
-RUN apt-get update && \
+ARG HTTP_PROXY=""
+RUN if [[ -n "${HTTP_PROXY}"  ]]; then \
+        echo "Acquire::http::Proxy \"${HTTP_PROXY}\"" >> /etc/apt/apt.conf.d/proxy.conf; \
+        echo "Acquire::https::Proxy \"${HTTP_PROXY}\"" >> /etc/apt/apt.conf.d/proxy.conf; \
+    fi && \
+    apt-get -y upgrade && \
+    apt-get -y update && \
     apt-get install unzip && \
     addgroup --system --gid 30000 tomcat && \
     adduser --ingroup tomcat --uid 10000 tomcat && \
-    rm -rf /usr/local/tomcat/webapps/*
+    rm -rf /usr/local/tomcat/webapps/* && \
+    if [[ -n "${HTTP_PROXY}"  ]]; then rm -f /etc/apt/apt.conf.d/proxy.conf; fi
 
 COPY repo/*.war /usr/local/tomcat/webapps/.
 
