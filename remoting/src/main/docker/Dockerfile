@@ -4,7 +4,6 @@
 # See authors file in the top folder
 # See license file in the top folder
 #
-
 FROM tomcat:8.5-jre11-temurin
 
 ENV JAVA_OPTS="-Xmx2g"
@@ -15,8 +14,8 @@ ARG JAVA_TOOL_OPTIONS ""
 # TODO Should have a healthcheck
 HEALTHCHECK NONE
 
-RUN apt update && \
-    apt install unzip && \
+RUN apt-get update && \
+    apt-get install unzip && \
     addgroup --system --gid 30000 tomcat && \
     adduser --ingroup tomcat --uid 10000 tomcat && \
     rm -rf /usr/local/tomcat/webapps/*
