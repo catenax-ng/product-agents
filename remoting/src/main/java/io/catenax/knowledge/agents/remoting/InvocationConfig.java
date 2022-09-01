@@ -40,6 +40,11 @@ public class InvocationConfig {
      */
     protected Map<String, ReturnValueConfig> outputs = new java.util.HashMap<String, ReturnValueConfig>();
 
+    @Override
+    public String toString() {
+        return super.toString()+"/service";
+    }   
+
     /**
      * Validates the invocation config
      * @throws SailConfigException

@@ -129,6 +129,11 @@ public class RemotingSailConfig extends AbstractSailImplConfig {
         } 
     }
 
+    @Override
+    public String toString() {
+        return super.toString()+"/config";
+    }
+
     /**
      * validates the config
      */

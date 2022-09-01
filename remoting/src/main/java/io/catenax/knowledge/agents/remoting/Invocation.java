@@ -33,7 +33,6 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
-import org.apache.http.entity.mime.MultipartEntity;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
@@ -53,7 +52,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 /**
@@ -87,13 +85,29 @@ public class Invocation {
         if (target.isAssignableFrom(String.class)) {
             return (Target) binding.stringValue();
         } else if (target.isAssignableFrom(int.class)) {
-            return (Target) Integer.valueOf(Integer.parseInt(binding.stringValue()));
+            try {
+                return (Target) Integer.valueOf(Integer.parseInt(binding.stringValue()));
+            } catch(NumberFormatException nfe) {
+                throw new SailException(String.format("Conversion from %s to %s failed.", binding, target), nfe);
+            }
         } else if (target.isAssignableFrom(long.class)) {
-            return (Target) Long.valueOf(Long.parseLong(binding.stringValue()));
+            try {
+                return (Target) Long.valueOf(Long.parseLong(binding.stringValue()));
+            } catch(NumberFormatException nfe) {
+                throw new SailException(String.format("Conversion from %s to %s failed.", binding, target), nfe);
+            }
         } else if (target.isAssignableFrom(double.class)) {
-            return (Target) Double.valueOf(Double.parseDouble(binding.stringValue()));
+            try {
+                return (Target) Double.valueOf(Double.parseDouble(binding.stringValue()));
+            } catch(NumberFormatException nfe) {
+                throw new SailException(String.format("Conversion from %s to %s failed.", binding, target), nfe);
+            }
         } else if (target.isAssignableFrom(float.class)) {
-            return (Target) Float.valueOf(Float.parseFloat(binding.stringValue()));
+            try {
+                return (Target) Float.valueOf(Float.parseFloat(binding.stringValue()));
+            } catch(NumberFormatException nfe) {
+                throw new SailException(String.format("Conversion from %s to %s failed.", binding, target), nfe);
+            }
         } else if (target.isAssignableFrom(JsonNode.class)) {
             try {
                 return (Target) new ObjectMapper().readTree(binding.stringValue());
@@ -104,6 +118,11 @@ public class Invocation {
             }
         }
         throw new SailException(String.format("No conversion from %s to %s possible.", binding, target));
+    }
+
+    @Override
+    public String toString() {
+        return super.toString()+"/invocation";
     }
 
     /**

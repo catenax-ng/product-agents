@@ -38,6 +38,11 @@ public class RemotingSailFactory implements SailFactory {
         }
     }
 
+    @Override
+    public String toString() {
+        return super.toString()+"/factory";
+    }
+
     /**
      * return the sail type IRI
      */

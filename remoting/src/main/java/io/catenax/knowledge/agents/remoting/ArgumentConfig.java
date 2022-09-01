@@ -20,4 +20,10 @@ public class ArgumentConfig {
             throw new SailConfigException(String.format("Only support named arguments %s.",context));
          }    
      }
+
+     @Override
+     public String toString() {
+         return super.toString()+"/argument";
+     }
+ 
 }

@@ -19,6 +19,12 @@ public class ReturnValueConfig {
       */
      protected String dataType="http://www.w3.org/2001/XMLSchema#string";
 
+
+     @Override
+     public String toString() {
+         return super.toString()+"/return";
+     }
+
      public void validate(String context) throws SailConfigException {
         switch(dataType) {
             case "http://www.w3.org/2001/XMLSchema#double":

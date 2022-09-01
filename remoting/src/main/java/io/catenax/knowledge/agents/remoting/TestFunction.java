@@ -10,6 +10,13 @@ package io.catenax.knowledge.agents.remoting;
  * a simple test function to expose
  */
 public class TestFunction {
+
+
+    @Override
+    public String toString() {
+        return super.toString()+"/test";
+    }
+
     /**
      * test method to expose
      */
