@@ -199,12 +199,24 @@ public class Invocation {
                 }
                 return vf.createLiteral(String.valueOf(pathObj));
             case "http://www.w3.org/2001/XMLSchema#int":
-                return vf.createLiteral(Integer.parseInt(String.valueOf(pathObj)));
+                try {
+                    return vf.createLiteral(Integer.parseInt(String.valueOf(pathObj)));
+                } catch(NumberFormatException nfwe) {
+                    throw new SailException(String.format("Could not convert %s to integer.", String.valueOf(pathObj)));
+                }
             case "http://www.w3.org/2001/XMLSchema#long":
-                return vf.createLiteral(Long.parseLong(String.valueOf(pathObj)));
-            case "http://www.w3.org/2001/XMLSchema#double":
+                try {
+                    return vf.createLiteral(Long.parseLong(String.valueOf(pathObj)));
+                } catch(NumberFormatException nfwe) {
+                    throw new SailException(String.format("Could not convert %s to integer.", String.valueOf(pathObj)));
+                }
+        case "http://www.w3.org/2001/XMLSchema#double":
+            try {
                 return vf.createLiteral(Double.parseDouble(String.valueOf(pathObj)));
-            default:
+            } catch(NumberFormatException nfwe) {
+                throw new SailException(String.format("Could not convert %s to integer.", String.valueOf(pathObj)));
+            }
+        default:
                 throw new SailException(String.format("Data Type %s is not supported.", cf.dataType));
         }
     }
