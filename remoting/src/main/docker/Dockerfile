@@ -21,7 +21,7 @@ RUN if [[ -n "${HTTP_PROXY}"  ]]; then \
     fi && \
     apt-get -y upgrade && \
     apt-get -y update && \
-    apt-get install unzip && \
+    apt-get -y --no-install-recommends install unzip=6.0-26ubuntu3 && \
     addgroup --system --gid 30000 tomcat && \
     adduser --ingroup tomcat --uid 10000 tomcat && \
     rm -rf /usr/local/tomcat/webapps/* && \
