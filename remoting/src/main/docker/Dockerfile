@@ -37,7 +37,7 @@ RUN	mkdir -p /var/rdf4j/server/conf && \
     rm /usr/local/tomcat/webapps/rdf4j-workbench.war && \
     wget -q "https://repo1.maven.org/maven2/org/apache/httpcomponents/httpmime/4.5.13/httpmime-4.5.13.jar" -O /usr/local/tomcat/webapps/rdf4j-server/WEB-INF/lib/httpmime-4.5.13.jar && \
     chown -R tomcat:tomcat /var/rdf4j /usr/local/tomcat && \
-	chmod a+x /usr/local/tomcat /usr/local/tomcat/bin /usr/local/tomcat/bin/catalina.sh /var/rdf4j/server
+	chmod 775 /usr/local/tomcat /usr/local/tomcat/bin /usr/local/tomcat/bin/catalina.sh /var/rdf4j/server 
 
 COPY resources/web/logging.properties /usr/local/tomcat/conf/logging.properties
 COPY resources/web/server.xml /usr/local/tomcat/conf/server.xml
