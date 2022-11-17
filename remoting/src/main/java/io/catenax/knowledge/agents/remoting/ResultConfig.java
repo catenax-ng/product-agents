@@ -25,7 +25,8 @@ public class ResultConfig {
     String outputProperty=null;
     /** where the id of the result can be found */
     String resultIdProperty=null;
-
+    String correlationInput=null;
+    
     @Override
     public String toString() {
         return super.toString()+"/service";
