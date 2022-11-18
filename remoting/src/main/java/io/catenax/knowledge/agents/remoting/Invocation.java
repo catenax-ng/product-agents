@@ -269,7 +269,7 @@ public class Invocation {
      * @return mapped value
      * @throws SailException
      */
-    public Value convertOutputToValue(Object target, Object resultKey, IRI output) throws SailException {
+    public Value convertOutputToValue(Object target, String resultKey, IRI output) throws SailException {
         if (service.result.outputProperty != null) {
             target = traversePath(target, service.result.outputProperty);
         }
@@ -280,11 +280,11 @@ public class Invocation {
         if (resultKey != null) {
             if (target.getClass().isArray()) {
                 if(service.result.resultIdProperty!=null) {
-                    target=Arrays.stream(((Object[]) target)).filter( tt -> resultKey.equals(traversePath(tt,service.result.resultIdProperty)))
+                    target=Arrays.stream(((Object[]) target)).filter( tt -> resultKey.equals(convertObjectToString(traversePath(tt,service.result.resultIdProperty))))
                             .findFirst().get();
                 } else {
                     try {
-                        target = Array.get(target, Integer.parseInt(String.valueOf(resultKey)));
+                        target = Array.get(target, Integer.parseInt(resultKey));
                     } catch (NumberFormatException nfwe) {
                         throw new SailException(String.format("Could not access index %s of target %s which should be integer.", resultKey, target));
                     }
@@ -293,14 +293,14 @@ public class Invocation {
                 if(service.result.resultIdProperty!=null) {
                     ArrayNode array=(ArrayNode) target;
                     for(int count=0;count<array.size();count++) {
-                        if(resultKey.equals(traversePath(array.get(count),service.result.resultIdProperty))) {
+                        if(resultKey.equals(convertObjectToString(traversePath(array.get(count),service.result.resultIdProperty)))) {
                             target=array.get(count);
                             break;
                         }
                     }
                 } else {
                     try {
-                        target = ((ArrayNode) target).get(Integer.parseInt(String.valueOf(resultKey)));
+                        target = ((ArrayNode) target).get(Integer.parseInt(resultKey));
                     } catch (NumberFormatException nfwe) {
                         throw new SailException(String.format("Could not access index %s of target %s which should be integer.", resultKey, target));
                     }
@@ -309,14 +309,14 @@ public class Invocation {
                 if(service.result.resultIdProperty!=null) {
                     NodeList nl =((Element) target).getChildNodes();
                     for(int count=0;count<nl.getLength();count++) {
-                        if(resultKey.equals(traversePath(nl.item(count),service.result.resultIdProperty))) {
+                        if(resultKey.equals(convertObjectToString(traversePath(nl.item(count),service.result.resultIdProperty)))) {
                             target=nl.item(count);
                             break;
                         }
                     }
                 } else {
                     try {
-                        target = ((Element) target).getChildNodes().item(Integer.parseInt(String.valueOf(resultKey)));
+                        target = ((Element) target).getChildNodes().item(Integer.parseInt(resultKey));
                     } catch (NumberFormatException nfwe) {
                         throw new SailException(String.format("Could not access index %s of target %s which should be integer.", resultKey, target));
                     }
@@ -607,17 +607,18 @@ public class Invocation {
                         }
 
                         for(MutableBindingSet binding : batch) {
-                            Object key=null;
+                            String key=null;
                             if(service.batch>1) {
                                 if (service.result.correlationInput != null) {
-                                    Value value = binding.getValue(inputs.get(service.result.correlationInput).getName());
-                                    Class resultClass = String.class;
-                                    if(isJson) {
-                                        resultClass=JsonNode.class;
+                                    Var variable=inputs.get(service.result.correlationInput);
+                                    if(variable.hasValue()) {
+                                        key = convertToObject(variable.getValue(),String.class);
+                                    } else {
+                                        Value val = binding.getValue(variable.getName());
+                                        key = convertToObject(val, String.class);
                                     }
-                                    key = convertToObject(value,resultClass);
                                 } else {
-                                    key = 0;
+                                    key = "0";
                                 }
                             }
                             for(Map.Entry<Var,IRI> output : outputs.entrySet() ) {
@@ -625,7 +626,7 @@ public class Invocation {
                             }
                         }
                     } catch (Exception e) {
-                        logger.warn(String.format("Got an unsuccessful status %d from invoking %s. Ignoring.",lsuccess,ourl));
+                        logger.warn(String.format("Got an exception %s when processing invocation results of %s. Ignoring.",e,ourl));
                         success=Math.max(success,500);
                     }
                 } else {
