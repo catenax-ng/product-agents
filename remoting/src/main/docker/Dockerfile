@@ -27,7 +27,7 @@ RUN if [[ -n "${HTTP_PROXY}"  ]]; then \
     rm -rf /usr/local/tomcat/webapps/* && \
     if [[ -n "${HTTP_PROXY}"  ]]; then rm -f /etc/apt/apt.conf.d/proxy.conf; fi
 
-COPY repo/rdf4j-server.war repo/rdf4j-workbench.war /usr/local/tomcat/webapps/.
+COPY repo/rdf4j-server.war repo/rdf4j-workbench.war /usr/local/tomcat/webapps/
 
 RUN	mkdir -p /var/rdf4j/server/conf && \
     mkdir -p /var/rdf4j/server/repositories && \
