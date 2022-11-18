@@ -23,7 +23,7 @@ RUN if [[ -n "${HTTP_PROXY}"  ]]; then \
     apt-get -y update && \
     apt-get -y --no-install-recommends install unzip=6.0-26ubuntu3 && \
     addgroup --system --gid 30000 tomcat && \
-    adduser --ingroup tomcat --uid 10000 tomcat && \
+    adduser --disabled-password --ingroup tomcat --uid 10000 tomcat && \
     rm -rf /usr/local/tomcat/webapps/* && \
     if [[ -n "${HTTP_PROXY}"  ]]; then rm -f /etc/apt/apt.conf.d/proxy.conf; fi
 
