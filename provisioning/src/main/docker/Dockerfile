@@ -26,7 +26,7 @@ RUN groupadd -g 30000 ontop && \
     chown -R ontop:ontop /database && \
     chmod 775 /database && \
     chmod 755 /opt/ontop/entrypoint.sh && \
-    wget -q -P /jdbc https://search.maven.org/remotecontent?filepath=com/h2database/h2/2.1.214/h2-2.1.214.jar
+    wget -q -P /opt/ontop/jdbc ${jdbcDriver}
 
 # run with docker --build-arg dremioDownload=download_url to establish a different driver
 #ARG dremioDownload=https://download.dremio.com/jdbc-driver/dremio-jdbc-driver-LATEST.jar
