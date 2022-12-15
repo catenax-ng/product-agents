@@ -102,6 +102,9 @@ public class Invocation {
 
     /**
      * converter from the literal to the type system
+     * @param binding value to convert
+     * @param target class to convert to
+     * @return converted value
      */
     public <Target> Target convertToObject(Value binding, Class<Target> target) throws SailException {
         if (target.isAssignableFrom(String.class)) {
@@ -192,9 +195,9 @@ public class Invocation {
 
     /**
      * traverse path
-     * 
-     * @param source
-     * @return path object
+     * @param source object
+     * @param path under source
+     * @return path object, will be source if path is empty
      */
     public Object traversePath(Object source, String... path) throws SailException {
         if (logger.isTraceEnabled()) {
@@ -327,7 +330,12 @@ public class Invocation {
     }
 
     /**
-     * converter from the literal to the type system
+     * converter from the type system to a literal
+     * @param target source object
+     * @param vf factory for creating literals
+     * @param cfPath path under source object
+     * @param dataType name of the target literal type
+     * @return a literal
      */
     public Value convertOutputToValue(Object target, ValueFactory vf, String cfPath, String dataType) throws SailException {
         String[] path = new String[0];
@@ -369,13 +377,19 @@ public class Invocation {
 
     /**
      * perform execution
-     * 
      * @param connection sail connection in which to perform the invocation
+     * @param host a binding host
      * @return flag indicating whether execution has been attempted (or was already
      *         done)
      */
     public boolean execute(RemotingSailConnection connection, IBindingHost host) throws SailException {
+        
         startTime = System.currentTimeMillis();
+
+        if (logger.isTraceEnabled()) {
+            logger.trace(String.format("Starting execution on connection %s with binding host %s at clock %d",connection,host,startTime));
+        }
+
         try {
             if (service.matcher.group("classType") != null) {
                     executeClass(connection, host);
@@ -394,8 +408,12 @@ public class Invocation {
     /**
      * perform REST based executions
      * @param connection sail connection in which to perform the invocation
+     * @param host binding host
      */
     public void executeRest(RemotingSailConnection connection, IBindingHost host) throws SailException {
+        if (logger.isTraceEnabled()) {
+            logger.trace(String.format("About to invoke REST call to connection %s at host %s", connection,host));
+        }
         try (final CloseableHttpClient httpclient = HttpClients.createDefault()) {
             String ourl = service.matcher.group("restType") + "://" + service.matcher.group("url");
             if (logger.isTraceEnabled()) {
@@ -644,11 +662,14 @@ public class Invocation {
     }
 
     /**
-     * perform class-based reflection execution
-     * 
+     * perform class-based reflection execution 
      * @param connection sail connection in which to perform the invocation
+     * @param host binding host
      */
     public void executeClass(RemotingSailConnection connection, IBindingHost host) throws SailException {
+        if (logger.isTraceEnabled()) {
+            logger.trace(String.format("About to invoke Java call to connection %s at host %s", connection,host));
+        }
         Class targetClass = null;
         try {
             targetClass = getClass().getClassLoader().loadClass(service.matcher.group("class"));
