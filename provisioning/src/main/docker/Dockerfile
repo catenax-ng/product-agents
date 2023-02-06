@@ -20,7 +20,7 @@ COPY resources/entrypoint.sh /opt/ontop/.
 COPY target/provisioning-agent-*.jar /opt/ontop/lib/.
 
 # run with docker --build-arg jdbcDrivers=path_to_my_driver to establish a different driver
-ARG jdbcDrivers="https://repo1.maven.org/maven2/org/apache/calcite/avatica/avatica/1.22.0/avatica-1.22.0.jar https://search.maven.org/remotecontent?filepath=com/h2database/h2/2.1.214/h2-2.1.214.jar https://download.dremio.com/jdbc-driver/dremio-jdbc-driver-LATEST.jar"
+ARG jdbcDrivers="https://repo1.maven.org/maven2/org/apache/calcite/avatica/avatica/1.22.0/avatica-1.22.0.jar https://search.maven.org/remotecontent?filepath=com/h2database/h2/2.1.214/h2-2.1.214.jar https://download.dremio.com/jdbc-driver/dremio-jdbc-driver-LATEST.jar https://repo1.maven.org/maven2/org/postgresql/postgresql/42.5.2/postgresql-42.5.2.jar"
 
 # Security issue A1SLDT-828
 RUN mkdir -p /opt/ontop/jdbc && \
