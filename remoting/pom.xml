@@ -82,6 +82,14 @@
 		<artifactId>jackson-databind</artifactId>
         <version>2.13.4.2</version>
      </dependency>
+
+     <!-- to enable debugging -->
+     <dependency>
+        <groupId>org.eclipse.rdf4j</groupId>
+        <artifactId>rdf4j-http-server-spring</artifactId>
+        <scope>provided</scope>
+     </dependency>
+
     </dependencies>
 
     <dependencyManagement>
