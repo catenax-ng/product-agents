@@ -25,6 +25,5 @@
     <modules>
         <module>provisioning</module>
         <module>remoting</module>
-        <module>mock</module>
     </modules>
 </project>
