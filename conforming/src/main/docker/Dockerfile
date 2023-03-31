@@ -1,13 +1,13 @@
 FROM openjdk:17-jdk-alpine
 
-WORKDIR /app
-VOLUME /tmp
 COPY target/conforming-agent-*.jar /app/lib/
 
-RUN groupadd --system -g 30000 agent \
-    && useradd --base-dir /app --system -u 10000 --gid agent agent \
+RUN addgroup -S -g 30000 agent \
+    && adduser -h /app -S -u 10000 -G agent agent \
     && chown -R agent:agent /app
 
+WORKDIR /app
+VOLUME /tmp
 USER agent
 
 # TODO Reestablish the original health check
