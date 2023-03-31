@@ -6,7 +6,6 @@
 //
 package io.catenax.knowledge.agents.conforming.api;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import io.catenax.knowledge.agents.conforming.ConformingAgent;
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
@@ -22,12 +21,10 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -45,11 +42,11 @@ public class XmlProvider implements MessageBodyReader, MessageBodyWriter {
     @Override
     public Object readFrom(Class aClass, Type type, Annotation[] annotations, MediaType mediaType, MultivaluedMap multivaluedMap, InputStream inputStream) throws IOException, WebApplicationException {
         try {
-            DocumentBuilder parser= DocumentBuilderFactory.newInstance().newDocumentBuilder();
+            DocumentBuilderFactory factory=DocumentBuilderFactory.newInstance();
+            factory.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
+            DocumentBuilder parser= factory.newDocumentBuilder();
             return parser.parse(new InputSource(inputStream));
-        } catch (SAXException e) {
-            throw new IOException("Could not xml parse message body",e);
-        } catch (ParserConfigurationException e) {
+        } catch (ParserConfigurationException | SAXException e) {
             throw new IOException("Could not xml parse message body",e);
         }
     }
@@ -64,8 +61,6 @@ public class XmlProvider implements MessageBodyReader, MessageBodyWriter {
         try {
             Transformer transformer = TransformerFactory.newInstance().newTransformer();
             transformer.transform(new DOMSource((Document) o),new StreamResult(outputStream));
-        } catch (TransformerConfigurationException e) {
-            throw new IOException("Cannot render xml body",e);
         } catch (TransformerException e) {
             throw new IOException("Cannot render xml body",e);
         }
