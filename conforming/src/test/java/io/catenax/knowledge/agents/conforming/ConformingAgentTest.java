@@ -74,7 +74,7 @@ public abstract class ConformingAgentTest extends JerseyTest {
     @Test
     public void testUnderspecifiedGet() {
         final Response response = target(getPath()).request().get();
-        assertEquals(400,response.getStatus(),"KA-BIND/KA-MATCH: Should not be possible to get information without query or skill asset");
+        assertTrue(response.getStatus()>=400 && response.getStatus()<500,"KA-BIND/KA-MATCH: Should not be possible to get information without query or skill asset");
     }
 
     /**
@@ -83,7 +83,7 @@ public abstract class ConformingAgentTest extends JerseyTest {
     @Test
     public void testUnderspecifiedPost() {
         final Response response = target(getPath()).request().post(Entity.entity("","application/sparql-results+json"));
-        assertEquals(400,response.getStatus(), "KA-BIND/KA-MATCH: Should not be possible to post information without query or skill asset");
+        assertTrue(response.getStatus()>=400 && response.getStatus()<500, "KA-BIND/KA-MATCH: Should not be possible to post information without query or skill asset");
     }
 
     /**
@@ -95,7 +95,7 @@ public abstract class ConformingAgentTest extends JerseyTest {
                 .queryParam("query","SELECT%20%3Fsubject%20%3Fpredicate%20%3Fobject%20WHERE%20%7B%20%3Fsubject%20<cx:test>%20%3Fobject.%7D")
                 .request()
                 .get();
-        assertEquals(200,response.getStatus(),"Successful get json request");
+        assertTrue(response.getStatus()>=200 && response.getStatus()<300,"Successful get json request");
         testJsonResultSet(response);
     }
 
@@ -109,7 +109,7 @@ public abstract class ConformingAgentTest extends JerseyTest {
                 .request()
                 .accept("application/sparql-results+xml")
                 .get();
-        assertEquals(200,response.getStatus(),"Successful get xml request");
+        assertTrue(response.getStatus()>=200 && response.getStatus()<300,"Successful get xml request");
         testXmlResultSet(response);
     }
 

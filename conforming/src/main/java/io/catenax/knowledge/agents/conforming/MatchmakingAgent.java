@@ -21,6 +21,10 @@ import java.util.List;
 @Path("/match")
 public class MatchmakingAgent extends ConformingAgent {
 
+    public MatchmakingAgent() {
+        status=203;
+    }
+
     @Override
     public Response getAgent(String asset, String queryLn, String query, String _vin, List<String> troubleCode) throws NotFoundException {
         if(query==null && asset==null) {

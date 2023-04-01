@@ -95,7 +95,7 @@ public class ConformingAgent extends AgentApi {
 
     public boolean useSimple=true;
     public int status=200;
-    public String warnings = "[]";
+    public String warnings = "[ { \"source-tenant\": \"BPNL00000003CQI9\", \"target-tenant\": \"BPNL00000003COJN\", \"target-asset\": \"urn:cx:GraphAsset#TestAsset\", \"problem\": \"Could not access graph.\", \"context\": \"SPARQL-QUERY 1027\" } ]";
 
     protected MediaType getDefaultResultType() {
         if(headers.getHeaderString("Accept")!=null) {

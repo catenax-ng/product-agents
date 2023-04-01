@@ -30,7 +30,7 @@ public class MatchmakingAgentTest extends ConformingAgentTest {
     @Test
     public void testMatchSkillGet() throws IOException {
         Response response =target(getPath()).queryParam("asset","urn:cx:SkillAsset#Test").request().get();
-        assertEquals(200,response.getStatus(),"Successful get json request");
+        assertTrue(response.getStatus()>=200 && response.getStatus()<300,"Successful get json request");
         testJsonResultSet(response);
     }
 
@@ -38,7 +38,7 @@ public class MatchmakingAgentTest extends ConformingAgentTest {
     public void testMatchSkillPost() throws IOException {
         Response response =target(getPath()).queryParam("asset","urn:cx:SkillAsset#Test").request().
                 post(Entity.entity(ConformingAgent.emptyJson,"application/sparql-results+json"));
-        assertEquals(200,response.getStatus(),"Successful post skill request");
+        assertTrue(response.getStatus()>=200 && response.getStatus()<300,"Successful post skill request");
         testJsonResultSet(response);
     }
 
@@ -47,7 +47,7 @@ public class MatchmakingAgentTest extends ConformingAgentTest {
         Response response =target(getPath()).queryParam("asset","urn:cx:SkillAsset#Test").request()
                 .accept("application/sparql-results+xml")
                 .post(Entity.entity(ConformingAgent.emptyXml,"application/sparql-results+xml"));
-        assertEquals(200,response.getStatus(),"Successful post skill xml request");
+        assertTrue(response.getStatus()>=200 && response.getStatus()<300,"Successful post skill xml request");
         testXmlResultSet(response);
     }
 
@@ -56,7 +56,7 @@ public class MatchmakingAgentTest extends ConformingAgentTest {
         Response response =target(getPath()).queryParam("asset","urn:cx:SkillAsset#Test").request()
                 .accept("application/sparql-results+json")
                 .post(Entity.entity(ConformingAgent.emptyXml,"application/sparql-results+xml"));
-        assertEquals(200,response.getStatus(),"Successful post skill json request");
+        assertTrue(response.getStatus()>=200 && response.getStatus()<300,"Successful post skill json request");
         testJsonResultSet(response);
     }
 
@@ -65,7 +65,7 @@ public class MatchmakingAgentTest extends ConformingAgentTest {
         Response response =target(getPath()).queryParam("asset","urn:cx:SkillAsset#Test").request()
                 .accept("application/sparql-results+xml")
                 .post(Entity.entity(ConformingAgent.emptyJson,"application/sparql-results+json"));
-        assertEquals(200,response.getStatus(),"Successful post skill xml request");
+        assertTrue(response.getStatus()>=200 && response.getStatus()<300,"Successful post skill xml request");
         testXmlResultSet(response);
     }
 
