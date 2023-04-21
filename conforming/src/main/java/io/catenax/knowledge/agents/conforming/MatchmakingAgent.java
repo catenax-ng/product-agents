@@ -26,6 +26,23 @@ public class MatchmakingAgent extends ConformingAgent {
     }
 
     @Override
+    protected Response annotate(Response.ResponseBuilder builder) {
+        return builder.header("cx_warnings",warnings)
+            .header("Access-Control-Expose-Headers","cx_warnings, content-length, content-type")
+            .build();
+    }
+
+    @Override
+    protected String getSimpleJson(String bindingVar) {
+        return simpleBindJson.replaceAll("bindingVar",bindingVar);
+    }
+
+    @Override
+    protected String getSimpleXml(String bindingVar) {
+        return simpleBindXml.replaceAll("bindingVar",bindingVar);
+    }
+
+    @Override
     public Response getAgent(String asset, String queryLn, String query, String _vin, List<String> troubleCode) throws NotFoundException {
         if(query==null && asset==null) {
             return annotate(Response.status(400,"{ \"error\":400, \"reason\":\"KA-MATCH: query or asset parameter must be set\" }"));

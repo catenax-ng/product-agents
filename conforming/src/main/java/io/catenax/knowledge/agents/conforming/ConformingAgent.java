@@ -11,6 +11,7 @@ import io.catenax.knowledge.agents.conforming.api.AgentApi;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.regex.Matcher;
 
 import io.catenax.knowledge.agents.conforming.api.NotFoundException;
 
@@ -52,8 +53,43 @@ public class ConformingAgent extends AgentApi {
             "                \"object\": {\n" +
             "                    \"type\": \"literal\",\n" +
             "                    \"value\": \"engine control module\",\n" +
-            "                    \"datatype\": \"http://www.w3.org/2001/XMLSchema#string\",\n" +
-            "                    \"xml:lang\": \"http://www.w3.org/2001/XMLSchema#string\"\n" +
+            "                    \"datatype\": \"http://www.w3.org/1999/02/22-rdf-syntax-ns#langString\",\n" +
+            "                    \"xml:lang\": \"en\"\n" +
+            "                }\n" +
+            "            }\n" +
+            "        ]\n" +
+            "    }\n" +
+            "}";
+
+    public static String simpleBindJson="{\n" +
+            "    \"head\": {\n" +
+            "        \"vars\": [\n" +
+            "            \"subject\",\n" +
+            "            \"predicate\",\n" +
+            "            \"object\",\n" +
+            "            \"bindingVar\"\n" +
+            "        ]\n" +
+            "    },\n" +
+            "    \"results\": {\n" +
+            "        \"bindings\": [\n" +
+            "            {\n" +
+            "                \"bindingVar\": {\n" +
+            "                    \"type\": \"literal\",\n" +
+            "                    \"value\": \"0\"\n" +
+            "                },\n" +
+            "                \"subject\": {\n" +
+            "                    \"type\": \"uri\",\n" +
+            "                    \"value\": \"urn:cx:AnonymousSerializedPart#GB4711\"\n" +
+            "                },\n" +
+            "                \"predicate\": {\n" +
+            "                    \"type\": \"uri\",\n" +
+            "                    \"value\": \"https://github.com/catenax-ng/product-knowledge/ontology/cx.ttl#hasPartType\"\n" +
+            "                },\n" +
+            "                \"object\": {\n" +
+            "                    \"type\": \"literal\",\n" +
+            "                    \"value\": \"engine control module\",\n" +
+            "                    \"datatype\": \"http://www.w3.org/1999/02/22-rdf-syntax-ns#langString\",\n" +
+            "                    \"xml:lang\": \"en\"\n" +
             "                }\n" +
             "            }\n" +
             "        ]\n" +
@@ -84,11 +120,38 @@ public class ConformingAgent extends AgentApi {
             "                <uri>https://github.com/catenax-ng/product-knowledge/ontology/cx.ttl#hasPartType</uri>\n" +
             "            </binding>\n" +
             "            <binding name=\"object\">\n" +
-            "                <literal xml:lang=\"en\" datatype=\"http://www.w3.org/2001/XMLSchema#string\">engine control module</literal>\n" +
+            "                <literal xml:lang=\"en\" datatype=\"http://www.w3.org/1999/02/22-rdf-syntax-ns#langString\">engine control module</literal>\n" +
             "            </binding>\n" +
             "        </result>\n" +
             "    </results>\n" +
             "</sparql>";
+
+    public static String simpleBindXml="<?xml version=\"1.0\"?>\n" +
+            "<sparql xmlns=\"http://www.w3.org/2005/sparql-results#\">\n" +
+            "    <head>\n" +
+            "        <variable name=\"subject\"/>\n" +
+            "        <variable name=\"predicate\"/>\n" +
+            "        <variable name=\"object\"/>\n" +
+            "        <variable name=\"bindingVar\"/>\n" +
+            "    </head>\n" +
+            "    <results>\n" +
+            "        <result>\n" +
+            "            <binding name=\"bindingVar\">\n" +
+            "                <literal>0</literal>\n" +
+            "            </binding>\n" +
+            "            <binding name=\"subject\">\n" +
+            "                <uri>urn:cx:AnonymousSerializedPart#GB4711</uri>\n" +
+            "            </binding>\n" +
+            "            <binding name=\"predicate\">\n" +
+            "                <uri>https://github.com/catenax-ng/product-knowledge/ontology/cx.ttl#hasPartType</uri>\n" +
+            "            </binding>\n" +
+            "            <binding name=\"object\">\n" +
+            "                <literal xml:lang=\"en\" datatype=\"http://www.w3.org/1999/02/22-rdf-syntax-ns#langString\">engine control module</literal>\n" +
+            "            </binding>\n" +
+            "        </result>\n" +
+            "    </results>\n" +
+            "</sparql>";
+
     public static MediaType srj = MediaType.valueOf("application/sparql-results+json");
     public static MediaType srx = MediaType.valueOf("application/sparql-results+xml");
     public static MediaType sq = MediaType.valueOf("application/sparql-query");
@@ -118,13 +181,13 @@ public class ConformingAgent extends AgentApi {
     }
 
     /** produces a standard response */
-    protected Map<String,byte[]> computeBody(MediaType resultType) {
+    protected Map<String,byte[]> computeBody(MediaType resultType, String bindingVar) {
         String target;
         if(useSimple) {
             if(resultType.isCompatible(srj)) {
-                target=simpleJson;
+                target = getSimpleJson(bindingVar);
             } else {
-                target=simpleXml;
+                target=getSimpleXml(bindingVar);
             }
         } else {
             if(resultType.isCompatible(srj)) {
@@ -136,10 +199,18 @@ public class ConformingAgent extends AgentApi {
         return Map.of(resultType.toString(),target.getBytes());
     }
 
+    protected String getSimpleJson(String bindingVar) {
+        return simpleJson;
+    }
+
+    protected String getSimpleXml(String bindingVar) {
+        return simpleXml;
+    }
+
     /** produces a standard response */
-    protected Response.ResponseBuilder compute(MediaType resultType) {
+    protected Response.ResponseBuilder compute(MediaType resultType, String bindingVar) {
         AtomicReference<Response.ResponseBuilder> response= new AtomicReference<>(Response.status(status));
-        Map<String,byte[]> body=computeBody(resultType);
+        Map<String,byte[]> body=computeBody(resultType, bindingVar);
         body.entrySet().forEach( result -> {
                     response.set(response.get().type(result.getKey()).entity(result.getValue()));
                 });
@@ -147,8 +218,10 @@ public class ConformingAgent extends AgentApi {
     }
 
     protected Response annotate(Response.ResponseBuilder builder) {
-        return builder.header("cx_warnings",warnings).build();
+        return builder.build();
     }
+
+    java.util.regex.Pattern pattern= java.util.regex.Pattern.compile("\\?(binding[0-9]+)");
 
     @Override
     public Response getAgent(String asset, String queryLn, String query, String _vin, List<String> troubleCode) throws NotFoundException {
@@ -156,7 +229,14 @@ public class ConformingAgent extends AgentApi {
         if(resultType==null) {
             return annotate(Response.status(400,"KA-BIND/KA-MATCH: Only supports application/sparql-results+json|xml compatible Accept header"));
         }
-        return annotate(compute(resultType));
+        String bindingVar="bindingVar";
+        if(query!=null) {
+            Matcher matcher=pattern.matcher(query);
+            if(matcher.find()) {
+                bindingVar=matcher.group(1);
+            }
+        }
+        return annotate(compute(resultType,bindingVar));
     }
 
     @Override
@@ -169,7 +249,18 @@ public class ConformingAgent extends AgentApi {
         if(!bodyType.isCompatible(sq) && !bodyType.isCompatible(srj) && !bodyType.isCompatible(srx)) {
             return annotate(Response.status(400,"KA-BIND/KA-MATCH postAgent only accepts application/sparql-query|results+json|xml in body."));
         }
-        return annotate(compute(resultType));
+        String bindingVar="bindingVar";
+        String toCheck=query;
+        if(query==null) {
+            toCheck=String.valueOf(body);
+        }
+        if(toCheck!=null) {
+            Matcher matcher=pattern.matcher(toCheck);
+            if(matcher.find()) {
+                bindingVar=matcher.group(1);
+            }
+        }
+        return annotate(compute(resultType,bindingVar));
     }
 
     @Override
