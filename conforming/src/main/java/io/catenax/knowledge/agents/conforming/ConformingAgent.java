@@ -173,6 +173,7 @@ public class ConformingAgent extends AgentApi {
                         return srx;
                     }
                 } catch(IllegalArgumentException iae) {
+                    System.err.printf("Warning: Ingoring unsupported accepted mediatype %s%n",qualifiers[0]);
                 }
             }
             return null;
@@ -211,9 +212,7 @@ public class ConformingAgent extends AgentApi {
     protected Response.ResponseBuilder compute(MediaType resultType, String bindingVar) {
         AtomicReference<Response.ResponseBuilder> response= new AtomicReference<>(Response.status(status));
         Map<String,byte[]> body=computeBody(resultType, bindingVar);
-        body.entrySet().forEach( result -> {
-                    response.set(response.get().type(result.getKey()).entity(result.getValue()));
-                });
+        body.forEach((key, value) -> response.set(response.get().type(key).entity(value)));
         return response.get();
     }
 
@@ -265,6 +264,9 @@ public class ConformingAgent extends AgentApi {
 
     @Override
     public Response postSkill(String body,  @NotNull String asset) throws NotFoundException {
+        if(asset.length()==0) {
+            return Response.status(400,"KA-BIND/KA-MATCH postSkill requires a non-empty asset name.").build();
+        }
         MediaType bodyType=MediaType.valueOf(headers.getHeaderString("Content-Type"));
         if(!bodyType.isCompatible(sq)) {
             return Response.status(400,"KA-BIND/KA-MATCH postSkill only accepts application/sparql-query|results+json|xml in body.").build();
