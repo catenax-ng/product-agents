@@ -268,7 +268,7 @@ public class ConformingAgent extends AgentApi {
             return Response.status(400,"KA-BIND/KA-MATCH postSkill requires a non-empty asset name.").build();
         }
         MediaType bodyType=MediaType.valueOf(headers.getHeaderString("Content-Type"));
-        if(!bodyType.isCompatible(sq)) {
+        if(body!=null || !bodyType.isCompatible(sq)) {
             return Response.status(400,"KA-BIND/KA-MATCH postSkill only accepts application/sparql-query|results+json|xml in body.").build();
         }
         return Response.ok().build();
