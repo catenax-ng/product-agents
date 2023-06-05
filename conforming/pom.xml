@@ -8,7 +8,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <groupId>io.catenax.knowledge.dataspace</groupId>
+        <groupId>org.eclipse.tractusx</groupId>
         <artifactId>agents</artifactId>
         <version>1.9.1-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
@@ -16,10 +16,10 @@
 
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>io.catenax.knowledge.dataspace.agents</groupId>
+    <groupId>org.eclipse.tractusx.agents</groupId>
     <artifactId>conforming-agent</artifactId>
 
-    <name>Catena-X Knowledge Agents Conformity</name>
+    <name>Tractus-X Knowledge Agents Conformity</name>
     <description>This container/application provides endpoints for assessing KA compliance.</description>
     <url>http://catena-x.net/</url>
 
@@ -29,7 +29,7 @@
     </organization>
 
     <properties>
-        <symbolic.name>io.catenax.knowledge.agents.conforming-agent</symbolic.name>
+        <symbolic.name>org.eclipse.tractusx.agents.conforming-agent</symbolic.name>
         <finalName>${symbolic.name}-${project.version}</finalName>
         <filter.main.resources>true</filter.main.resources>
         <skipTests>false</skipTests>

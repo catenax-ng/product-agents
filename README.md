@@ -1,7 +1,6 @@
-# Catena-X Knowledge Agents KIT (Hey Catena!) Agent Reference Implementations
+# Tractus-X Knowledge Agents (Hey Catena!) Reference Implementations
 
-This is a folder providing FOSS implementations of Hey Catena! agents that may be 
-used in conjunction with the extended Eclipse Dataspace Connector.
+This repository provides FOSS implementations for the [Catena-X Knowledge Agents](https://catenax-ng.github.io/product-knowledge/docs/adoption-view/CX-0084-Federated_Queries_In_Data_Spaces_v1.0.0) standard. These implementations may be used in conjunction with the [Tractus-X Extensions for the Eclipse Dataspace Components](https://github.com/catenax-ng/product-agents-edc).
 
 We provide the following implementations for different roles
 
@@ -12,13 +11,11 @@ We provide the following implementations for different roles
   - [Anything Agent](anything) An agent implementation for binding xml, excel, json and other files to the dataspace via an approach called Facade-X.
 - [Conforming Agent](conforming) An agent implementation that is used to test the conformity of all other parts of the architecture.
 
-## Notice
+The Tractus-X Knowledge Agents Reference Implementations are a product of the [Catena-X Knowledge Agents Kit](https://catenax-ng.github.io/product-knowledge)
 
-* see copyright notice in the top folder
-* see license file in the top folder
-* see authors file in the top folder
-
-
-
-
-
+* See the [copyright notice](COPYRIGHT.md)
+* See the [authors file](AUTHORS.md)
+* See the [license file](LICENSE.md)
+* See the [code of conduct](CODE_OF_CONDUCT.md)
+* See the [contribution guidelines](CONTRIBUTING.md)
+* See the [dependencies and their licenses](DEPENDENCIES.md)

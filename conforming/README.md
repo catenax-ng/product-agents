@@ -1,4 +1,4 @@
-# Catena-X Knowledge Agents (Hey Catena!) Conforming Agent
+# Tractus-X Knowledge Agents (Hey Catena!) Conforming Agent
 
 The Conforming Agent is a component that may be used in place of Matchmaking and Binding Agents to prove the conformity of other components of the KA architecture.
 It implements (depending on its configuration) and validates the KA-MATCH and KA-BIND SPARQL profiles behind the Knowledge Agents standard API.

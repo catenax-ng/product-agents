@@ -7,7 +7,7 @@
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <groupId>io.catenax.knowledge.dataspace</groupId>
+        <groupId>org.eclipse.tractusx</groupId>
         <artifactId>agents</artifactId>
         <version>1.9.1-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
@@ -15,10 +15,10 @@
 
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>io.catenax.knowledge.dataspace.agents</groupId>
+    <groupId>org.eclipse.tractusx.agents</groupId>
     <artifactId>provisioning-agent</artifactId>
     
-    <name>Catena-X Knowledge Agents Provisioning</name>
+    <name>Tractus-X Knowledge Agents Provisioning</name>
     <description>This container/application binds existing data sources (SQL, Parquet, CSV, JSON) to a SparQL inference engine.</description>
     <url>http://catena-x.net/</url>
 
@@ -28,7 +28,7 @@
     </organization>
 
     <properties>
-        <symbolic.name>io.catenax.knowledge.provisioning-agent</symbolic.name>
+        <symbolic.name>org.eclipse.tractusx.agents.provisioning-agent</symbolic.name>
         <finalName>${symbolic.name}-${project.version}</finalName>
     </properties>
 
