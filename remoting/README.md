@@ -8,9 +8,9 @@ This is a folder providing the FOSS implementations of a Hey Catena! Remoting Ag
 
 The Remoting Agent relies on the [Eclipse RDF4J](https://rdf4j.org) for building a storage and inference layer (SAIL) which is backed by a remote REST service.
 
-The [Remoting SAIL](src/main/java/io/catenax/knowledge/agents/remoting/RemotingSail.java) provides the implementation of a repository (=graph asset or named graph) by means of functions (or rather function invocations).
+The [Remoting SAIL](src/main/java/org/eclipse/tractusx/agents/remoting/RemotingSail.java) provides the implementation of a repository (=graph asset or named graph) by means of functions (or rather function invocations).
 
-The Remoting SAIL is [configured](src/main/java/io/catenax/knowledge/agents/remoting/RemotingSailConfig.java) by declaring the functions and their binding (determined by a targetUri property). Currently, there are two bindings available
+The Remoting SAIL is [configured](src/main/java/org/eclipse/tractusx/agents/remoting/RemotingSailConfig.java) by declaring the functions and their binding (determined by a targetUri property). Currently, there are two bindings available
 * Class Binding (targetUri follows the pattern "class:<className/>#<methodName/>") 
 * REST Binding (targetUri follows the pattern "https?://<url>")
 

@@ -21,4 +21,4 @@ HEALTHCHECK NONE
 
 EXPOSE 8080
 
-ENTRYPOINT ["java","-cp","/app/lib/*", "io.catenax.knowledge.agents.conforming.Bootstrap"]
+ENTRYPOINT ["java","-cp","/app/lib/*", "org.eclipse.tractusx.agents.conforming.Bootstrap"]

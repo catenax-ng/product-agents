@@ -23,7 +23,7 @@
    rep:repositoryImpl [
       rep:repositoryType "openrdf:SailRepository" ;
       sr:sailImpl [
-         sail:sailType "io.catenax.knowledge:Remoting" ;
+         sail:sailType "org.eclipse.tractusx.agents:Remoting" ;
          cx-fx:supportsInvocation cx-rt:Test;
          cx-fx:supportsInvocation cx-prognosis:Prognosis;
          cx-fx:supportsInvocation cx-lifetime:LifetimePrognosis;
@@ -32,7 +32,7 @@
    ].
 
 cx-rt:Test rdf:type cx-fx:Function;
-  cx-fx:targetUri "class:io.catenax.knowledge.agents.remoting.TestFunction#test";
+  cx-fx:targetUri "class:org.eclipse.tractusx.agents.remoting.TestFunction#test";
   cx-fx:input cx-rt:input-1;
   cx-fx:input cx-rt:input-2;
   cx-fx:result cx-rt:TestResult.
