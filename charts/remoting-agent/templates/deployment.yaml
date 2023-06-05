@@ -6,6 +6,8 @@ metadata:
   namespace: {{ .Release.Namespace | default "default" | quote }}
   labels:
     {{- include "agent.labels" . | nindent 4 }}
+  annotations:
+    container.apparmor.security.beta.kubernetes.io/{{ include "agent.fullname" . }}: default
 spec:
   {{- if not .Values.autoscaling.enabled }}
   replicas: {{ .Values.replicaCount }}
