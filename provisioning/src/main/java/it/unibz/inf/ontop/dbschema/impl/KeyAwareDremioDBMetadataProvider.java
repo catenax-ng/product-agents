@@ -53,7 +53,7 @@ public class KeyAwareDremioDBMetadataProvider extends DremioDBMetadataProvider {
 
             while (rs.next()) {
                 RelationID extractedId = getRelationID(rs, "TABLE_CAT", "TABLE_SCHEM","TABLE_NAME");
-                checkSameRelationID(extractedId, id);
+                checkSameRelationID(extractedId, id,"getColumns");
 
                 RelationDefinition.AttributeListBuilder builder = relations.computeIfAbsent(extractedId,
                         i -> DatabaseTableDefinition.attributeListBuilder());
