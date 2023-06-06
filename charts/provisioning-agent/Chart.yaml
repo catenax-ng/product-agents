@@ -2,7 +2,7 @@
 apiVersion: v2
 name: provisioning-agent
 description: >-
-  Catena-X Provisioning Agent - Knowledge-Agents Compatible Data Binding Layer
+  Tractus-X Provisioning Agent - Knowledge-Agents Compatible Data Binding Layer
 home: https://github.com/catenax-ng/product-knowledge/infrastructure/charts/provisioning-agent
 type: application
 appVersion: "1.9.1-SNAPSHOT"

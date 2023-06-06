@@ -6,7 +6,7 @@
 # See license file in the top folder
 #
 
-FROM ontop/ontop:5.0.0
+FROM ontop/ontop:5.0.2
 
 # Switch to root
 USER root
