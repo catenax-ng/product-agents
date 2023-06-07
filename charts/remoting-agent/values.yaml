@@ -9,7 +9,7 @@ replicaCount: 1
 
 image:
   # -- Which derivate of the remoting agent to use
-  repository: ghcr.io/catenax-ng/product-knowledge/remoting-agent
+  repository: ghcr.io/catenax-ng/product-agents/remoting-agent
   # -- [Kubernetes image pull policy](https://kubernetes.io/docs/concepts/containers/images/#image-pull-policy) to use
   pullPolicy: IfNotPresent
   # -- Overrides the image tag whose default is the chart appVersion
