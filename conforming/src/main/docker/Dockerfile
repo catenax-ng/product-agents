@@ -9,7 +9,7 @@ FROM openjdk:21-jdk-slim
 COPY target/conforming-agent-*.jar /app/lib/
 
 RUN addgroup --system --gid 30000 agent \
-    && adduser --system --home /app --uid 10000 --gid 30000 agent \
+    && adduser --system --home /app --uid 10001 --gid 30000 agent \
     && chown -R agent:agent /app
 
 WORKDIR /app

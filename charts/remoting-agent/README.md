@@ -1,6 +1,6 @@
 # remoting-agent
 
-![Version: 1.9.1-SNAPSHOT](https://img.shields.io/badge/Version-0.8.5--SNAPSHOT-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.9.1-SNAPSHOT](https://img.shields.io/badge/AppVersion-0.8.5--SNAPSHOT-informational?style=flat-square)
+![Version: 1.9.1-SNAPSHOT](https://img.shields.io/badge/Version-1.9.1--SNAPSHOT-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.9.1-SNAPSHOT](https://img.shields.io/badge/AppVersion-1.9.1--SNAPSHOT-informational?style=flat-square)
 
 Tractus-X Remoting Agent - Knowledge-Agents Compatible API Binding Layer
 
@@ -38,7 +38,7 @@ $ helm install my-release catenax-ng-product-knowledge/remoting-agent --version 
 | envSecretName | string | `nil` | [Kubernetes Secret Resource](https://kubernetes.io/docs/concepts/configuration/secret/) name to load environment variables from |
 | fullnameOverride | string | `""` | Overrides the releases full name |
 | image.pullPolicy | string | `"IfNotPresent"` | [Kubernetes image pull policy](https://kubernetes.io/docs/concepts/containers/images/#image-pull-policy) to use |
-| image.repository | string | `"ghcr.io/catenax-ng/product-knowledge/remoting-agent"` | Which derivate of the remoting agent to use |
+| image.repository | string | `"ghcr.io/catenax-ng/product-agents/remoting-agent"` | Which derivate of the remoting agent to use |
 | image.tag | string | `""` | Overrides the image tag whose default is the chart appVersion |
 | imagePullSecret.dockerconfigjson | string | `""` | Image pull secret to create to [obtain the container image from private registries](https://kubernetes.io/docs/concepts/containers/images/#using-a-private-registry) Note: This value needs to adhere to the [(base64 encoded) .dockerconfigjson format](https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/#registry-secret-existing-credentials). Furthermore, if 'imagePullSecret.dockerconfigjson' is defined, it takes precedence over 'imagePullSecrets'. |
 | imagePullSecrets | list | `[]` | Existing image pull secret to use to [obtain the container image from private registries](https://kubernetes.io/docs/concepts/containers/images/#using-a-private-registry) |
@@ -63,7 +63,7 @@ $ helm install my-release catenax-ng-product-knowledge/remoting-agent --version 
 | podAnnotations | object | `{}` | [Annotations](https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/) added to deployed [pods](https://kubernetes.io/docs/concepts/workloads/pods/) |
 | podSecurityContext.fsGroup | int | `30000` | The owner for volumes and any files created within volumes will belong to this guid |
 | podSecurityContext.runAsGroup | int | `30000` | Processes within a pod will belong to this guid |
-| podSecurityContext.runAsUser | int | `10000` | Runs all processes within a pod with a special uid |
+| podSecurityContext.runAsUser | int | `10001` | Runs all processes within a pod with a special uid |
 | podSecurityContext.seccompProfile.type | string | `"RuntimeDefault"` | Restrict a Container's Syscalls with seccomp |
 | readinessProbe.enabled | bool | `true` | Whether to enable kubernetes readiness-probes |
 | readinessProbe.failureThreshold | int | `3` | Minimum consecutive failures for the probe to be considered failed after having succeeded |
@@ -72,13 +72,14 @@ $ helm install my-release catenax-ng-product-knowledge/remoting-agent --version 
 | readinessProbe.timeoutSeconds | int | `5` | number of seconds until a timeout is assumed |
 | replicaCount | int | `1` | Specifies how many replicas of a deployed pod shall be created during the deployment Note: If horizontal pod autoscaling is enabled this setting has no effect |
 | repositories | object | `{}` | A map of repository names to configuration ttl files |
-| resources | object | `{}` | [Resource management](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/) applied to the deployed pod |
+| resources | object | `{"limits":{"cpu":0.25,"memory":"256Mi"},"requests":{"cpu":0.25,"memory":"256Mi"}}` | [Resource management](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/) applied to the deployed pod We recommend 25% of a cpu and 256MB per endpoint  |
 | securityContext.allowPrivilegeEscalation | bool | `false` | Controls [Privilege Escalation](https://kubernetes.io/docs/concepts/security/pod-security-policy/#privilege-escalation) enabling setuid binaries changing the effective user ID |
 | securityContext.capabilities.add | list | `["NET_BIND_SERVICE"]` | Specifies which capabilities to add to issue specialized syscalls |
 | securityContext.capabilities.drop | list | `["ALL"]` | Specifies which capabilities to drop to reduce syscall attack surface |
-| securityContext.readOnlyRootFilesystem | bool | `false` | Whether the root filesystem is mounted in read-only mode |
+| securityContext.readOnlyRootFilesystem | bool | `true` | Whether the root filesystem is mounted in read-only mode |
+| securityContext.runAsGroup | int | `30000` | Processes within a pod will belong to this guid |
 | securityContext.runAsNonRoot | bool | `true` | Requires the container to run without root privileges |
-| securityContext.runAsUser | int | `10000` | The container's process will run with the specified uid |
+| securityContext.runAsUser | int | `10001` | The container's process will run with the specified uid |
 | service.type | string | `"ClusterIP"` | [Service type](https://kubernetes.io/docs/concepts/services-networking/service/#publishing-services-service-types) to expose the running application on a set of Pods as a network service. |
 | serviceAccount.annotations | object | `{}` | [Annotations](https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/) to add to the service account |
 | serviceAccount.create | bool | `true` | Specifies whether a [service account](https://kubernetes.io/docs/tasks/configure-pod-container/configure-service-account/) should be created per release |

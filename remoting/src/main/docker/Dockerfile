@@ -23,7 +23,7 @@ RUN if [ "${HTTP_PROXY}" != ""  ]; then \
     apt-get -y update && \
     apt-get -y --no-install-recommends install unzip=6.0-26ubuntu3 && \
     addgroup --system --gid 30000 tomcat && \
-    adduser --disabled-password --gecos "" --ingroup tomcat --uid 10000 tomcat && \
+    adduser --disabled-password --gecos "" --ingroup tomcat --uid 10001 tomcat && \
     rm -rf /usr/local/tomcat/webapps/* && \
     if [ "${HTTP_PROXY}" != ""  ]; then rm -f /etc/apt/apt.conf.d/proxy.conf; fi && \
     wget -q -O /tmp/rdf4j.zip "https://rhlx01.hs-esslingen.de/pub/Mirrors/eclipse/rdf4j/eclipse-rdf4j-4.2.1-sdk.zip" && \

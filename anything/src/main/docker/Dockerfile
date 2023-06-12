@@ -18,7 +18,7 @@ RUN if [ "${HTTP_PROXY}" != ""  ]; then \
     && if [ "${HTTP_PROXY}" != ""  ]; then rm -f /etc/apt/apt.conf.d/proxy.conf; fi \
     && mkdir -p /opt/xyz/lib \
     && groupadd --system -g 30000 xyz \
-    && useradd --base-dir /opt/xyz --system -u 10000 --gid xyz xyz \
+    && useradd --base-dir /opt/xyz --system -u 10001 --gid xyz xyz \
     && wget -q "${DOWNLOAD_URL}" -O /opt/xyz/lib/sparql-anything-server.jar \
     && chown -R xyz:xyz /opt/xyz \
     && chmod +x /opt/xyz/bin/xyz.sh
