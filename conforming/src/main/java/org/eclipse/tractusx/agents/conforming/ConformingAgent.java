@@ -200,12 +200,20 @@ public class ConformingAgent extends AgentApi {
         return Map.of(resultType.toString(),target.getBytes());
     }
 
+
     protected String getSimpleJson(String bindingVar) {
+        if(bindingVar!=null) {
+            return simpleBindJson.replaceAll("bindingVar",bindingVar);
+        }
         return simpleJson;
     }
 
     protected String getSimpleXml(String bindingVar) {
-        return simpleXml;
+        if(bindingVar!=null) {
+            return simpleBindXml.replaceAll("bindingVar", bindingVar);
+        } else {
+            return simpleXml;
+        }
     }
 
     /** produces a standard response */
@@ -228,7 +236,7 @@ public class ConformingAgent extends AgentApi {
         if(resultType==null) {
             return annotate(Response.status(400,"KA-BIND/KA-MATCH: Only supports application/sparql-results+json|xml compatible Accept header"));
         }
-        String bindingVar="bindingVar";
+        String bindingVar=null;
         if(query!=null) {
             Matcher matcher=pattern.matcher(query);
             if(matcher.find()) {
@@ -248,7 +256,7 @@ public class ConformingAgent extends AgentApi {
         if(!bodyType.isCompatible(sq) && !bodyType.isCompatible(srj) && !bodyType.isCompatible(srx)) {
             return annotate(Response.status(400,"KA-BIND/KA-MATCH postAgent only accepts application/sparql-query|results+json|xml in body."));
         }
-        String bindingVar="bindingVar";
+        String bindingVar=null;
         String toCheck=query;
         if(query==null) {
             toCheck=String.valueOf(body);

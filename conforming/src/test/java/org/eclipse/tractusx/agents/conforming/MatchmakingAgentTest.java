@@ -27,7 +27,7 @@ public class MatchmakingAgentTest extends ConformingAgentTest {
 
     @Override
     protected int getNumberVars() {
-        return 4;
+        return 3;
     }
 
     @Test
