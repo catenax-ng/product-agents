@@ -5,7 +5,7 @@
 # See license file in the top folder
 #
 
-FROM openjdk:11-jdk as run
+FROM openjdk:18-jdk as run
 
 COPY resources/xyz.sh /opt/xyz/bin/
 
