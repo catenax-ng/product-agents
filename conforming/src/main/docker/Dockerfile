@@ -4,7 +4,7 @@
 # See authors file in the top folder
 # See license file in the top folder
 #
-FROM openjdk:21-jdk-slim
+FROM openjdk:22-jdk-slim
 
 COPY target/conforming-agent-*.jar /app/lib/
 
