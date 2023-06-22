@@ -4,7 +4,7 @@
 # See authors file in the top folder
 # See license file in the top folder
 #
-FROM tomcat:10.1-jre11-temurin
+FROM tomcat:9-jre11-temurin
 
 ENV JAVA_OPTS="-Xmx2g"
 ENV CATALINA_OPTS="-Dorg.eclipse.rdf4j.appdata.basedir=/var/rdf4j"

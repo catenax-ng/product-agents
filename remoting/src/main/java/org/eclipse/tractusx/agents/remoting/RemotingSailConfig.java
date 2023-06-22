@@ -29,7 +29,7 @@ public class RemotingSailConfig extends AbstractSailImplConfig {
     /**
      * constant
      */
-    public static String CONFIG_NAMESPACE="https://github.com/catenax-ng/product-knowledge/ontology/fx.ttl#";
+    public static String CONFIG_NAMESPACE="https://www.w3id.org/catenax/ontology/function#";
 
     /**
      * constant

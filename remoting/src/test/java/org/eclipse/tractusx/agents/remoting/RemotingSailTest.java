@@ -39,9 +39,9 @@ public class RemotingSailTest {
         rsc.parse(graph,Models.subjectBNode(graph.filter(null,rsc.vf.createIRI("http://www.openrdf.org/config/sail#","sailType"),rsc.vf.createLiteral("org.eclipse.tractusx.agents:Remoting"))).get());
         rsc.validate();
         assertEquals(4,rsc.invocations.size(),"correct number of invocation configs");
-        InvocationConfig health = rsc.invocations.get("https://github.com/catenax-ng/product-knowledge/ontology/health.ttl#HealthIndication");
+        InvocationConfig health = rsc.invocations.get("https://www.w3id.org/catenax/ontology/health#HealthIndication");
         assertEquals(100,health.batch,"Correct batch size");
-        assertEquals("https://github.com/catenax-ng/product-knowledge/ontology/health.ttl#requestComponentId",health.result.correlationInput,"Correct correlation input");
+        assertEquals("https://www.w3id.org/catenax/ontology/health#requestComponentId",health.result.correlationInput,"Correct correlation input");
     }
     
     /**
@@ -52,38 +52,37 @@ public class RemotingSailTest {
         
         RemotingSailConfig rsc=new RemotingSailConfig(RemotingSailFactory.SAIL_TYPE);
         InvocationConfig ic=new InvocationConfig();
-        rsc.invocations.put("https://github.com/catenax-ng/product-knowledge/ontology/prognosis.ttl#Prognosis",ic);
+        rsc.invocations.put("https://www.w3id.org/catenax/ontology/prognosis#Prognosis",ic);
         ic.targetUri="class:org.eclipse.tractusx.agents.remoting.TestFunction#test";
         ArgumentConfig ac=new ArgumentConfig();
         ac.argumentName = "arg0";
-        ic.arguments.put("https://github.com/catenax-ng/product-knowledge/ontology/prognosis.ttl#input-1",ac);
+        ic.arguments.put("https://www.w3id.org/catenax/ontology/prognosis#input-1",ac);
         ac=new ArgumentConfig();
         ac.argumentName = "arg1";
-        ic.arguments.put("https://github.com/catenax-ng/product-knowledge/ontology/prognosis.ttl#input-2",ac);
+        ic.arguments.put("https://www.w3id.org/catenax/ontology/prognosis#input-2",ac);
         ResultConfig rc=new ResultConfig();
         ic.result=rc;
-        ic.resultName="https://github.com/catenax-ng/product-knowledge/ontology/prognosis.ttl#Result";
+        ic.resultName="https://www.w3id.org/catenax/ontology/prognosis#Result";
 
         ReturnValueConfig rvc=new ReturnValueConfig();
 
-        rc.outputs.put("https://github.com/catenax-ng/product-knowledge/ontology/prognosis.ttl#output",rvc);
+        rc.outputs.put("https://www.w3id.org/catenax/ontology/prognosis#output",rvc);
         rsc.validate();
 
         Repository rep = new SailRepository(new RemotingSail(rsc));
 
         try (RepositoryConnection conn = rep.getConnection()) {
             TupleQuery query=(TupleQuery) conn.prepareQuery(QueryLanguage.SPARQL,
-            "PREFIX cx: <https://github.com/catenax-ng/product-knowledge/ontology/cx.ttl#> "+
             "PREFIX xsd: <http://www.w3.org/2001/XMLSchema#> "+
-            "PREFIX prognosis: <https://github.com/catenax-ng/product-knowledge/ontology/prognosis.ttl#> "+
-            "SELECT ?invocation ?output "+
-            "WHERE { "+
-            "?invocation a prognosis:Prognosis; "+
-            "            prognosis:input-1 \"1\"^^xsd:string; "+
-            "            prognosis:input-2 \"2\"^^xsd:string; "+
-            "            prognosis:output ?output. "+
-            //"            prognosis:hasResult [ prognosis:output ?output ]. "+
-            "}");
+                "PREFIX prognosis: <https://www.w3id.org/catenax/ontology/prognosis#> "+
+                "SELECT ?invocation ?output "+
+                "WHERE { "+
+                "?invocation a prognosis:Prognosis; "+
+                "            prognosis:input-1 \"1\"^^xsd:string; "+
+                "            prognosis:input-2 \"2\"^^xsd:string; "+
+                "            prognosis:output ?output. "+
+                //"            prognosis:hasResult [ prognosis:output ?output ]. "+
+                "}");
             final TupleQueryResult result = query.evaluate();
 		    final String[] names = result.getBindingNames().toArray(new String[0]);
 		    assertEquals(2,names.length,"Correct number of binding names");
@@ -93,7 +92,7 @@ public class RemotingSailTest {
 		    assertEquals(1,bindings.size(),"Correct number of bindings");
             BindingSet firstBindingSet=bindings.get(0);
             assertTrue(firstBindingSet.getBindingNames().contains("invocation"),"Found invocation binding");
-            assertTrue(firstBindingSet.getValue("invocation").stringValue().startsWith("https://github.com/catenax-ng/product-knowledge/ontology/prognosis.ttl#"),"Invocation binding has the right prefix");
+            assertTrue(firstBindingSet.getValue("invocation").stringValue().startsWith("https://www.w3id.org/catenax/ontology/prognosis#"),"Invocation binding has the right prefix");
             assertEquals(2,firstBindingSet.size(),"Correct number of variables in binding 0");
             assertTrue(firstBindingSet.getBindingNames().contains("output"),"Found output binding");
             assertEquals("3",firstBindingSet.getValue("output").stringValue());
@@ -108,38 +107,37 @@ public class RemotingSailTest {
         
         RemotingSailConfig rsc=new RemotingSailConfig(RemotingSailFactory.SAIL_TYPE);
         InvocationConfig ic=new InvocationConfig();
-        rsc.invocations.put("https://github.com/catenax-ng/product-knowledge/ontology/prognosis.ttl#Prognosis",ic);
+        rsc.invocations.put("https://www.w3id.org/catenax/ontology/prognosis#Prognosis",ic);
         ic.targetUri="https://api.agify.io";
         ArgumentConfig ac=new ArgumentConfig();
         ac.argumentName = "name";
-        ic.arguments.put("https://github.com/catenax-ng/product-knowledge/ontology/prognosis.ttl#name",ac);
+        ic.arguments.put("https://www.w3id.org/catenax/ontology/prognosis#name",ac);
         ReturnValueConfig rvc=new ReturnValueConfig();
         rvc.path="age";
         rvc.dataType="http://www.w3.org/2001/XMLSchema#int";
         ResultConfig rc=new ResultConfig();
         ic.result=rc;
-        ic.resultName="https://github.com/catenax-ng/product-knowledge/ontology/prognosis.ttl#Result";
-        rc.outputs.put("https://github.com/catenax-ng/product-knowledge/ontology/prognosis.ttl#prediction",rvc);
+        ic.resultName="https://www.w3id.org/catenax/ontology/prognosis#Result";
+        rc.outputs.put("https://www.w3id.org/catenax/ontology/prognosis#prediction",rvc);
         rvc=new ReturnValueConfig();
         rvc.path="count";
         rvc.dataType="http://www.w3.org/2001/XMLSchema#int";
-        rc.outputs.put("https://github.com/catenax-ng/product-knowledge/ontology/prognosis.ttl#count",rvc);
+        rc.outputs.put("https://www.w3id.org/catenax/ontology/prognosis#count",rvc);
         rsc.validate();
 
         Repository rep = new SailRepository(new RemotingSail(rsc));
 
         try (RepositoryConnection conn = rep.getConnection()) {
             TupleQuery query=(TupleQuery) conn.prepareQuery(QueryLanguage.SPARQL,
-            "PREFIX cx: <https://github.com/catenax-ng/product-knowledge/ontology/cx.ttl#> "+
             "PREFIX xsd: <http://www.w3.org/2001/XMLSchema#> "+
-            "PREFIX prognosis: <https://github.com/catenax-ng/product-knowledge/ontology/prognosis.ttl#> "+
-            "SELECT ?invocation ?prediction ?count "+
-            "WHERE { "+
-            "?invocation a prognosis:Prognosis; "+
-            "            prognosis:name \"Schorsch\"^^xsd:string; "+
-            "            prognosis:prediction ?prediction; "+
-            "            prognosis:count ?count. "+
-            "}");
+                "PREFIX prognosis: <https://www.w3id.org/catenax/ontology/prognosis#> "+
+                "SELECT ?invocation ?prediction ?count "+
+                "WHERE { "+
+                "?invocation a prognosis:Prognosis; "+
+                "            prognosis:name \"Schorsch\"^^xsd:string; "+
+                "            prognosis:prediction ?prediction; "+
+                "            prognosis:count ?count. "+
+                "}");
             final TupleQueryResult result = query.evaluate();
 		    final String[] names = result.getBindingNames().toArray(new String[0]);
 		    assertEquals(3,names.length,"Correct number of binding names");
@@ -150,7 +148,7 @@ public class RemotingSailTest {
 		    assertEquals(1,bindings.size(),"Correct number of bindings");
             BindingSet firstBindingSet=bindings.get(0);
             assertTrue(firstBindingSet.getBindingNames().contains("invocation"),"Found invocation binding");
-            assertTrue(firstBindingSet.getValue("invocation").stringValue().startsWith("https://github.com/catenax-ng/product-knowledge/ontology/prognosis.ttl#"),"Invocation binding has the right prefix");
+            assertTrue(firstBindingSet.getValue("invocation").stringValue().startsWith("https://www.w3id.org/catenax/ontology/prognosis#"),"Invocation binding has the right prefix");
             assertEquals(3,firstBindingSet.size(),"Correct number of variables in binding 0");
             assertTrue(firstBindingSet.getBindingNames().contains("prediction"),"Found prediction binding");
             assertTrue(61<=((Literal) firstBindingSet.getValue("prediction")).intValue(),"Correct prediction value");
@@ -167,31 +165,30 @@ public class RemotingSailTest {
 
         RemotingSailConfig rsc=new RemotingSailConfig(RemotingSailFactory.SAIL_TYPE);
         InvocationConfig ic=new InvocationConfig();
-        rsc.invocations.put("https://github.com/catenax-ng/product-knowledge/ontology/prognosis.ttl#Prognosis",ic);
+        rsc.invocations.put("https://www.w3id.org/catenax/ontology/prognosis#Prognosis",ic);
         ic.targetUri="https://api.agify.io";
         ArgumentConfig ac=new ArgumentConfig();
         ac.argumentName = "name";
-        ic.arguments.put("https://github.com/catenax-ng/product-knowledge/ontology/prognosis.ttl#name",ac);
+        ic.arguments.put("https://www.w3id.org/catenax/ontology/prognosis#name",ac);
         ReturnValueConfig rvc=new ReturnValueConfig();
         rvc.path="age";
         rvc.dataType="http://www.w3.org/2001/XMLSchema#int";
         ResultConfig rc=new ResultConfig();
         ic.result=rc;
-        ic.resultName="https://github.com/catenax-ng/product-knowledge/ontology/prognosis.ttl#Result";
-        rc.outputs.put("https://github.com/catenax-ng/product-knowledge/ontology/prognosis.ttl#prediction",rvc);
+        ic.resultName="https://www.w3id.org/catenax/ontology/prognosis#Result";
+        rc.outputs.put("https://www.w3id.org/catenax/ontology/prognosis#prediction",rvc);
         rvc=new ReturnValueConfig();
         rvc.path="count";
         rvc.dataType="http://www.w3.org/2001/XMLSchema#int";
-        rc.outputs.put("https://github.com/catenax-ng/product-knowledge/ontology/prognosis.ttl#count",rvc);
+        rc.outputs.put("https://www.w3id.org/catenax/ontology/prognosis#count",rvc);
         rsc.validate();
 
         Repository rep = new SailRepository(new RemotingSail(rsc));
 
         try (RepositoryConnection conn = rep.getConnection()) {
             TupleQuery query=(TupleQuery) conn.prepareQuery(QueryLanguage.SPARQL,
-                    "PREFIX cx: <https://github.com/catenax-ng/product-knowledge/ontology/cx.ttl#> "+
-                            "PREFIX xsd: <http://www.w3.org/2001/XMLSchema#> "+
-                            "PREFIX prognosis: <https://github.com/catenax-ng/product-knowledge/ontology/prognosis.ttl#> "+
+                         "PREFIX xsd: <http://www.w3.org/2001/XMLSchema#> "+
+                            "PREFIX prognosis: <https://www.w3id.org/catenax/ontology/prognosis#> "+
                             "SELECT ?invocation ?input ?prediction ?count "+
                             "WHERE { "+
                             " VALUES(?input) { (\"Schorsch\"^^xsd:string) (\"Christoph\"^^xsd:string)}"+
@@ -212,7 +209,7 @@ public class RemotingSailTest {
             BindingSet firstBindingSet=bindings.get(0);
             assertEquals(4,firstBindingSet.size(),"Correct number of variables in binding 0");
             assertTrue(firstBindingSet.getBindingNames().contains("invocation"),"Found invocation binding");
-            assertTrue(firstBindingSet.getValue("invocation").stringValue().startsWith("https://github.com/catenax-ng/product-knowledge/ontology/prognosis.ttl#"),"Invocation binding has the right prefix");
+            assertTrue(firstBindingSet.getValue("invocation").stringValue().startsWith("https://www.w3id.org/catenax/ontology/prognosis#"),"Invocation binding has the right prefix");
             assertTrue(firstBindingSet.getBindingNames().contains("input"),"Found input binding");
             assertTrue(firstBindingSet.getValue("input").stringValue().equals("Schorsch"));
             assertTrue(firstBindingSet.getBindingNames().contains("prediction"),"Found prediction binding");
@@ -222,7 +219,7 @@ public class RemotingSailTest {
             BindingSet secondBindingSet=bindings.get(1);
             assertEquals(4,secondBindingSet.size(),"Correct number of variables in binding 0");
             assertTrue(secondBindingSet.getBindingNames().contains("invocation"),"Found invocation binding");
-            assertTrue(secondBindingSet.getValue("invocation").stringValue().startsWith("https://github.com/catenax-ng/product-knowledge/ontology/prognosis.ttl#"),"Invocation binding has the right prefix");
+            assertTrue(secondBindingSet.getValue("invocation").stringValue().startsWith("https://www.w3id.org/catenax/ontology/prognosis#"),"Invocation binding has the right prefix");
             assertTrue(secondBindingSet.getBindingNames().contains("input"),"Found input binding");
             assertTrue(secondBindingSet.getValue("input").stringValue().equals("Christoph"));
             assertTrue(secondBindingSet.getBindingNames().contains("prediction"),"Found prediction binding");

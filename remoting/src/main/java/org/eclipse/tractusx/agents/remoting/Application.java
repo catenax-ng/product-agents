@@ -41,19 +41,19 @@ public class Application {
     public static void main(String[] args) {        
         RemotingSailConfig rsc=new RemotingSailConfig(RemotingSailFactory.SAIL_TYPE);
         InvocationConfig ic=new InvocationConfig();
-        rsc.invocations.put("https://github.com/catenax-ng/product-knowledge/ontology/prognosis.ttl#Invocation",ic);
+        rsc.invocations.put("https://www.w3id.org/catenax/ontology/prognosis#Invocation",ic);
         ic.targetUri="class:io.catenax.knowledge.agents.remoting.TestFunction#test";
         ArgumentConfig ac=new ArgumentConfig();
         ac.argumentName = "arg0";
-        ic.arguments.put("https://github.com/catenax-ng/product-knowledge/ontology/prognosis.ttl#input-1",ac);
+        ic.arguments.put("https://www.w3id.org/catenax/ontology/prognosis#input-1",ac);
         ac=new ArgumentConfig();
         ac.argumentName = "arg1";
-        ic.arguments.put("https://github.com/catenax-ng/product-knowledge/ontology/prognosis.ttl#input-2",ac);
+        ic.arguments.put("https://www.w3id.org/catenax/ontology/prognosis#input-2",ac);
         ReturnValueConfig rvc=new ReturnValueConfig();
         ResultConfig rc=new ResultConfig();
-        rc.outputs.put("https://github.com/catenax-ng/product-knowledge/ontology/prognosis.ttl#output",rvc);
+        rc.outputs.put("https://www.w3id.org/catenax/ontology/prognosis#output",rvc);
         ic.result=rc;
-        ic.resultName="https://github.com/catenax-ng/product-knowledge/ontology/prognosis.ttl#Result";
+        ic.resultName="https://www.w3id.org/catenax/ontology/prognosis#Result";
 
         rsc.validate();
 
@@ -64,7 +64,7 @@ public class Application {
             TupleQuery query=(TupleQuery) conn.prepareQuery(QueryLanguage.SPARQL,
             "PREFIX cx: <https://github.com/catenax-ng/product-knowledge/ontology/cx.ttl#> "+
             "PREFIX xsd: <http://www.w3.org/2001/XMLSchema#> "+
-            "PREFIX prognosis: <https://github.com/catenax-ng/product-knowledge/ontology/prognosis.ttl#> "+
+            "PREFIX prognosis: <https://www.w3id.org/catenax/ontology/prognosis#> "+
             "SELECT ?output "+
             "WHERE { "+
             "?invocation a prognosis:Invocation; "+

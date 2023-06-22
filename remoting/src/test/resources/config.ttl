@@ -11,11 +11,11 @@
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 @prefix json: <https://json-schema.org/draft/2020-12/schema#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix cx-fx: <https://github.com/catenax-ng/product-knowledge/ontology/fx.ttl#>.
-@prefix cx-prognosis: <https://github.com/catenax-ng/product-knowledge/ontology/prognosis.ttl#>.
-@prefix cx-lifetime: <https://github.com/catenax-ng/product-knowledge/ontology/lifetime.ttl#>.
-@prefix cx-health: <https://github.com/catenax-ng/product-knowledge/ontology/health.ttl#>.
-@prefix cx-rt: <urn:io.catenax.knowledge.agents.remoting#>.
+@prefix cx-fx: <https://www.w3id.org/catenax/ontology/function#>.
+@prefix cx-prognosis: <https://www.w3id.org/catenax/ontology/prognosis#>.
+@prefix cx-lifetime: <https://www.w3id.org/catenax/ontology/lifetime#>.
+@prefix cx-health: <https://www.w3id.org/catenax/ontology/health#>.
+@prefix cx-rt: <https://www.w3id.org/catenax/ontology/remoting#>.
 
 [] rdf:type rep:Repository ;
    rep:repositoryID "prognosis" ;

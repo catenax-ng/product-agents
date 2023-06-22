@@ -22,14 +22,15 @@ import java.util.*;
 /**
  * The query processing is done while visiting 
  */
+@SuppressWarnings("removal")
 public class RemotingQueryModelVisitor implements QueryModelVisitor<SailException>, IBindingHost {
 
 	/** the state */
-	protected Map<Value,Invocation> invocations=new HashMap<Value,Invocation>();
+	protected Map<Value,Invocation> invocations= new HashMap<>();
 
     /** bindings and results */
     final protected Set<String> variables=new HashSet<>();
-    final protected Collection<MutableBindingSet> bindings= new ArrayList<>();
+    final protected List<MutableBindingSet> bindings= new ArrayList<>();
 
     /** the logger */
     protected Logger logger = LoggerFactory.getLogger(getClass());
@@ -38,7 +39,7 @@ public class RemotingQueryModelVisitor implements QueryModelVisitor<SailExceptio
 
     /**
      * create a new visitor
-     * @param connection
+     * @param connection the sail connection
      */
 	public RemotingQueryModelVisitor(RemotingSailConnection connection) {
 		this.connection=connection;        
@@ -52,7 +53,7 @@ public class RemotingQueryModelVisitor implements QueryModelVisitor<SailExceptio
 
     @Override
 	public void meet(QueryRoot node) throws SailException {
-		logger.debug(String.format("Visiting a query root"));
+		logger.debug(String.format("Visiting a query root %s",node.getClass()));
 		node.getArg().visit(this);
     }
 
@@ -78,7 +79,7 @@ public class RemotingQueryModelVisitor implements QueryModelVisitor<SailExceptio
 
     /**
      * convert a binding set to a mutable version
-     * @param bs
+     * @param bs the binding set
      * @return mutable binding set
      */
     protected MutableBindingSet makeMutable(BindingSet bs) {
@@ -97,17 +98,9 @@ public class RemotingQueryModelVisitor implements QueryModelVisitor<SailExceptio
 	public void meet(BindingSetAssignment node) throws SailException {
         variables.addAll(node.getBindingNames());
         if(bindings.isEmpty()) {
-            node.getBindingSets().forEach( binding -> {
-                bindings.add(makeMutable(binding));
-            });
+            node.getBindingSets().forEach( binding -> bindings.add(makeMutable(binding)));
         } else {
-            bindings.forEach( binding -> {
-                node.getBindingSets().forEach( joinBindings -> {
-                   joinBindings.forEach( joinBinding -> {
-                       binding.addBinding(joinBinding);
-                   });
-                });
-            });
+            bindings.forEach( binding -> node.getBindingSets().forEach(joinBindings -> joinBindings.forEach(binding::addBinding)));
         }
     }
 
@@ -217,6 +210,11 @@ public class RemotingQueryModelVisitor implements QueryModelVisitor<SailExceptio
     }
 
     @Override
+    public void meet(AggregateFunctionCall node) throws SailException {
+        throw new SailException(String.format("No support for %s",node));
+    }
+
+    @Override
 	public void meet(Group node) throws SailException {
         throw new SailException(String.format("No support for %s",node));
     }
@@ -283,7 +281,7 @@ public class RemotingQueryModelVisitor implements QueryModelVisitor<SailExceptio
 
     @Override
 	public void meet(Join node) throws SailException {
-        logger.debug(String.format("Visiting a join"));
+        logger.debug(String.format("Visiting a join %s",node.getClass()));
         node.getLeftArg().visit(this);
         node.getRightArg().visit(this);
     }
@@ -309,8 +307,8 @@ public class RemotingQueryModelVisitor implements QueryModelVisitor<SailExceptio
     }
 
     @Override
-	public void meet(Like node) throws SailException {
-        throw new SailException(String.format("No support for %s",node));
+    public void meet(Like like) throws SailException {
+
     }
 
     @Override
@@ -380,7 +378,7 @@ public class RemotingQueryModelVisitor implements QueryModelVisitor<SailExceptio
 
     @Override
 	public void meet(Projection node) throws SailException {
-		logger.debug(String.format("Visiting a projection"));
+		logger.debug(String.format("Visiting a projection %s",node.getClass()));
 		node.getArg().visit(this);
         for(Invocation invocation : invocations.values()) {
             invocation.execute(connection,this);
@@ -390,7 +388,7 @@ public class RemotingQueryModelVisitor implements QueryModelVisitor<SailExceptio
 
     @Override
 	public void meet(ProjectionElem node) throws SailException {
-		logger.debug(String.format("Visiting a projection element"));
+		logger.debug(String.format("Visiting a projection element %s",node.getClass()));
         bindings.forEach( binding -> {
             if(node.getTargetName()!= null && !node.getTargetName().equals(node.getSourceName())) {
                 if (!binding.hasBinding(node.getTargetName())) {
@@ -405,7 +403,7 @@ public class RemotingQueryModelVisitor implements QueryModelVisitor<SailExceptio
 
     @Override
     public void meet(ProjectionElemList node) throws SailException {
-		logger.debug(String.format("Visiting a projection list"));
+		logger.debug(String.format("Visiting a projection list %s",node.getClass()));
         node.visitChildren(this);
     }
 
@@ -486,20 +484,20 @@ public class RemotingQueryModelVisitor implements QueryModelVisitor<SailExceptio
             } else {
                 invocation=new Invocation(connection);
                 invocation.service=ic;
-                invocation.key=(IRI) bindings.stream().findFirst().get().getBinding(subject.getName()).getValue();
+                invocation.key=(IRI) bindings.get(0).getBinding(subject.getName()).getValue();
                 logger.debug(String.format("Registering a new invocation %s for service type %s",subject.getValue(),invocation.service));
                 invocations.put(subject.getValue(),invocation);
             }
         } else {
             Var subject = statement.getSubjectVar();
             if(!subject.hasValue()) {
-                if(!bindings.stream().findFirst().get().hasBinding(subject.getName())) {
+                if(!bindings.get(0).hasBinding(subject.getName())) {
                     throw new SailException(String.format("Subject variable %s not bound to invocation or result.",subject.getName()));
                 } 
-                subject=new Var(subject.getName(),bindings.stream().findFirst().get().getValue(subject.getName()));
+                subject=new Var(subject.getName(),bindings.get(0).getValue(subject.getName()));
             }
             if(!invocations.containsKey(subject.getValue())) {
-                throw new SailException(String.format("Trying to bind argument predicate %s to non existant invocation %s. Maybe you need to switch statement order such that rdf:type precedes any other bindings.",predicate.getValue().stringValue(),subject));
+                throw new SailException(String.format("Trying to bind argument predicate %s to non existent invocation %s. Maybe you need to switch statement order such that rdf:type precedes any other bindings.",predicate.getValue().stringValue(),subject));
             }
             Invocation invocation=invocations.get(subject.getValue());
             IRI argument=(IRI) predicate.getValue();

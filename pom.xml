@@ -9,7 +9,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.eclipse.tractusx</groupId>
     <artifactId>agents</artifactId>
-    <version>1.9.1-SNAPSHOT</version>
+    <version>1.9.3-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>Tractus-X Knowledge Agents Reference Implementations</name>
     <description>Provides Reference Implementations and Artifacts to Realize Semantic Dataspace Backends</description>
@@ -24,8 +24,11 @@
         <mockito.version>4.6.1</mockito.version>
         <failsafe.version>3.2.4</failsafe.version>
         <okhttp.version>4.9.3</okhttp.version>
-        <rdf4j.version>4.2.0</rdf4j.version>
-        <slf4j.version>2.0.3</slf4j.version>
+        <rdf4j.version>4.3.2</rdf4j.version>
+        <slf4j.version>2.0.7</slf4j.version>
+        <httpcomponents.version>4.5.14</httpcomponents.version>
+        <jackson.version>2.13.4</jackson.version>
+        <jackson.databind.version>2.13.4.2</jackson.databind.version>
 
         <!-- Source characteristics -->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
