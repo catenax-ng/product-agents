@@ -27,7 +27,7 @@
         <rdf4j.version>4.3.2</rdf4j.version>
         <slf4j.version>2.0.7</slf4j.version>
         <httpcomponents.version>4.5.14</httpcomponents.version>
-        <jackson.version>2.15.1</jackson.version>
+        <jackson.version>2.15.2</jackson.version>
         <jackson.databind.version>2.15.1</jackson.databind.version>
         <jaxb.version>2.3.0</jaxb.version>
         <migbase.version>2.2</migbase.version>
