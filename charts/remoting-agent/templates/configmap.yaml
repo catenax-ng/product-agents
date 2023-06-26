@@ -9,10 +9,8 @@ metadata:
 data:
   logback.xml: |-
     {{- .Values.logging.configuration | nindent 4 }}
-
   {{ $scope := . }}
   {{- range $asset, $content := .Values.repositories }}
-  {{- $asset }}.ttl: |-
-  {{- $content | nindent 4 }}
+  {{ $asset }}.ttl: {{ $content | toYaml | indent 2 }}
   {{- end }}
 

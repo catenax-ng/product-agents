@@ -39,7 +39,7 @@ public class MatchmakingAgent extends ConformingAgent {
 
     @Override
     public Response postAgent(Object body, String asset, String queryLn, String query, String _vin,  List<String> troubleCode) throws NotFoundException {
-        if(body==null && asset == null) {
+        if((body==null || String.valueOf(body).isEmpty()) && asset == null) {
             return annotate(Response.status(400,"{ \"error\":400, \"reason\":\"KA-BIND: body or asset parameter must be set\" }"));
         }
         return super.postAgent(body, asset, queryLn, query, _vin,troubleCode);

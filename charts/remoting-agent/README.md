@@ -72,7 +72,7 @@ $ helm install my-release catenax-ng-product-knowledge/remoting-agent --version 
 | readinessProbe.timeoutSeconds | int | `5` | number of seconds until a timeout is assumed |
 | replicaCount | int | `1` | Specifies how many replicas of a deployed pod shall be created during the deployment Note: If horizontal pod autoscaling is enabled this setting has no effect |
 | repositories | object | `{}` | A map of repository names to configuration ttl files |
-| resources | object | `{"limits":{"cpu":0.25,"memory":"256Mi"},"requests":{"cpu":0.25,"memory":"256Mi"}}` | [Resource management](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/) applied to the deployed pod We recommend 25% of a cpu and 256MB per endpoint  |
+| resources | object | `{"limits":{"cpu":"250m","memory":"256Mi"},"requests":{"cpu":"250m","memory":"256Mi"}}` | [Resource management](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/) applied to the deployed pod We recommend 25% of a cpu and 256MB per endpoint  |
 | securityContext.allowPrivilegeEscalation | bool | `false` | Controls [Privilege Escalation](https://kubernetes.io/docs/concepts/security/pod-security-policy/#privilege-escalation) enabling setuid binaries changing the effective user ID |
 | securityContext.capabilities.add | list | `["NET_BIND_SERVICE"]` | Specifies which capabilities to add to issue specialized syscalls |
 | securityContext.capabilities.drop | list | `["ALL"]` | Specifies which capabilities to drop to reduce syscall attack surface |

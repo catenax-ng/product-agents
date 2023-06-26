@@ -27,9 +27,11 @@
         <rdf4j.version>4.3.2</rdf4j.version>
         <slf4j.version>2.0.7</slf4j.version>
         <httpcomponents.version>4.5.14</httpcomponents.version>
-        <jackson.version>2.13.4</jackson.version>
-        <jackson.databind.version>2.13.4.2</jackson.databind.version>
-
+        <jackson.version>2.15.1</jackson.version>
+        <jackson.databind.version>2.15.1</jackson.databind.version>
+        <jaxb.version>2.3.0</jaxb.version>
+        <migbase.version>2.2</migbase.version>
+        <ontop.version>5.0.2</ontop.version>
         <!-- Source characteristics -->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
