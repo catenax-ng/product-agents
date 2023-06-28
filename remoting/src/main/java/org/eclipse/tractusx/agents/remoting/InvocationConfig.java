@@ -33,6 +33,9 @@ public class InvocationConfig {
     /** the maximal batch size */
     protected long batch = 1;
 
+    /** whether it is an asynchronous call */
+    protected String callbackProperty;
+
     /** prefix to attach to all properties */
     protected String inputProperty;
     
@@ -89,6 +92,11 @@ public class InvocationConfig {
                                 "%s Method can only be used with REST service URLs but was %s.", method, targetUri));
                     }
 
+            }
+        }
+        if(callbackProperty!=null) {
+            if(result.callbackProperty==null) {
+                throw new SailConfigException("There should be a result callbackProperty configured when the invocation callbackProperty is set.");
             }
         }
         for (Map.Entry<String, ArgumentConfig> arg : arguments.entrySet()) {

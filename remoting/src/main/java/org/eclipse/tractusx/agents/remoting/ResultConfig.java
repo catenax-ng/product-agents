@@ -26,6 +26,8 @@ public class ResultConfig {
     /** where the id of the result can be found */
     String resultIdProperty=null;
     String correlationInput=null;
+    String callbackProperty=null;
+
     
     @Override
     public String toString() {
