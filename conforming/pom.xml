@@ -34,11 +34,11 @@
         <filter.main.resources>true</filter.main.resources>
         <skipTests>false</skipTests>
         <swagger-core-version>2.2.12</swagger-core-version>
-        <jersey2-version>2.39</jersey2-version>
+        <jersey2-version>2.40</jersey2-version>
         <junit-version>4.13.1</junit-version>
-        <logback-version>1.2.9</logback-version>
+        <logback-version>1.4.8</logback-version>
         <servlet-api-version>2.5</servlet-api-version>
-        <beanvalidation-version>1.1.0.Final</beanvalidation-version>
+        <beanvalidation-version>2.0.1.Final</beanvalidation-version>
     </properties>
 
     <dependencies>
