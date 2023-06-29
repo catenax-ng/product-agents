@@ -16,6 +16,7 @@ import java.lang.reflect.Parameter;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -91,7 +92,7 @@ public class Invocation {
         objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
     }
 
-    public SimpleDateFormat dateFormat=new SimpleDateFormat("yyyy-MM-dd");
+    public static SimpleDateFormat dateFormat=new SimpleDateFormat("yyyy-MM-dd");
 
     /**
      * creates a new invocaiton
@@ -107,7 +108,7 @@ public class Invocation {
      * @param target class to convert to
      * @return converted value
      */
-    public <Target> Target convertToObject(Value binding, Class<Target> target) throws SailException {
+    public static <Target> Target convertToObject(Value binding, Class<Target> target) throws SailException {
         if (target.isAssignableFrom(String.class)) {
             return (Target) binding.stringValue();
         } else if (target.isAssignableFrom(int.class)) {
@@ -209,7 +210,7 @@ public class Invocation {
      * @param path under source
      * @return path object, will be source if path is empty
      */
-    public Object traversePath(Object source, String... path) throws SailException {
+    public static Object traversePath(Object source, String... path) throws SailException {
         if (logger.isTraceEnabled()) {
             logger.trace(String.format("Accessing a path of length %d under %s", path.length, source));
         }
@@ -246,7 +247,7 @@ public class Invocation {
      * @return string rep
      * @throws SailException
      */
-    public String convertObjectToString(Object source) throws SailException {
+    public static String convertObjectToString(Object source) throws SailException {
         if(source instanceof JsonNode) {
             JsonNode node=(JsonNode) source;
             if (node.isNumber() || node.isTextual()) {
@@ -284,7 +285,8 @@ public class Invocation {
      */
     public Value convertOutputToValue(Object target, String resultKey, IRI output) throws SailException {
         if (service.result.outputProperty != null) {
-            target = traversePath(target, service.result.outputProperty);
+            String[] resultPath=service.result.outputProperty.split("\\.");
+            target = traversePath(target, resultPath);
         }
         ReturnValueConfig cf = service.result.outputs.get(output.stringValue());
         if (cf == null) {
@@ -293,7 +295,8 @@ public class Invocation {
         if (resultKey != null) {
             if (target.getClass().isArray()) {
                 if(service.result.resultIdProperty!=null) {
-                    target=Arrays.stream(((Object[]) target)).filter( tt -> resultKey.equals(convertObjectToString(traversePath(tt,service.result.resultIdProperty))))
+                    String[] resultPath=service.result.resultIdProperty.split("\\.");
+                    target=Arrays.stream(((Object[]) target)).filter( tt -> resultKey.equals(convertObjectToString(traversePath(tt,resultPath))))
                             .findFirst().get();
                 } else {
                     try {
@@ -304,12 +307,18 @@ public class Invocation {
                 }
             } else if (target instanceof ArrayNode) {
                 if(service.result.resultIdProperty!=null) {
+                    String[] resultPath=service.result.resultIdProperty.split("\\.");
                     ArrayNode array=(ArrayNode) target;
+                    boolean found=false;
                     for(int count=0;count<array.size();count++) {
-                        if(resultKey.equals(convertObjectToString(traversePath(array.get(count),service.result.resultIdProperty)))) {
+                        if(resultKey.equals(convertObjectToString(traversePath(array.get(count),resultPath)))) {
                             target=array.get(count);
+                            found=true;
                             break;
                         }
+                    }
+                    if(!found) {
+                        throw new SailException(String.format("Could not find result with key %s under property %s.", resultKey,service.result.resultIdProperty));
                     }
                 } else {
                     try {
@@ -320,12 +329,18 @@ public class Invocation {
                 }
             } else if (target instanceof Element) {
                 if(service.result.resultIdProperty!=null) {
+                    String[] resultPath=service.result.resultIdProperty.split("\\.");
                     NodeList nl =((Element) target).getChildNodes();
+                    boolean found=false;
                     for(int count=0;count<nl.getLength();count++) {
-                        if(resultKey.equals(convertObjectToString(traversePath(nl.item(count),service.result.resultIdProperty)))) {
+                        if(resultKey.equals(convertObjectToString(traversePath(nl.item(count),resultPath)))) {
                             target=nl.item(count);
+                            found=true;
                             break;
                         }
+                    }
+                    if(!found) {
+                        throw new SailException(String.format("Could not find result with key %s under property %s.", resultKey,service.result.resultIdProperty));
                     }
                 } else {
                     try {
@@ -347,7 +362,7 @@ public class Invocation {
      * @param dataType name of the target literal type
      * @return a literal
      */
-    public Value convertOutputToValue(Object target, ValueFactory vf, String cfPath, String dataType) throws SailException {
+    public static Value convertOutputToValue(Object target, ValueFactory vf, String cfPath, String dataType) throws SailException {
         String[] path = new String[0];
         if (cfPath != null) {
             path = cfPath.split("\\.");
@@ -375,6 +390,12 @@ public class Invocation {
                     return vf.createLiteral(Double.parseDouble(convertObjectToString(pathObj)));
                 } catch(NumberFormatException nfwe) {
                     throw new SailException(String.format("Could not convert %s to integer.", String.valueOf(pathObj)));
+                }
+            case "http://www.w3.org/2001/XMLSchema#float":
+                try {
+                    return vf.createLiteral(Float.parseFloat(convertObjectToString(pathObj)));
+                } catch(NumberFormatException nfwe) {
+                    throw new SailException(String.format("Could not convert %s to float.", String.valueOf(pathObj)));
                 }
             case "http://www.w3.org/2001/XMLSchema#string":
                 return vf.createLiteral(convertObjectToString(pathObj));
@@ -430,6 +451,7 @@ public class Invocation {
                 logger.trace(String.format("About to invoke REST call to %s ", ourl));
             }
             CloseableHttpResponse response = null;
+            CallbackToken asyncToken=null;
             Iterator<Collection<MutableBindingSet>> batches;
             if (service.batch > 1) {
                 batches = List.of(host.getBindings()).iterator();
@@ -438,7 +460,7 @@ public class Invocation {
             }
             for (; batches.hasNext(); ) {
                 Collection<MutableBindingSet> batch = batches.next();
-                String url=ourl;
+                final String[] url = {ourl};
                 switch (service.method) {
                     case "GET":
                         boolean isFirst = true;
@@ -448,20 +470,20 @@ public class Invocation {
                             }
                             if (batch.size() > 1) {
                                 if (isFirst) {
-                                    url = url + "?(";
+                                    url[0] = url[0] + "?(";
                                 } else {
-                                    url = url + "&(";
+                                    url[0] = url[0] + "&(";
                                 }
                             } else {
                                 if (isFirst) {
-                                    url = url + "?";
+                                    url[0] = url[0] + "?";
                                 } else {
-                                    url = url + "&";
+                                    url[0] = url[0] + "&";
                                 }
                             }
                             isFirst = false;
-                            boolean isFirstArg = true;
-                            for (Map.Entry<String, ArgumentConfig> argument : service.arguments.entrySet()) {
+                            final boolean[] isFirstArg = {true};
+                            service.arguments.entrySet().stream().sorted(new ArgumentComparator()).forEach(argument -> {
                                 if (logger.isTraceEnabled()) {
                                     logger.trace(String.format("About to process argument %s %s", argument.getKey(), argument.getValue()));
                                 }
@@ -473,22 +495,26 @@ public class Invocation {
                                     value = binding.getValue(mapping.getName());
                                 }
                                 Object render = convertToObject(value, String.class);
-                                if (isFirstArg) {
-                                    url = url + argument.getValue().argumentName;
+                                if (isFirstArg[0]) {
+                                    url[0] = url[0] + argument.getValue().argumentName;
                                 } else {
-                                    url = url + "&" + argument.getValue().argumentName;
+                                    url[0] = url[0] + "&" + argument.getValue().argumentName;
                                 }
-                                isFirstArg = false;
-                                url = url + "=" + render;
-                            }
+                                isFirstArg[0] = false;
+                                url[0] = url[0] + "=" + render;
+                            });
                             if (batch.size() > 1) {
-                                url = url + ")";
+                                url[0] = url[0] + ")";
                             }
                         }
                         if (logger.isTraceEnabled()) {
-                            logger.trace(String.format("Instantiated REST call target with parameters to %s ", url));
+                            logger.trace(String.format("Instantiated REST call target with parameters to %s ", url[0]));
                         }
-                        final HttpGet httpget = new HttpGet(url);
+                        final HttpGet httpget = new HttpGet(url[0]);
+                        if(service.authentication!=null) {
+                            httpget.addHeader(service.authentication.authKey,service.authentication.authCode);
+                        }
+
                         if (logger.isDebugEnabled()) {
                             logger.debug(String.format("Performing %s ", httpget));
                         }
@@ -520,17 +546,10 @@ public class Invocation {
                             }
                         }
 
-                        if (service.invocationIdProperty != null) {
-                            if (!message.isObject()) {
-                                throw new SailException(String.format("Cannot use invocationIdProperty in batch mode without inputProperty."));
-                            } else {
-                                ((ObjectNode) message).set(service.invocationIdProperty, objectMapper.getNodeFactory().textNode(key.stringValue()));
-                            }
-                        }
-
+                        final ObjectNode finalinput=input;
                         for (MutableBindingSet binding : batch) {
-                            boolean isCorrect=true;
-                            for (Map.Entry<String, ArgumentConfig> argument : service.arguments.entrySet()) {
+                            AtomicBoolean isCorrect= new AtomicBoolean(true);
+                            service.arguments.entrySet().stream().sorted(new ArgumentComparator()).forEach(argument -> {
                                 if (logger.isTraceEnabled()) {
                                     logger.trace(String.format("About to process argument %s %s", argument.getKey(), argument.getValue()));
                                 }
@@ -542,52 +561,56 @@ public class Invocation {
                                     } else {
                                      value = binding.getValue(var.getName());
                                     }
-                                } 
+                                }
+                                JsonNode render=null;
                                 if(value!=null) {
-                                    JsonNode render = convertToObject(value, JsonNode.class);
-                                    String pathName = argument.getValue().argumentName;
-                                    String[] argPath = pathName.split("\\.");
-                                    ObjectNode traverse = input;
-                                    int depth = 0;
-                                    for (String argField : argPath) {
-                                        if (depth != argPath.length - 1) {
-                                            if (traverse.has(argField)) {
-                                                JsonNode next = traverse.get(argField);
-                                                if (!(next instanceof ObjectNode)) {
-                                                    throw new SailException(String
-                                                            .format("Field %s was occupied by a non-object %s", argField, next));
-                                                } else {
-                                                    traverse = (ObjectNode) next;
-                                                }
-                                            } else {
-                                                ObjectNode next = objectMapper.createObjectNode();
-                                                traverse.set(argField, next);
-                                                traverse = next;
-                                            }
-                                        } else {
-                                            traverse.set(argField, render);
-                                        }
-                                        depth++;
-                                    } // set argument in input
+                                    render = convertToObject(value, JsonNode.class);
+                                } else if(argument.getValue().defaultValue!=null) {
+                                    render= (JsonNode) argument.getValue().defaultValue;
+                                }
+                                if(render!=null) {
+                                    setNode(objectMapper, finalinput, argument.getValue().argumentName, render);
                                 } else {
                                     if(argument.getValue().mandatory) {
                                       // TODO optional arguments
                                       logger.warn(String.format("Mandatory argument %s has no binding. Leaving the hole tuple.", argument.getKey()));
-                                      isCorrect=false;
+                                      isCorrect.set(false);
                                     }                                
                                 }
-                            }
-                            if(isCorrect) {
+                            });
+                            if(isCorrect.get()) {
                                 array.add(input);
                             }
                             input = objectMapper.createObjectNode();
                         }
+
+                        if (service.invocationIdProperty != null) {
+                            if (!message.isObject()) {
+                                throw new SailException(String.format("Cannot use invocationIdProperty in batch mode without inputProperty."));
+                            } else {
+                                setNode(objectMapper,((ObjectNode) message),service.invocationIdProperty, objectMapper.getNodeFactory().textNode(key.stringValue()));
+                            }
+                        }
+
+                        if(service.callbackProperty!=null) {
+                            setNode(objectMapper,((ObjectNode) message),service.callbackProperty,objectMapper.getNodeFactory().textNode(connection.remotingSail.config.callbackAddress));
+                            if(service.result.callbackProperty!=null) {
+                                asyncToken=CallbackController.register(service.result.callbackProperty,key.stringValue());
+                            }
+                        }
+
                         if (logger.isTraceEnabled()) {
                             logger.trace(String.format("Derived body %s", body));
                         }
-                        //objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
-                        final HttpPost httppost = new HttpPost(url);
+
+                        final HttpPost httppost = new HttpPost(url[0]);
+                        httppost.addHeader("accept","application/json");
+                        if(service.authentication!=null) {
+                            httppost.addHeader(service.authentication.authKey,service.authentication.authCode);
+                        }
+
                         if (service.method.equals("POST-JSON")) {
+                            httppost.addHeader("Content-Type","application/json");
                             httppost.setEntity(new StringEntity(objectMapper.writeValueAsString(body)));
                         } else {
                             MultipartEntityBuilder mpeb = MultipartEntityBuilder.create();
@@ -613,18 +636,20 @@ public class Invocation {
 
                 int lsuccess = response.getStatusLine().getStatusCode();
                 if (lsuccess >= 200 && lsuccess < 300) {
-                    final HttpEntity entity = response.getEntity();
-                    boolean isJson = false;
-                    boolean isXml = false;
-                    for (Header contentType : response.getHeaders("Content-Type")) {
-                        if (contentType.getValue().contains("json")) {
-                            isJson = true;
-                        } else if (contentType.getValue().contains("xml")) {
-                            isXml = true;
-                        }
-                    }
                     try {
                         Object result;
+
+                        final HttpEntity entity = response.getEntity();
+                        boolean isJson = false;
+                        boolean isXml = false;
+                        for (Header contentType : response.getHeaders("Content-Type")) {
+                            if (contentType.getValue().contains("json")) {
+                                isJson = true;
+                            } else if (contentType.getValue().contains("xml")) {
+                                isXml = true;
+                            }
+                        }
+
                         if (isXml) {
                             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
                             DocumentBuilder builder = factory.newDocumentBuilder();
@@ -638,23 +663,30 @@ public class Invocation {
                             result = EntityUtils.toString(entity);
                         }
 
-                        for(MutableBindingSet binding : batch) {
-                            String key=null;
-                            if(service.batch>1) {
+                        if(asyncToken!=null) {
+                            result=CallbackController.synchronize(asyncToken);
+                        }
+
+                        if(result==null) {
+                            logger.warn(String.format("Did not get any response."));
+                            success=Math.max(success,500);
+                        } else {
+                            for (MutableBindingSet binding : batch) {
+                                String key = null;
                                 if (service.result.correlationInput != null) {
-                                    Var variable=inputs.get(service.result.correlationInput);
-                                    if(variable.hasValue()) {
-                                        key = convertToObject(variable.getValue(),String.class);
+                                    Var variable = inputs.get(service.result.correlationInput);
+                                    if (variable.hasValue()) {
+                                        key = convertToObject(variable.getValue(), String.class);
                                     } else {
                                         Value val = binding.getValue(variable.getName());
                                         key = convertToObject(val, String.class);
                                     }
-                                } else {
+                                } else if(batch.size()>1) {
                                     key = "0";
                                 }
-                            }
-                            for(Map.Entry<Var,IRI> output : outputs.entrySet() ) {
-                                binding.addBinding(output.getKey().getName(), convertOutputToValue(result, key, output.getValue()));
+                                for (Map.Entry<Var, IRI> output : outputs.entrySet()) {
+                                    binding.addBinding(output.getKey().getName(), convertOutputToValue(result, key, output.getValue()));
+                                }
                             }
                         }
                     } catch (Exception e) {
@@ -667,7 +699,50 @@ public class Invocation {
                 }
             }
         } catch(IOException ioe){
+            logger.warn(String.format("Got an exception %s when processing invocation. Ignoring.",ioe));
             success = Math.max(500,success);
+        }
+    }
+
+    private static void setNode(ObjectMapper objectMapper, ObjectNode finalinput, String pathSpec, JsonNode render) {
+        String[] pathNames = pathSpec.split(",");
+        for(String pathName : pathNames) {
+            String[] argPath = pathName.split("\\.");
+            JsonNode traverse = finalinput;
+            int depth = 0;
+            if (argPath.length==depth) {
+                finalinput.setAll((ObjectNode)render);
+                return;
+            }
+            for (String argField : argPath) {
+                if (depth != argPath.length - 1) {
+                    if (traverse.has(argField)) {
+                        JsonNode next = traverse.get(argField);
+                        if (next==null || (!next.isArray() && !next.isObject()) ) {
+                            throw new SailException(String
+                                    .format("Field %s was occupied by a non-object object", argField,next));
+                        } else {
+                            traverse = next;
+                        }
+                    } else {
+                        ObjectNode next = objectMapper.createObjectNode();
+                        if(traverse.isObject()) {
+                            ((ObjectNode)traverse).set(argField, next);
+                        } else if(traverse.isArray()) {
+                            ((ArrayNode)traverse).set(Integer.valueOf(argField),next);
+                        }
+                        traverse = next;
+                    }
+                } else {
+                    ObjectNode next = objectMapper.createObjectNode();
+                    if(traverse.isObject()) {
+                        ((ObjectNode)traverse).set(argField, render);
+                    } else if(traverse.isArray()) {
+                        ((ArrayNode)traverse).set(Integer.valueOf(argField),render);
+                    }
+                }
+                depth++;
+            } // set argument in input
         }
     }
 
@@ -722,7 +797,7 @@ public class Invocation {
                                     logger.trace(String.format("Agains argument %s %s", argument.getKey(),
                                             argument.getValue().argumentName));
                                 }
-                                if (argument.getValue().argumentName.equals(param.getName())) {
+                                if (argument.getValue().argumentName.contains(param.getName())) {
                                     aconfig = argument.getValue();
                                     Var arg = inputs.get(argument.getKey());
                                     Value value;

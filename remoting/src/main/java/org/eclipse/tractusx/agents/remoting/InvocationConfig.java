@@ -33,11 +33,19 @@ public class InvocationConfig {
     /** the maximal batch size */
     protected long batch = 1;
 
+    /** whether it is an asynchronous call */
+    protected String callbackProperty;
+
     /** prefix to attach to all properties */
     protected String inputProperty;
     
     /** whether and where to put a unique invocation id */
     protected String invocationIdProperty;
+
+    /** 
+     * an optional authentication
+     */
+    protected AuthenticationConfig authentication;
 
     /**
      * map of arguments
@@ -91,6 +99,11 @@ public class InvocationConfig {
 
             }
         }
+        if(callbackProperty!=null) {
+            if(result.callbackProperty==null) {
+                throw new SailConfigException("There should be a result callbackProperty configured when the invocation callbackProperty is set.");
+            }
+        }
         for (Map.Entry<String, ArgumentConfig> arg : arguments.entrySet()) {
             arg.getValue().validate(arg.getKey());
         }
@@ -100,6 +113,9 @@ public class InvocationConfig {
 
         } else {
             result.validate(resultName);
+        }
+        if(authentication!=null) {
+            authentication.validate(context);
         }
     }
 }

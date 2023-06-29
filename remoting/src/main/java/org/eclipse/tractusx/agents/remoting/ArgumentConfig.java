@@ -15,8 +15,11 @@ public class ArgumentConfig {
      /** name of the argument */
      protected String argumentName;
      protected boolean mandatory=true;
-     
-     public void validate(String context) throws SailConfigException {
+     protected Object defaultValue;
+
+     protected int priority = 100;
+
+    public void validate(String context) throws SailConfigException {
          if (argumentName==null || argumentName.length()==0) {
             throw new SailConfigException(String.format("Only support named arguments %s.",context));
          }    

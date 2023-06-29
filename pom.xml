@@ -9,7 +9,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.eclipse.tractusx</groupId>
     <artifactId>agents</artifactId>
-    <version>1.9.3-SNAPSHOT</version>
+    <version>1.9.4-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>Tractus-X Knowledge Agents Reference Implementations</name>
     <description>Provides Reference Implementations and Artifacts to Realize Semantic Dataspace Backends</description>
@@ -27,14 +27,16 @@
         <rdf4j.version>4.3.2</rdf4j.version>
         <slf4j.version>2.0.7</slf4j.version>
         <httpcomponents.version>4.5.14</httpcomponents.version>
-        <jackson.version>2.15.1</jackson.version>
-        <jackson.databind.version>2.15.1</jackson.databind.version>
+        <jackson.version>2.15.2</jackson.version>
+        <jackson.databind.version>2.15.2</jackson.databind.version>
         <jaxb.version>2.3.0</jaxb.version>
         <migbase.version>2.2</migbase.version>
         <ontop.version>5.0.2</ontop.version>
         <!-- Source characteristics -->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-
+        <servlet.version>3.1.0</servlet.version>
+        <spring.version>5.3.23</spring.version>
+        <spring.boot.version>2.7.5</spring.boot.version>
         <!-- REPO -->
         <repo>ghcr.io/catenax-ng/product-agents/</repo>
         <platform>linux/amd64</platform>
@@ -80,7 +82,7 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-shade-plugin</artifactId>
-                    <version>3.4.1</version>
+                    <version>3.5.0</version>
                 </plugin>
                 <plugin>
                     <groupId>org.codehaus.mojo</groupId>
