@@ -4,11 +4,24 @@ All notable changes to this product will be documented in this file.
 
 # Unreleased
 
+## [1.9.4] - 2023-07-07
+
+### Added
+
+- Remoting Agent: Asynchronous API calls
+
+### Changed
+
+- Adapted all Catena-X namespaces to https://w3id.org/catenax
+- Upgraded to most possible unvulnerable dependencies
+
+### Removed
+
 ## [0.8.6] - 2023-05-19
 
 ### Added
 
-- Conforming Agent Implementation
+- Conforming Agent: Implementation
 - Support for SPARQL KA-transfer profile including the cx_warnings header
 
 ### Changed
@@ -26,11 +39,7 @@ All notable changes to this product will be documented in this file.
 
 ### Changed
 
--
-
 ### Removed
-
--
 
 ## [0.6.4] - 2022-12-15
 

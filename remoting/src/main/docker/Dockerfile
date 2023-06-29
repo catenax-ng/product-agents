@@ -36,6 +36,7 @@ RUN	mkdir -p /var/rdf4j/server/conf && \
 	unzip /tmp/eclipse-rdf4j-4.3.2/war/rdf4j-workbench.war -d /usr/local/tomcat/webapps/rdf4j-workbench && \
     rm -rf /tmp/eclipse-rdf4j-4.3.2 && \
     wget -q "https://repo1.maven.org/maven2/org/apache/httpcomponents/httpmime/4.5.14/httpmime-4.5.14.jar" -O /usr/local/tomcat/webapps/rdf4j-server/WEB-INF/lib/httpmime-4.5.14.jar && \
+    wget -q "https://repo1.maven.org/maven2/commons-logging/commons-logging/1.2/commons-logging-1.2.jar" -O /usr/local/tomcat/webapps/rdf4j-server/WEB-INF/lib/commons-logging-1.2.jar && \
     chown -R tomcat:tomcat /var/rdf4j /usr/local/tomcat && \
 	chmod 775 /usr/local/tomcat /usr/local/tomcat/bin /usr/local/tomcat/bin/catalina.sh /var/rdf4j/server 
 
@@ -43,6 +44,8 @@ COPY resources/web/logging.properties /usr/local/tomcat/conf/logging.properties
 COPY resources/web/server.xml /usr/local/tomcat/conf/server.xml
 COPY resources/web/web.xml /usr/local/tomcat/conf/web.xml
 COPY resources/web/tomcat-users.xml /usr/local/tomcat/conf/tomcat-users.xml
+COPY resources/web/rdf4j.xml /usr/local/tomcat/webapps/rdf4j-server/WEB-INF/web.xml
+COPY resources/web/callback.xml /usr/local/tomcat/webapps/rdf4j-server/WEB-INF/rdf4j-http-server-servlet.xml
 
 USER tomcat
 

@@ -50,7 +50,7 @@ public class AsyncRemotingTest {
      */
     @Test
     public void testAsync() throws Exception {
-        final HttpPost httppost = new HttpPost("http://192.168.178.64:"+localServerPort+"/callback");
+        final HttpPost httppost = new HttpPost("http://localhost:"+localServerPort+"/callback");
         httppost.setEntity(new StringEntity("{\"header\":{\"referenceNotificationID\":\"puffpaff\"}}"));
         try (final CloseableHttpClient httpclient = HttpClients.createDefault()) {
            HttpResponse response = httpclient.execute(httppost);

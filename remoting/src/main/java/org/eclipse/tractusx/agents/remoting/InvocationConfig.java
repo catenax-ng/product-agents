@@ -42,6 +42,11 @@ public class InvocationConfig {
     /** whether and where to put a unique invocation id */
     protected String invocationIdProperty;
 
+    /** 
+     * an optional authentication
+     */
+    protected AuthenticationConfig authentication;
+
     /**
      * map of arguments
      */
@@ -108,6 +113,9 @@ public class InvocationConfig {
 
         } else {
             result.validate(resultName);
+        }
+        if(authentication!=null) {
+            authentication.validate(context);
         }
     }
 }

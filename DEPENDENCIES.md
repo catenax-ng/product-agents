@@ -29,7 +29,7 @@ The following is a simple type of single-level Software-BOM for all official ope
 | Agents>Provisioning | [Apache Calcite/Avatica](https://calcite.apache.org/avatica/) | >=1.22 | All | Apache License 2.0 |     |
 | Agents>Provisioning | [H2 Database](http://h2database.com/) | >=2.1 | Runtime | Mozilla Public License (2.0) and Eclipse Public License (1.0) |     |
 | Agents>Provisioning | [Dremio JDBC](https://docs.dremio.com/software/drivers/jdbc/) | >=22.1.1 | All | Proprietary |     |
-| Agents>Remoting | [Eclipse RDF4J](https://rdf4j.org/) | >=3.7 | All | Eclipse Public License (1.0) |     |
+| Agents>Remoting | [Eclipse RDF4J](https://rdf4j.org/) | >=4.3.2 | All | Eclipse Public License (1.0) |     |
 | Agents>Remoting | [SLF4J](https://www.slf4j.org) | >=2.0.0 | All | MIT |     |
 | Agents>Remoting | [Jackson](https://github.com/FasterXML/jackson) | >=2.13.4 | All | Apache License 2.0 |     |
 | Agents>Remoting | [Apache HttpComponents](https://hc.apache.org/) | >=4.5.13 | All | Apache License 2.0 |     |

@@ -31,6 +31,10 @@ public class RemotingSailConfig extends AbstractSailImplConfig {
      * constant
      */
     public static String CONFIG_NAMESPACE="https://w3id.org/catenax/ontology/function#";
+    /**
+     * constant
+     */
+    public static String COMMON_NAMESPACE="https://w3id.org/catenax/ontology/common#";
 
     /**
      * constant
@@ -41,6 +45,16 @@ public class RemotingSailConfig extends AbstractSailImplConfig {
      * constant
      */
     public static String FUNCTION_NAME="Function";
+
+    /**
+     * constant
+     */
+    public static String AUTHENTICATION_CODE="authenticationCode";
+
+    /**
+     * constant
+     */
+    public static String AUTHENTICATION_KEY="authenticationKey";
 
     /**
      * constant
@@ -183,6 +197,8 @@ public class RemotingSailConfig extends AbstractSailImplConfig {
     protected IRI RESULT_CLASS=vf.createIRI(CONFIG_NAMESPACE,RESULT_NAME);
     protected IRI ARGUMENT_CLASS=vf.createIRI(CONFIG_NAMESPACE,ARGUMENT_NAME);
     protected IRI RETURN_CLASS=vf.createIRI(CONFIG_NAMESPACE,RETURN_NAME);
+    protected IRI AUTHENTICATION_CODE_PREDICATE=vf.createIRI(COMMON_NAMESPACE,AUTHENTICATION_CODE);
+    protected IRI AUTHENTICATION_KEY_PREDICATE=vf.createIRI(COMMON_NAMESPACE,AUTHENTICATION_KEY);
 
     /**
      * keeps a list of invocation configs
@@ -262,6 +278,10 @@ public class RemotingSailConfig extends AbstractSailImplConfig {
             if(func.getValue().invocationIdProperty!=null) {
                 model.add(functionNode,INVOCATION_ID_PREDICATE,vf.createLiteral(func.getValue().invocationIdProperty));
             }
+            if(func.getValue().authentication!=null) {
+                model.add(functionNode,AUTHENTICATION_CODE_PREDICATE,vf.createLiteral(func.getValue().authentication.authCode));
+                model.add(functionNode,AUTHENTICATION_KEY_PREDICATE,vf.createLiteral(func.getValue().authentication.authKey));
+            }
             for(Map.Entry<String,ArgumentConfig> arg: func.getValue().arguments.entrySet()) {
                 IRI argumentNode = vf.createIRI(arg.getKey());
                 model.add(functionNode,INPUT_PREDICATE,argumentNode);
@@ -332,6 +352,20 @@ public class RemotingSailConfig extends AbstractSailImplConfig {
                 ifPresent(ip -> ic.inputProperty=ip.stringValue());
             Models.objectLiteral(model.filter(functionNode,INVOCATION_ID_PREDICATE,null)).
                 ifPresent(iid -> ic.invocationIdProperty=iid.stringValue());
+            Models.objectLiteral(model.filter(functionNode,AUTHENTICATION_KEY_PREDICATE,null)).
+                ifPresent(authKey -> { 
+                    if(ic.authentication==null) { 
+                        ic.authentication=new AuthenticationConfig(); 
+                    }
+                    ic.authentication.authKey=authKey.stringValue();
+                });
+            Models.objectLiteral(model.filter(functionNode,AUTHENTICATION_CODE_PREDICATE,null)).
+                ifPresent(authCode -> {
+                    if(ic.authentication==null) { 
+                        ic.authentication=new AuthenticationConfig(); 
+                    }
+                    ic.authentication.authCode=authCode.stringValue();
+                });
             model.getStatements(functionNode,INPUT_PREDICATE,null).forEach(
                     argumentStatement -> {
                         if(logger.isDebugEnabled()) {

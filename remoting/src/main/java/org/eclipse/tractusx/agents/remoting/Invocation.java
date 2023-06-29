@@ -491,6 +491,10 @@ public class Invocation {
                             logger.trace(String.format("Instantiated REST call target with parameters to %s ", url[0]));
                         }
                         final HttpGet httpget = new HttpGet(url[0]);
+                        if(service.authentication!=null) {
+                            httpget.addHeader(service.authentication.authKey,service.authentication.authCode);
+                        }
+
                         if (logger.isDebugEnabled()) {
                             logger.debug(String.format("Performing %s ", httpget));
                         }
@@ -581,6 +585,9 @@ public class Invocation {
 
                         final HttpPost httppost = new HttpPost(url[0]);
                         httppost.addHeader("accept","application/json");
+                        if(service.authentication!=null) {
+                            httppost.addHeader(service.authentication.authKey,service.authentication.authCode);
+                        }
 
                         if (service.method.equals("POST-JSON")) {
                             httppost.addHeader("Content-Type","application/json");
