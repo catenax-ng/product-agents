@@ -474,7 +474,7 @@ public class RemotingQueryModelVisitor implements QueryModelVisitor<SailExceptio
             }
             InvocationConfig ic=connection.remotingSail.config.invocations.get(objectIRI.stringValue());
             if(ic==null) {
-                throw new SailException(String.format("Function %s was not configured",objectIRI));
+                throw new SailException(String.format("Function %s was not configured. Only got keys %s",objectIRI,connection.remotingSail.config.invocations.keySet()));
             }
             Invocation invocation = invocations.get(subject.getValue());
             if(invocation!=null) {

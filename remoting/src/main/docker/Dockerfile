@@ -45,7 +45,7 @@ COPY resources/web/server.xml /usr/local/tomcat/conf/server.xml
 COPY resources/web/web.xml /usr/local/tomcat/conf/web.xml
 COPY resources/web/tomcat-users.xml /usr/local/tomcat/conf/tomcat-users.xml
 COPY resources/web/rdf4j.xml /usr/local/tomcat/webapps/rdf4j-server/WEB-INF/web.xml
-COPY resources/web/callback.xml /usr/local/tomcat/webapps/rdf4j-server/WEB-INF/rdf4j-http-server-servlet.xml
+COPY resources/web/callback.xml /usr/local/tomcat/webapps/rdf4j-server/WEB-INF/.
 
 USER tomcat
 

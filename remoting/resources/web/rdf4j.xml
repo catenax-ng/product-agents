@@ -59,7 +59,7 @@
         <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
         <init-param>
             <param-name>contextConfigLocation</param-name>
-            <param-value>/WEB-INF/common-webapp-servlet.xml, /WEB-INF/common-webapp-system-servlet.xml, /WEB-INF/rdf4j-http-server-servlet.xml</param-value>
+            <param-value>/WEB-INF/common-webapp-servlet.xml, /WEB-INF/common-webapp-system-servlet.xml, /WEB-INF/rdf4j-http-server-servlet.xml, /WEB-INF/callback.xml</param-value>
         </init-param>
         <load-on-startup>100</load-on-startup>
     </servlet>

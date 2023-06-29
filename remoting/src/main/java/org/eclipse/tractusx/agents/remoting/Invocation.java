@@ -285,7 +285,8 @@ public class Invocation {
      */
     public Value convertOutputToValue(Object target, String resultKey, IRI output) throws SailException {
         if (service.result.outputProperty != null) {
-            target = traversePath(target, service.result.outputProperty);
+            String[] resultPath=service.result.outputProperty.split("\\.");
+            target = traversePath(target, resultPath);
         }
         ReturnValueConfig cf = service.result.outputs.get(output.stringValue());
         if (cf == null) {
@@ -294,7 +295,8 @@ public class Invocation {
         if (resultKey != null) {
             if (target.getClass().isArray()) {
                 if(service.result.resultIdProperty!=null) {
-                    target=Arrays.stream(((Object[]) target)).filter( tt -> resultKey.equals(convertObjectToString(traversePath(tt,service.result.resultIdProperty))))
+                    String[] resultPath=service.result.resultIdProperty.split("\\.");
+                    target=Arrays.stream(((Object[]) target)).filter( tt -> resultKey.equals(convertObjectToString(traversePath(tt,resultPath))))
                             .findFirst().get();
                 } else {
                     try {
@@ -305,12 +307,18 @@ public class Invocation {
                 }
             } else if (target instanceof ArrayNode) {
                 if(service.result.resultIdProperty!=null) {
+                    String[] resultPath=service.result.resultIdProperty.split("\\.");
                     ArrayNode array=(ArrayNode) target;
+                    boolean found=false;
                     for(int count=0;count<array.size();count++) {
-                        if(resultKey.equals(convertObjectToString(traversePath(array.get(count),service.result.resultIdProperty)))) {
+                        if(resultKey.equals(convertObjectToString(traversePath(array.get(count),resultPath)))) {
                             target=array.get(count);
+                            found=true;
                             break;
                         }
+                    }
+                    if(!found) {
+                        throw new SailException(String.format("Could not find result with key %s under property %s.", resultKey,service.result.resultIdProperty));
                     }
                 } else {
                     try {
@@ -321,12 +329,18 @@ public class Invocation {
                 }
             } else if (target instanceof Element) {
                 if(service.result.resultIdProperty!=null) {
+                    String[] resultPath=service.result.resultIdProperty.split("\\.");
                     NodeList nl =((Element) target).getChildNodes();
+                    boolean found=false;
                     for(int count=0;count<nl.getLength();count++) {
-                        if(resultKey.equals(convertObjectToString(traversePath(nl.item(count),service.result.resultIdProperty)))) {
+                        if(resultKey.equals(convertObjectToString(traversePath(nl.item(count),resultPath)))) {
                             target=nl.item(count);
+                            found=true;
                             break;
                         }
+                    }
+                    if(!found) {
+                        throw new SailException(String.format("Could not find result with key %s under property %s.", resultKey,service.result.resultIdProperty));
                     }
                 } else {
                     try {
@@ -376,6 +390,12 @@ public class Invocation {
                     return vf.createLiteral(Double.parseDouble(convertObjectToString(pathObj)));
                 } catch(NumberFormatException nfwe) {
                     throw new SailException(String.format("Could not convert %s to integer.", String.valueOf(pathObj)));
+                }
+            case "http://www.w3.org/2001/XMLSchema#float":
+                try {
+                    return vf.createLiteral(Float.parseFloat(convertObjectToString(pathObj)));
+                } catch(NumberFormatException nfwe) {
+                    throw new SailException(String.format("Could not convert %s to float.", String.valueOf(pathObj)));
                 }
             case "http://www.w3.org/2001/XMLSchema#string":
                 return vf.createLiteral(convertObjectToString(pathObj));
@@ -653,18 +673,16 @@ public class Invocation {
                         } else {
                             for (MutableBindingSet binding : batch) {
                                 String key = null;
-                                if (service.batch > 1) {
-                                    if (service.result.correlationInput != null) {
-                                        Var variable = inputs.get(service.result.correlationInput);
-                                        if (variable.hasValue()) {
-                                            key = convertToObject(variable.getValue(), String.class);
-                                        } else {
-                                            Value val = binding.getValue(variable.getName());
-                                            key = convertToObject(val, String.class);
-                                        }
+                                if (service.result.correlationInput != null) {
+                                    Var variable = inputs.get(service.result.correlationInput);
+                                    if (variable.hasValue()) {
+                                        key = convertToObject(variable.getValue(), String.class);
                                     } else {
-                                        key = "0";
+                                        Value val = binding.getValue(variable.getName());
+                                        key = convertToObject(val, String.class);
                                     }
+                                } else if(batch.size()>1) {
+                                    key = "0";
                                 }
                                 for (Map.Entry<Var, IRI> output : outputs.entrySet()) {
                                     binding.addBinding(output.getKey().getName(), convertOutputToValue(result, key, output.getValue()));
@@ -690,7 +708,7 @@ public class Invocation {
         String[] pathNames = pathSpec.split(",");
         for(String pathName : pathNames) {
             String[] argPath = pathName.split("\\.");
-            ObjectNode traverse = finalinput;
+            JsonNode traverse = finalinput;
             int depth = 0;
             if (argPath.length==depth) {
                 finalinput.setAll((ObjectNode)render);
@@ -700,19 +718,28 @@ public class Invocation {
                 if (depth != argPath.length - 1) {
                     if (traverse.has(argField)) {
                         JsonNode next = traverse.get(argField);
-                        if (!(next instanceof ObjectNode)) {
+                        if (next==null || (!next.isArray() && !next.isObject()) ) {
                             throw new SailException(String
-                                    .format("Field %s was occupied by a non-object %s", argField, next));
+                                    .format("Field %s was occupied by a non-object object", argField,next));
                         } else {
-                            traverse = (ObjectNode) next;
+                            traverse = next;
                         }
                     } else {
                         ObjectNode next = objectMapper.createObjectNode();
-                        traverse.set(argField, next);
+                        if(traverse.isObject()) {
+                            ((ObjectNode)traverse).set(argField, next);
+                        } else if(traverse.isArray()) {
+                            ((ArrayNode)traverse).set(Integer.valueOf(argField),next);
+                        }
                         traverse = next;
                     }
                 } else {
-                    traverse.set(argField, render);
+                    ObjectNode next = objectMapper.createObjectNode();
+                    if(traverse.isObject()) {
+                        ((ObjectNode)traverse).set(argField, render);
+                    } else if(traverse.isArray()) {
+                        ((ArrayNode)traverse).set(Integer.valueOf(argField),render);
+                    }
                 }
                 depth++;
             } // set argument in input
