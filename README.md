@@ -4,7 +4,7 @@ This repository provides FOSS implementations for the [Catena-X Knowledge Agents
 
 We provide the following implementations for different roles
 
-- [Matchmaking Agent](matchmaking) An agent implementation needed by consumer and all other dataspace participants which is able to interact with the Dataspace/EDC (and hence: other Matchmaking Agents behind) as well as potential internal agents providing data and functions (Binding Agents). Currently, this folder is empty because the reference matchmaking agent is yet tightly integrated into the [EDC data plane (Agent Plane)](../edc/agent-plane). This may change in the near future.
+- [Matchmaking Agent](matchmaking) An agent implementation needed by consumer and all other dataspace participants which is able to interact with the Dataspace/EDC (and hence: other Matchmaking Agents behind) as well as potential internal agents providing data and functions (Binding Agents). Currently, this folder is empty because the reference matchmaking agent is yet integrated into the [EDC data plane (Agent Plane)](http://github.com/eclipse-tractusx/knowledge-agents-edc). This may change in the near future.
 - Binding Agents are used by Providers to link the Dataspace to the actual Data and Functional Resources 
   - [Provisioning Agent](provisioning) An agent implementation for provider-side deployment which will bind typical backend data sources to the dataspace.
   - [Remoting Agent](remoting) An agent implementation for binding simple remote (REST) services to the dataspace.
