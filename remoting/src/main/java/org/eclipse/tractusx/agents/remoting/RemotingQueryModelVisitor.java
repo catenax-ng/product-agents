@@ -459,7 +459,8 @@ public class RemotingQueryModelVisitor implements QueryModelVisitor<SailExceptio
             // TODO lookup configuration 
             Var subject = statement.getSubjectVar();
             if(!subject.hasValue() ) {
-                IRI invocationIri=connection.remotingSail.getValueFactory().createIRI(objectIRI.getNamespace(),String.valueOf(invocations.size()));
+                String key=String.format("?invocation=%d",connection.remotingSail.getNextId());
+                IRI invocationIri=connection.remotingSail.getValueFactory().createIRI(objectIRI.getNamespace(),key);
                 for(MutableBindingSet binding : bindings) {
                     binding.addBinding(subject.getName(),invocationIri);
                 }

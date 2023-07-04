@@ -18,6 +18,9 @@ import org.slf4j.LoggerFactory;
  * Implements a pseudo-storage that is backed by a remote service
  */
 public class RemotingSail extends AbstractSail {
+
+    public int count=0;
+
     /** the logger */
     protected Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -33,6 +36,14 @@ public class RemotingSail extends AbstractSail {
         if(logger.isDebugEnabled()) {
         logger.debug(String.format("Starting remoting inference on config %s",this.config));
        }
+    }
+
+    /**
+     * creates the next invocation id
+     * @return current invocation id
+     */
+    public int getNextId() {
+        return count++;
     }
 
     @Override

@@ -453,6 +453,7 @@ public class Invocation {
             CloseableHttpResponse response = null;
             CallbackToken asyncToken=null;
             Iterator<Collection<MutableBindingSet>> batches;
+            int batchCount=0;
             if (service.batch > 1) {
                 batches = List.of(host.getBindings()).iterator();
             } else {
@@ -584,18 +585,19 @@ public class Invocation {
                             input = objectMapper.createObjectNode();
                         }
 
+                        String invocationId=key.stringValue()+String.format("&batch=%d",batchCount++);
                         if (service.invocationIdProperty != null) {
                             if (!message.isObject()) {
                                 throw new SailException(String.format("Cannot use invocationIdProperty in batch mode without inputProperty."));
                             } else {
-                                setNode(objectMapper,((ObjectNode) message),service.invocationIdProperty, objectMapper.getNodeFactory().textNode(key.stringValue()));
+                                setNode(objectMapper,((ObjectNode) message),service.invocationIdProperty, objectMapper.getNodeFactory().textNode(invocationId));
                             }
                         }
 
                         if(service.callbackProperty!=null) {
                             setNode(objectMapper,((ObjectNode) message),service.callbackProperty,objectMapper.getNodeFactory().textNode(connection.remotingSail.config.callbackAddress));
                             if(service.result.callbackProperty!=null) {
-                                asyncToken=CallbackController.register(service.result.callbackProperty,key.stringValue());
+                                asyncToken=CallbackController.register(service.result.callbackProperty,invocationId);
                             }
                         }
 
