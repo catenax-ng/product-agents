@@ -4,7 +4,7 @@
 // See authors file in the top folder
 // See license file in the top folder
 //
-package org.eclipse.tractusx.agents.remoting;
+package org.eclipse.tractusx.agents.remoting.config;
 
 import org.eclipse.rdf4j.sail.config.SailConfigException;
 
@@ -16,7 +16,7 @@ import java.util.regex.Pattern;
  * class to represent a single invocation description
  * from the config graph of the remoting SAIL repo.
  */
-public class InvocationConfig {
+public class ServiceConfig {
     /** regexp to check invocation */
     public static Pattern classPattern = Pattern.compile(
             "(?<classType>class):(?<class>[a-zA-Z0-9\\.]+)#(?<method>[a-zA-Z0-9]+)|(?<restType>https?)://(?<url>[a-zA-Z0-9\\.:/%#\\-]+)");
@@ -38,11 +38,11 @@ public class InvocationConfig {
 
     /** prefix to attach to all properties */
     protected String inputProperty;
-    
+
     /** whether and where to put a unique invocation id */
     protected String invocationIdProperty;
 
-    /** 
+    /**
      * an optional authentication
      */
     protected AuthenticationConfig authentication;
@@ -55,7 +55,101 @@ public class InvocationConfig {
     /** the result */
     String resultName=null;
     ResultConfig result=null;
-    
+
+    /**
+     * sets
+     * @param targetUri reference
+     */
+    public void setTargetUri(String targetUri) {
+        this.targetUri = targetUri;
+    }
+
+    /**
+     * sets
+     * @param resultName reference
+     */
+    public void setResultName(String resultName) {
+        this.resultName = resultName;
+    }
+
+    /**
+     * sets
+     * @param result config
+     */
+    public void setResult(ResultConfig result) {
+        this.result = result;
+    }
+
+    /**
+     * @return invocation method (POST-JSON, POST-JSON-MF, GET, ...)
+     */
+    public String getMethod() {
+        return method;
+    }
+
+    /**
+     * @return the matcher that parsed the target uri and provides parsing components
+     */
+    public Matcher getMatcher() {
+        return matcher;
+    }
+
+    /**
+     * @return maximal batch size
+     */
+    public long getBatch() {
+        return batch;
+    }
+
+    /**
+     * @return callback property to set callback address to
+     */
+    public String getCallbackProperty() {
+        return callbackProperty;
+    }
+
+    /**
+     * @return property which contains the actual request data
+     */
+    public String getInputProperty() {
+        return inputProperty;
+    }
+
+    /**
+     * @return property which should host the invocation id
+     */
+    public String getInvocationIdProperty() {
+        return invocationIdProperty;
+    }
+
+    /**
+     * @return authentication info
+     */
+    public AuthenticationConfig getAuthentication() {
+        return authentication;
+    }
+
+    /**
+     * @return map of iri to argument configurations
+     */
+    public Map<String, ArgumentConfig> getArguments() {
+        return arguments;
+    }
+
+    /**
+     * @return result reference
+     */
+    public String getResultName() {
+        return resultName;
+    }
+
+    /**
+     * @return result config
+     */
+    public ResultConfig getResult() {
+        return result;
+    }
+
     @Override
     public String toString() {
         return super.toString()+"/service";
@@ -63,7 +157,7 @@ public class InvocationConfig {
 
     /**
      * Validates the invocation config
-     * @throws SailConfigException
+     * @throws SailConfigException if validation is unsuccessful
      */
     public void validate(String context) throws SailConfigException {
         if (targetUri == null || targetUri.length() == 0) {

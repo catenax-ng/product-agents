@@ -7,6 +7,7 @@
 package org.eclipse.tractusx.agents.remoting;
 
 import org.eclipse.rdf4j.query.*;
+import org.eclipse.rdf4j.query.impl.ListBindingSet;
 import org.eclipse.rdf4j.sail.helpers.AbstractSailConnection;
 import org.eclipse.rdf4j.common.iteration.CloseableIteration;
 import org.eclipse.rdf4j.sail.SailException;
@@ -15,12 +16,12 @@ import org.eclipse.rdf4j.query.algebra.TupleExpr;
 import org.eclipse.rdf4j.common.iteration.AbstractCloseableIteration;
 import org.eclipse.rdf4j.model.impl.SimpleNamespace;
 
+import org.eclipse.tractusx.agents.remoting.util.BatchKey;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Map;
-import java.util.Arrays;
-import java.util.HashMap;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Implements a connection to a remote service
@@ -30,7 +31,7 @@ public class RemotingSailConnection extends AbstractSailConnection {
     /** logger */
     protected Logger logger = LoggerFactory .getLogger(getClass());
     /** namespaces map */
-    protected Map<String,String> namespaces=new HashMap<String,String>();
+    protected Map<String,String> namespaces=new HashMap<>();
     /** link to the sail / service wrapper */
     protected RemotingSail remotingSail;
 
@@ -105,8 +106,8 @@ public class RemotingSailConnection extends AbstractSailConnection {
         if(logger.isDebugEnabled()) {
             logger.debug(String.format("Iterate namespaces to the remoting sail %s wrapping config %s",remotingSail,remotingSail.config));
         }
-        return new AbstractCloseableIteration<Namespace,SailException>() {
-            java.util.Iterator<java.util.Map.Entry<String,String>> iterator=namespaces.entrySet().iterator();
+        return new AbstractCloseableIteration<>() {
+            protected final java.util.Iterator<java.util.Map.Entry<String,String>> iterator=namespaces.entrySet().iterator();
 
             @Override
             public void remove() {
@@ -145,12 +146,17 @@ public class RemotingSailConnection extends AbstractSailConnection {
                 if(logger.isInfoEnabled()) {
                     logger.info(String.format("Evaluating tuples %s on dataset %s and bindings %s (including inferred %b) connection to the remoting sail %s wrapping config %s",tupleExpr,dataset,bindings,includeInferred,remotingSail,remotingSail.config));
                 }
-                RemotingQueryModelVisitor visitor=new RemotingQueryModelVisitor(this);
+                QueryExecutor visitor=new QueryExecutor(this);
                 tupleExpr.visit(visitor);
+                final Set<BatchKey<Value>> distincts=new HashSet<>();
+                visitor.bindings.forEach( binding -> {
+                    BatchKey<Value> key = new BatchKey<>(visitor.outputVariables.values().stream().map(binding::getValue).toArray(Value[]::new));
+                    distincts.add(key);
+                });
+                List<String> keys= new ArrayList<String>(visitor.outputVariables.keySet());
+                final Iterator<ListBindingSet> allBindings=distincts.stream().map( key -> new ListBindingSet(keys,key.getComponents())).iterator();
 
                 return new AbstractCloseableIteration<BindingSet,QueryEvaluationException>() {
-                    
-                    java.util.Iterator<MutableBindingSet> allBindings=visitor.bindings.iterator();
 
                     @Override
                     public void remove() {
@@ -178,7 +184,7 @@ public class RemotingSailConnection extends AbstractSailConnection {
                 if(logger.isInfoEnabled()) {
                     logger.info(String.format("Iterating resources for connection on remoting sail %s wrapping config %s",remotingSail,remotingSail.config));
                 }
-                return new AbstractCloseableIteration<Resource,SailException>() {
+                return new AbstractCloseableIteration<>() {
                     
                     @Override
                     public void remove() {
@@ -205,7 +211,7 @@ public class RemotingSailConnection extends AbstractSailConnection {
                 if(logger.isInfoEnabled()) {
                     logger.info(String.format("Returning all statements on subject %s for predicate %s and object %s (including inferred %b) in contexts %s for connection to the remoting sail %s wrapping config %s",subj,pred,obj,includeInferred,Arrays.toString(contexts),remotingSail,remotingSail.config));
                 }
-                return new AbstractCloseableIteration<Statement,SailException>() {
+                return new AbstractCloseableIteration<>() {
                     
                     @Override
                     public void remove() {

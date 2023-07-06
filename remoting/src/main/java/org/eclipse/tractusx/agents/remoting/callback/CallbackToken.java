@@ -1,4 +1,9 @@
-package org.eclipse.tractusx.agents.remoting;
+//
+// Application to provide REST APIs as SPARQL services
+// See copyright notice in the top folder
+// See authors file in the top folder
+// See license file in the top folder
+package org.eclipse.tractusx.agents.remoting.callback;
 
 /**
  * A callback token that may used to

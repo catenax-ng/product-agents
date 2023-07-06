@@ -14,6 +14,7 @@ import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.query.impl.MapBindingSet;
 import org.eclipse.rdf4j.model.Value;
 
+import org.eclipse.tractusx.agents.remoting.config.ServiceConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,7 +24,7 @@ import java.util.*;
  * The query processing is done while visiting 
  */
 @SuppressWarnings("removal")
-public class RemotingQueryModelVisitor implements QueryModelVisitor<SailException>, IBindingHost {
+public class QueryExecutor implements QueryModelVisitor<SailException>, IBindingHost {
 
 	/** the state */
 	protected Map<Value,Invocation> invocations= new HashMap<>();
@@ -31,6 +32,7 @@ public class RemotingQueryModelVisitor implements QueryModelVisitor<SailExceptio
     /** bindings and results */
     final protected Set<String> variables=new HashSet<>();
     final protected List<MutableBindingSet> bindings= new ArrayList<>();
+    final protected Map<String,String> outputVariables=new HashMap<>();
 
     /** the logger */
     protected Logger logger = LoggerFactory.getLogger(getClass());
@@ -41,7 +43,7 @@ public class RemotingQueryModelVisitor implements QueryModelVisitor<SailExceptio
      * create a new visitor
      * @param connection the sail connection
      */
-	public RemotingQueryModelVisitor(RemotingSailConnection connection) {
+	public QueryExecutor(RemotingSailConnection connection) {
 		this.connection=connection;        
 	}
 
@@ -389,16 +391,11 @@ public class RemotingQueryModelVisitor implements QueryModelVisitor<SailExceptio
     @Override
 	public void meet(ProjectionElem node) throws SailException {
 		logger.debug(String.format("Visiting a projection element %s",node.getClass()));
-        bindings.forEach( binding -> {
-            if(node.getTargetName()!= null && !node.getTargetName().equals(node.getSourceName())) {
-                if (!binding.hasBinding(node.getTargetName())) {
-                    if (!binding.hasBinding(node.getSourceName())) {
-                        logger.warn(String.format("Could not bind source var %s to target var %s. Leaving unbound.", node.getSourceName(), node.getTargetName()));
-                    }
-                    binding.addBinding(node.getTargetName(), binding.getValue(node.getSourceName()));
-                }
-            }
-        });
+        String targetName=node.getTargetName();
+        if(targetName==null) {
+            targetName=node.getSourceName();
+        }
+        outputVariables.put(node.getSourceName(),targetName);
     }
 
     @Override
@@ -473,9 +470,9 @@ public class RemotingQueryModelVisitor implements QueryModelVisitor<SailExceptio
                     throw new SailException(String.format("No support for non-IRI invocation subject binding %s",subject));
                 }
             }
-            InvocationConfig ic=connection.remotingSail.config.invocations.get(objectIRI.stringValue());
+            ServiceConfig ic=connection.remotingSail.config.getService(objectIRI.stringValue());
             if(ic==null) {
-                throw new SailException(String.format("Function %s was not configured. Only got keys %s",objectIRI,connection.remotingSail.config.invocations.keySet()));
+                throw new SailException(String.format("Function %s was not configured. Only got keys %s",objectIRI,connection.remotingSail.config.listServices()));
             }
             Invocation invocation = invocations.get(subject.getValue());
             if(invocation!=null) {
@@ -502,9 +499,9 @@ public class RemotingQueryModelVisitor implements QueryModelVisitor<SailExceptio
             }
             Invocation invocation=invocations.get(subject.getValue());
             IRI argument=(IRI) predicate.getValue();
-            if(invocation.service.result.outputs.containsKey(argument.stringValue())) {
+            if(invocation.service.getResult().getOutputs().containsKey(argument.stringValue())) {
                 invocation.outputs.put(object,argument);
-            } else if(invocation.service.arguments.containsKey(argument.stringValue())) {
+            } else if(invocation.service.getArguments().containsKey(argument.stringValue())) {
                 invocation.inputs.put(argument.stringValue(),object);
             } else {
                 throw new SailException(String.format("Predicate %s is neither output nor input predicate for invocation %s",argument,subject));
@@ -581,4 +578,5 @@ public class RemotingQueryModelVisitor implements QueryModelVisitor<SailExceptio
     public Collection<MutableBindingSet> getBindings() {
         return bindings;
     }
+
 }

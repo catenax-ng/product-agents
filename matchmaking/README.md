@@ -1,8 +1,19 @@
-# Tractus-X Knowledge Agents (Hey Catena!) Matchmaking and Inference Agent
+# Tractus-X Matchmaking and Inference Agent (Upcoming)
 
-This is a folder providing a FOSS implementations of a Hey Catena! agent for consumer-side deployment which will just delegate/federate skills.
+This is a folder providing a FOSS implementations of a Matchmaking Agent.
 
-Currently, a plain Apache Jena Fuseki is used for federation (no matchmaking). This will change in the near future and this folder will become active.
+The Matchmaking Agent is needed by any Agent-Enabled dataspace participant. 
+
+The Matchmaking Agent is able to interact with and reason about the Dataspace/EDC (and hence: other Matchmaking Agents) 
+using a Federated Data Catalogue. 
+
+It is also able to delegate work on sub-graphs/asset to tenant-internal agents (Binding Agents) providing actual data and functions. 
+
+For Agent-Enabled dataspace consumers, deploying the Matchmaking Agent alongside an Agent-Enabled EDC is sufficient.
+
+Currently, the Matchmaking Agent (based on Apache Jena Fuseki) is baked into the [EDC data plane (Agent Plane)](https://github.com/catenax-ng/product-agents-edc/tree/main/agent-plane/agent-plane-protocol/src/main/java/org/eclipse/tractusx/agents/edc/sparql). 
+
+This will be refactored in the near future.
 
 ## What is Matchmaking
 

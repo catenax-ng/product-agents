@@ -10,6 +10,7 @@ import org.eclipse.rdf4j.sail.Sail;
 import org.eclipse.rdf4j.sail.config.SailFactory;
 import org.eclipse.rdf4j.sail.config.SailImplConfig;
 import org.eclipse.rdf4j.sail.config.SailConfigException;
+import org.eclipse.tractusx.agents.remoting.config.RemotingSailConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

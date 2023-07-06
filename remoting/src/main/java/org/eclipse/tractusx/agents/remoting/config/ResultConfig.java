@@ -4,7 +4,7 @@
 // See authors file in the top folder
 // See license file in the top folder
 //
-package org.eclipse.tractusx.agents.remoting;
+package org.eclipse.tractusx.agents.remoting.config;
 
 import org.eclipse.rdf4j.sail.config.SailConfigException;
 
@@ -19,12 +19,33 @@ public class ResultConfig {
     /**
      * map of outputs
      */
-    protected Map<String, ReturnValueConfig> outputs = new java.util.HashMap<String, ReturnValueConfig>();
+    protected Map<String, ReturnValueConfig> outputs = new java.util.HashMap<>();
 
     /** prefix for all the output paths */
     String outputProperty=null;
     /** where the id of the result can be found */
     String resultIdProperty=null;
+
+    public Map<String, ReturnValueConfig> getOutputs() {
+        return outputs;
+    }
+
+    public String getOutputProperty() {
+        return outputProperty;
+    }
+
+    public String getResultIdProperty() {
+        return resultIdProperty;
+    }
+
+    public String getCorrelationInput() {
+        return correlationInput;
+    }
+
+    public String getCallbackProperty() {
+        return callbackProperty;
+    }
+
     String correlationInput=null;
     String callbackProperty=null;
 
@@ -36,7 +57,7 @@ public class ResultConfig {
 
     /**
      * Validates the invocation config
-     * @throws SailConfigException
+     * @throws SailConfigException if validation is not successful
      */
     public void validate(String context) throws SailConfigException {
         if(context==null) {

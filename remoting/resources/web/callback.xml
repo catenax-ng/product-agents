@@ -15,5 +15,5 @@
         </property>
     </bean>
     <!-- EXCEPTION RESOLVERS -->
-    <bean id="rdf4jCallbackController" class="org.eclipse.tractusx.agents.remoting.CallbackController"/>
+    <bean id="rdf4jCallbackController" class="org.eclipse.tractusx.agents.remoting.callback.CallbackController"/>
 </beans>

@@ -4,7 +4,7 @@
 // See authors file in the top folder
 // See license file in the top folder
 //
-package org.eclipse.tractusx.agents.remoting;
+package org.eclipse.tractusx.agents.remoting.config;
 
 import org.eclipse.rdf4j.sail.config.SailConfigException;
 
@@ -45,4 +45,20 @@ public class ReturnValueConfig {
                 throw new SailConfigException(String.format("Data type %s is not supported in return value %s.",dataType,context));
          }
      }
+
+    public String getPath() {
+        return path;
+    }
+
+    public void setPath(String path) {
+        this.path = path;
+    }
+
+    public String getDataType() {
+        return dataType;
+    }
+
+    public void setDataType(String dataType) {
+        this.dataType = dataType;
+    }
 }

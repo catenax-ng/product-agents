@@ -12,31 +12,25 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
-import org.xml.sax.SAXException;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * a test controller based on a json notification structure that sends a callback
+ * TODO XML response processing
  */
 @Controller
 @RequestMapping("/async")
 public class AsyncTestController implements org.springframework.web.servlet.mvc.Controller {
 
+
     public static ObjectMapper objectMapper=new ObjectMapper();
 
-    public static DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+    //public static DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 
     /**
      * the actual request handler
-     * @param request
-     * @param response
+     * @param request http request
+     * @param response http response
      * @return an empty redirection
      */
     @Override
@@ -45,6 +39,7 @@ public class AsyncTestController implements org.springframework.web.servlet.mvc.
         try (final CloseableHttpClient httpclient = HttpClients.createDefault()) {
             JsonNode callback;
             callback=objectMapper.readTree(request.getInputStream());
+            System.out.println(String.format("Got an asynchronous request with object %s",callback));
             String callbackAddress=Invocation.convertObjectToString(Invocation.traversePath(callback,"header","respondAssetId"));
             String callId=Invocation.convertObjectToString(Invocation.traversePath(callback, "header","notificationID"));
             String callbackBody=String.format("{ \"header\": { \"referencedNotificationID\": \"%s\" }, \"content\": { \"requestRefId\": \"98f507d5-175d-4945-8d06-6aa1fcef9a0c\", \"endurancePredictorOutputs\": [ 0.721, 0.852, 0.432 ]}}",callId);

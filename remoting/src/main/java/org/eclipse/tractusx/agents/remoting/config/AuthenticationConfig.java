@@ -4,13 +4,9 @@
 // See authors file in the top folder
 // See license file in the top folder
 //
-package org.eclipse.tractusx.agents.remoting;
+package org.eclipse.tractusx.agents.remoting.config;
 
 import org.eclipse.rdf4j.sail.config.SailConfigException;
-
-import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * class to represent an authentication description
@@ -31,11 +27,26 @@ public class AuthenticationConfig {
 
     /**
      * Validates the authentication config
-     * @throws SailConfigException
+     * @throws SailConfigException in case validation is unsuccessful
      */
     public void validate(String context) throws SailConfigException {
         if (authCode==null || authCode.length() == 0) {
             throw new SailConfigException(String.format("Authentication code in %s is not provided",context));
         }
     }
+
+    /**
+     * @return configured auth key
+     */
+    public String getAuthKey() {
+        return authKey;
+    }
+
+    /**
+     * @return configured auth code
+     */
+    public String getAuthCode() {
+        return authCode;
+    }
+
 }

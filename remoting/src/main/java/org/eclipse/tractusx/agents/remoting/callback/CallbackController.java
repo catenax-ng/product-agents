@@ -1,9 +1,14 @@
-package org.eclipse.tractusx.agents.remoting;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
+//
+// Application to provide REST APIs as SPARQL services
+// See copyright notice in the top folder
+// See authors file in the top folder
+// See license file in the top folder
+package org.eclipse.tractusx.agents.remoting.callback;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.io.IOUtils;
+import org.eclipse.tractusx.agents.remoting.Invocation;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -30,7 +35,7 @@ public class CallbackController implements org.springframework.web.servlet.mvc.C
 
     public static DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 
-    public static Map<CallbackToken, AtomicReference<Object>> pending=new HashMap<>();
+    public static final Map<CallbackToken, AtomicReference<Object>> pending=new HashMap<>();
 
     /**
      * registers a new asynchronous call
@@ -68,7 +73,7 @@ public class CallbackController implements org.springframework.web.servlet.mvc.C
             while(result.get()==null && 0<maxrounds--) {
                 try {
                     result.wait(30000);
-                } catch (InterruptedException e) {
+                } catch (InterruptedException ignored) {
                 }
             }
             return result.get();
@@ -77,8 +82,8 @@ public class CallbackController implements org.springframework.web.servlet.mvc.C
 
     /**
      * the actual request handler
-     * @param request
-     * @param response
+     * @param request http request
+     * @param response http response
      * @return an empty redirection
      */
     @Override
@@ -97,12 +102,12 @@ public class CallbackController implements org.springframework.web.servlet.mvc.C
             synchronized(pending) {
                 for(Map.Entry<CallbackToken,AtomicReference<Object>> callbacks : pending.entrySet()) {
                     String[] paths=callbacks.getKey().getResponsePath().split("\\.");
-                    String callId=Invocation.convertObjectToString(Invocation.traversePath(callback, paths));
+                    String callId= Invocation.convertObjectToString(Invocation.traversePath(callback, paths));
                     if(callbacks.getKey().getCallId().equals(callId)) {
                         callbacks.getValue().set(callback);
                         synchronized(callbacks.getValue()) {
                             callbacks.getValue().notify();
-                        };
+                        }
                     }
                 }
             }

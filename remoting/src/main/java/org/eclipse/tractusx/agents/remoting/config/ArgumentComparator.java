@@ -1,4 +1,10 @@
-package org.eclipse.tractusx.agents.remoting;
+//
+// Application to provide REST APIs as SPARQL services
+// See copyright notice in the top folder
+// See authors file in the top folder
+// See license file in the top folder
+//
+package org.eclipse.tractusx.agents.remoting.config;
 
 import java.util.Comparator;
 import java.util.Map;
@@ -15,6 +21,6 @@ public class ArgumentComparator implements Comparator<Map.Entry<String, Argument
      * @return comparison according to priority
      */
     public int compare(Map.Entry<String, ArgumentConfig> o1, Map.Entry<String, ArgumentConfig> o2) {
-        return Integer.compare(o1.getValue().priority,o2.getValue().priority);
+        return Integer.compare(o1.getValue().getPriority(),o2.getValue().getPriority());
     }
 }

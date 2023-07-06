@@ -14,6 +14,7 @@ import org.eclipse.rdf4j.query.TupleQueryResult;
 import org.eclipse.rdf4j.repository.Repository;
 import org.eclipse.rdf4j.repository.RepositoryConnection;
 import org.eclipse.rdf4j.repository.sail.SailRepository;
+import org.eclipse.tractusx.agents.remoting.config.*;
 
 import java.util.Arrays;
 
@@ -40,27 +41,25 @@ public class Application {
 
     public static void main(String[] args) {        
         RemotingSailConfig rsc=new RemotingSailConfig(RemotingSailFactory.SAIL_TYPE);
-        InvocationConfig ic=new InvocationConfig();
-        rsc.invocations.put("https://www.w3id.org/catenax/ontology/prognosis#Invocation",ic);
-        ic.targetUri="class:io.catenax.knowledge.agents.remoting.TestFunction#test";
+        ServiceConfig ic=new ServiceConfig();
+        rsc.putService("https://www.w3id.org/catenax/ontology/prognosis#Invocation",ic);
+        ic.setTargetUri("class:io.catenax.knowledge.agents.remoting.TestFunction#test");
         ArgumentConfig ac=new ArgumentConfig();
-        ac.argumentName = "arg0";
-        ic.arguments.put("https://www.w3id.org/catenax/ontology/prognosis#input-1",ac);
+        ac.setArgumentName("arg0");
+        ic.getArguments().put("https://www.w3id.org/catenax/ontology/prognosis#input-1",ac);
         ac=new ArgumentConfig();
-        ac.argumentName = "arg1";
-        ic.arguments.put("https://www.w3id.org/catenax/ontology/prognosis#input-2",ac);
+        ac.setArgumentName("arg1");
+        ic.getArguments().put("https://www.w3id.org/catenax/ontology/prognosis#input-2",ac);
         ReturnValueConfig rvc=new ReturnValueConfig();
         ResultConfig rc=new ResultConfig();
-        rc.outputs.put("https://www.w3id.org/catenax/ontology/prognosis#output",rvc);
-        ic.result=rc;
-        ic.resultName="https://www.w3id.org/catenax/ontology/prognosis#Result";
+        rc.getOutputs().put("https://www.w3id.org/catenax/ontology/prognosis#output",rvc);
+        ic.setResult(rc);
+        ic.setResultName("https://www.w3id.org/catenax/ontology/prognosis#Result");
 
         rsc.validate();
 
         Repository rep = new SailRepository(new RemotingSail(rsc));
         try (RepositoryConnection conn = rep.getConnection()) {
-            //conn.add(john, RDF.TYPE, FOAF.PERSON);
-            //conn.add(john, RDFS.LABEL, Values.literal("John"));
             TupleQuery query=(TupleQuery) conn.prepareQuery(QueryLanguage.SPARQL,
             "PREFIX cx: <https://github.com/catenax-ng/product-knowledge/ontology/cx.ttl#> "+
             "PREFIX xsd: <http://www.w3.org/2001/XMLSchema#> "+

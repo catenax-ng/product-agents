@@ -11,6 +11,7 @@ import org.eclipse.rdf4j.model.*;
 import org.eclipse.rdf4j.sail.helpers.AbstractSail;
 import org.eclipse.rdf4j.sail.SailException;
 
+import org.eclipse.tractusx.agents.remoting.config.RemotingSailConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -78,11 +79,11 @@ public class RemotingSail extends AbstractSail {
      */
     @Override
     public ValueFactory getValueFactory() {
-        return config.vf;
+        return config.getValueFactory();
     }
 
     /**
-     * a service is not "writable", only queriable
+     * a remote service is not "writable" in the SPARQL sense
      */
     @Override
     public boolean isWritable() {
