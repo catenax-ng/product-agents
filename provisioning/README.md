@@ -1,13 +1,16 @@
-# Catena-X Knowledge Agents (Hey Catena!) Provisioning Agent
+# Tractus-X Provisioning Agent
 
-The Provisioning Agent will bind typical (relational/structured) backend data sources such as Databases and Datalakes in a secure manner 
-to the dataspace.
+This is a folder providing a FOSS implementations of a Data Binding (aka Provisioning) Agent.
 
-This is a folder providing the FOSS implementation of a Hey Catena! Agent (=SparQL Endpoint) for provider-side deployment.
+Binding Agents are needed by any Agent-Enabled dataspace providers to connect the dataspace protocol/representation (here: a combination of the SPARQL query language/operating on RDF triple graphs) to the underlying business data and logic.
 
-Highly-scaleable replacements for (not only) the role of the FOSS Provisioning Agent are:
+The Provisioning Agent in particular is able to interact with typical relational and structured backend sources based on SQL interfaces. The SPARQL profile which is used is called KA-BIND (the Knowledge Agent Binding Profile).
+
+Commercial alternatives to the FOSS Provisioning Agent are:
 * [GraphDB](https://www.ontotext.com/products/graphdb/)
 * [Neptune](https://aws.amazon.com/de/neptune/)
+* [Stardog](https://www.stardog.com/)
+* [Ontopic Studio](https://ontopic.ai/en/)
 
 ## Architecture
 
@@ -23,14 +26,41 @@ Ontop operates on four standards: three W3C standards and one ANSI standard. It 
 * into [*SQL*](https://datacadamia.com/data/type/relation/sql/ansi) queries.
 
 The [Ontop CLI](https://ontop-vkg.org/tutorial/endpoint/endpoint-cli.html) is a Java/Spring application which must
-be extended with an appropriate JDBC driver.
+be extended with an appropriate JDBC driver and that can host only one endpoint per port. We have hence extended the original docker entrypoint scripting [resources](resources/entrypoint.sh) such that multiple endpoints and ports can be hosted in a single container. The following environment properties which were originally single-valued can now be set to arrays (where the last entry behaves as the original process to which the container liveness checks are tied to):
+* ONTOP_PORT - a list of port numbers to bind the services in the container to
+* ONTOP_ONTOLOGY_FILE - a list of local RDF resources (XML or TTL format) which describe the used (domain/use case) ontology. see the [Catena-X Ontology Repository](http://github.com/catenax-ng/product-ontology). For better performance, it is not recommended to include the complete Catena-X Ontology (ontology.ttl) but rather include one of the [Catena-X Use Case Ontology Folder](http://github.com/catenax-ng/product-ontology/tree/main/usecase)
+* ONTOP_MAPPING_FILE - a list of mapping files connecting RDF triples with SQL commands/columns either using OBDA or R2RML format
+* ONTOP_PROPERTIES_FILE - a list of properties with settings which influence the runtime (e.g. jdbc connection strings and reconfigurations of Ontops internal factories)
+* ONTOLOGY_PORTAL_FILE - only needed if web uis for testing the endpoints including some sample queries should be exposed to
+* ONTOLOGY_DEV_MODE - a list of boolean flags indicating whether the endpoints should be aware/reload of any changes in the mounted mapping files or ontologies
+* JAVA_TOOL_OPTIONS - a list of debug strings to instrument the endpoints with, e.g. to enable remote debugging
 
-The Ontop CLI can host only one endpoint per port, if you want to expose different ontologies, mappings or database sources,
-you must configure another endpoint=port. See <a href="#Containerizing">Containerizing</a> for an example.
+Tractus-X focusses on not only accessing traditional SQL databases, such as [PostgreSQL](https://www.postgresql.org/), but also on accessing modern cloud-based data lake/virtualization infrastructures, such as [Dremio](https://www.dremio.com/) and [Druid](https://druid.apache.org/). For that purpose, we have added a few [Ontop Extensions](src/main/java/it/unibz/inf/ontop). These extensions can be activated by setting the right properties in the files referenced by ONTOP_PROPERTIES_FILE
+* The ability to add additional schema meta-data via properties. Typically, data virtualization platforms do not define/expose any primary or foreign keys. But Ontop builds its optimization techniques on these definitions. Therefore, you might "simulate" the existance of such keys by entering additional properties. For that purpose, you should configure an instance of the  [KeyAwareDremioDBMetadataProvider](src/main/java/it/unibz/inf/ontop/dbschema/impl/KeyAwareDremioDBMetadataProvider.java)
+
+```console
+com.dremio.jdbc.Driver-metadataProvider = it.unibz.inf.ontop.dbschema.impl.KeyAwareDremioDBMetadataProvider
+com.dremio.jdbc.Driver-schemas = HI_TEST_OEM, TRACE_TEST_OEM
+com.dremio.jdbc.Driver-tables.HI_TEST_OEM = CX_RUL_SerialPartTypization_Vehicle,CX_RUL_SerialPartTypization_Component,CX_RUL_AssemblyPartRelationship,CX_RUL_LoadCollective
+com.dremio.jdbc.Driver-unique.HI_TEST_OEM.CX_RUL_SerialPartTypization_Vehicle = UC_VEHICLE
+com.dremio.jdbc.Driver-unique.HI_TEST_OEM.CX_RUL_SerialPartTypization_Component = UC_COMPONENT
+com.dremio.jdbc.Driver-unique.HI_TEST_OEM.CX_RUL_AssemblyPartRelationship = UC_ASSEMBLY
+... 
+```
+* the ability to optimize to a specific virtualization engine although using a generic REST-based JDBC driver from Apache Calcite
+
+```console
+# Use the Data Virtualization backend
+jdbc.url=jdbc\:avatica\:remote\:url=http://data-backend:8888/druid/v2/sql/avatica/
+jdbc.driver=org.apache.calcite.avatica.remote.Driver
+org.apache.calcite.avatica.remote.Driver-metadataProvider = it.unibz.inf.ontop.dbschema.impl.DruidMetadataProvider
+org.apache.calcite.avatica.remote.Driver-typeFactory = it.unibz.inf.ontop.model.type.impl.DefaultSQLDBTypeFactory
+org.apache.calcite.avatica.remote.Driver-symbolFactory = it.unibz.inf.ontop.model.term.functionsymbol.db.impl.DefaultSQLDBFunctionSymbolFactory 
+```
 
 ### Security
 
-Besides the authentication of the Ontop engine at the relational database via jdbc (one url/user per endpoint), there is no 
+Besides the authentication of the Ontop engine at the relational database via jdbc (one url/user per endpoint), there are no 
 additional (row-level) security mechanism.
 
 Hence we recommend to apply a role-based approach.
@@ -39,32 +69,49 @@ For any accessing role:
 - define a separate database schema with appropriately filtered views
 - define a separate endpoint/port/mapping.
 
-See <a href="#Containerizing">Containerizing</a> for an example.
-
 ### Data Sources and Scaleablility
 
 For the sample deployments, we use single agent container with an embedded database (H2) and/or a second database virtualization container (Dremio Community Edition) using preloaded files.
 
 Practical deployments will 
 * scale and balance the agent containers (for which the lifecycle hooks are already provided).
-* use an enterprise-level database (Postgres Service) or database virtualization infrastructure (Dremio Enterprise, Denodo, Teii) that is backed by an appropriate storage system (ADSL, S3, Netapp).
+* use an enterprise-level database (Postgres Service) or database virtualization infrastructure (Dremio Enterprise, Denodo, Teii) that are backed by an appropriate storage system (ADSL, S3, Netapp).
 
-## Deployment & Usage
+## Deployment
+
+### Compile, Test & Package
+
+```console
+mvn package
+```
+
+This will generate
+- a [pluging jar](target/provisioning-agent-1.9.4-SNAPSHOT.jar) which maybe dropped into an Ontop server (into the lib folder)
 
 ### Containerizing (Provisioning Agent)
 
-To build the docker image of the Agent, please invoke this command
+You could either call
 
 ```console
-docker build -t ghcr.io/catenax-ng/product-knowledge/dataspace/provisioning-agent:latest -f src/main/docker/Dockerfile .
+mvn install -Pwith-docker-image
+```
+
+or invoke the following docker command after a successful package run
+
+```console
+docker build -t ghcr.io/catenax-ng/product-agents/provisioning-agent:1.9.4-SNAPSHOT -f src/main/docker/Dockerfile .
 ```
 
 The image contains
 * the Ontop CLI distribution
 * an H2 in-memory database
-* a large SQL file for sample database initialisation (until we find a more easy way of deployment)
+* JDBC drivers for
+  * PostgreSQL
+  * Apache Calcite
+  * Dremio
+* a sample SQL file for database initialisation
 
-To run the docker image, you could invoke this command
+To run the docker image using some default data, you could invoke this command
 
 ```console
 docker run -p 8080:8080 \
@@ -72,7 +119,7 @@ docker run -p 8080:8080 \
   -v $(pwd)/resources/university-role1.obda:/input/mapping.obda \
   -v $(pwd)/resources/university-role1.properties:/input/settings.properties \
   -v $(pwd)/resources/university.sql:/tmp/university.sql \
-  ghcr.io/catenax-ng/product-knowledge/dataspace/provisioning-agent:latest
+  ghcr.io/catenax-ng/product-agents/provisioning-agent:1.9.4-SNAPSHOT
 ````
 
 Afterwards, you should be able to access the [local SparQL endpoint](http://localhost:8080/) via
@@ -120,7 +167,7 @@ docker run -p 8080:8080 -p 8082:8082 \
   -e ONTOP_MAPPING_FILE="/input/role1.obda /input/role2.obda" \
   -e ONTOP_PROPERTIES_FILE="/input/role1.properties /input/role2.properties" \
   -e ONTOP_DEV_MODE="false false" \
-  ghcr.io/catenax-ng/product-knowledge/dataspace/provisioning-agent:latest
+  ghcr.io/catenax-ng/product-agents/provisioning-agent:1.9.4-SNAPSHOT
 ````
 
 Accessing entities spanning two schemas using the first role/endpoint delivers a greater count
@@ -193,64 +240,104 @@ WHERE {
 }
 ```
 
-### Containerizing (Backend)
+### Helm
 
-To build the docker image of the Database Virtualization Layer, please invoke this command
+A helm chart for deploying the remoting agent can be found under [this folder](../charts/provisioning-agent).
+
+It can be added to your umbrella chart.yaml by the following snippet
 
 ```console
-docker build -t ghcr.io/catenax-ng/product-knowledge/backend/sql-virtualize-dremio-oss:latest -f src/main/docker/Dockerfile.backend .
+dependencies:
+  - name: provisioning-agent
+    repository: https://catenax-ng.github.io/product-knowledge/infrastructure
+    version: 1.9.4-SNAPSHOT
+    alias: my-provider-agent
 ```
 
-The image contains
-* the Dremio OSS distribution
-* some JSON files for sample provisioning
-
-To run the docker image, you could invoke this command
+and then installed using
 
 ```console
-docker run -p 9047:9047 -p 31010:31010 -p 45678:45678 \
-  ghcr.io/catenax-ng/product-knowledge/backend/sql-virtualize-dremio-oss:latest
-````
-
-When the image is run for the first time you need to setup an admin user:
-
-```console
-curl 'http://localhost:9047/apiv2/bootstrap/firstuser' -X PUT \
-      -H 'Authorization: _dremionull' -H 'Content-Type: application/json' \
-     --data-binary '{"userName":"foo","firstName":"foo","lastName":"bar","email":"foo@bar.com","createdAt":1526186430755,"password":"bananas4ever"}'
-````
-
-Now you could login to the [Dremio console](http://localhost:9047) and add a 
-new source to the local filesystem (via )
-
-### Deployment
-
-An example how to deploy the image can be found 
-* in the [Docker Compose](../../../infrastructure/docker-compose.yml) recipe as well as 
-* in the [Helm Chart](../../../infrastructure/templates/oem-provider.yaml) template.
-
-
-### Interact with the Provisioning Agent
-
-Once started (either locally on port 8080 or in a forwarded port from github codespaces via [docker compose](../../../infrastructure/README.md) you will be able 
-to access a SPARQL Console:
-
-- http://localhost:8080/
-- https://drcgjung-catenax-ng-product-knowledge-wjgvvr6fgx97-8080.githubpreview.dev/
-
-At the same time you may directly interface the SPARQL over HTTP endpoint
-
-```console
-curl --location --request POST 'http://localhost:8080/sparql' \
---header 'Content-Type: application/sparql-query' \
---header 'Accept: application/json' \
---data-raw 'PREFIX : <http://example.org/voc#>
-SELECT DISTINCT ?teacher {
-  ?teacher a :Teacher .
-}
-'
+helm dependency update
 ```
 
+In your values.yml, you configure your specific instance of the remoting agent like this
+
+```console
+#######################################################################################
+# Data Binding Agent
+#######################################################################################
+
+my-provider-agent: 
+  securityContext: *securityContext
+  nameOverride: my-provider-agent
+  fullnameOverride: my-provider-agent
+  resources:
+    requests:
+      cpu: 500m
+      # you should employ 512Mi per endpoint
+      memory: 1Gi
+    limits:
+      cpu: 500m
+      # you should employ 512Mi per endpoint
+      memory: 1Gi
+  bindings: 
+    # disables the default sample binding
+    dtc: null
+    # real production mapping
+    telematics2: 
+      port: 8081
+      path: /t2/(.*)
+      settings: 
+        jdbc.url: 'jdbc:postgresql://intradb:5432/schema'
+        jdbc.user: <path:vaultpath#username>
+        jdbc.password: <path:vaultpath#password>
+        jdbc.driver: 'org.postgresql.Driver'
+      ontology: cx-ontology.xml
+      mapping: |-
+        [PrefixDeclaration]
+        cx-common:          https://w3id.org/catenax/ontology/common#
+        cx-core:            https://w3id.org/catenax/ontology/core#
+        cx-vehicle:         https://w3id.org/catenax/ontology/vehicle#
+        cx-reliability:     https://w3id.org/catenax/ontology/reliability#
+        uuid:		            urn:uuid:
+        bpnl:		            bpn:legal:
+        owl:		            http://www.w3.org/2002/07/owl#
+        rdf:		            http://www.w3.org/1999/02/22-rdf-syntax-ns#
+        xml:		            http://www.w3.org/XML/1998/namespace
+        xsd:		            http://www.w3.org/2001/XMLSchema#
+        json:               https://json-schema.org/draft/2020-12/schema#
+        obda:		            https://w3id.org/obda/vocabulary#
+        rdfs:		            http://www.w3.org/2000/01/rdf-schema#
+        oem:                urn:oem:
+
+        [MappingDeclaration] @collection [[
+        mappingId	vehicles
+        target		<{vehicle_id}> rdf:type cx-vehicle:Vehicle ; cx-vehicle:vehicleIdentificationNumber {van}^^xsd:string; cx-vehicle:worldManufaturerId bpnl:{localIdentifiers_manufacturerId}; cx-vehicle:productionDate {production_date}^^xsd:date.
+        source		SELECT vehicle_id, van, 'BPNL0000000DUMMY' as localIdentifiers_manufacturerId, production_date FROM vehicles
+
+        mappingId	partsvehicle
+        target		<{gearbox_id}> cx-vehicle:isPartOf <{vehicle_id}> .
+        source		SELECT vehicle_id, gearbox_id FROM vehicles
+
+        mappingId	vehicleparts
+        target		<{vehicle_id}> cx-vehicle:hasPart <{gearbox_id}> .
+        source		SELECT vehicle_id, gearbox_id FROM vehicles
+
+        ]]  
+  ingresses:
+    - enabled: true
+      # -- The hostname to be used to precisely map incoming traffic onto the underlying network service
+      hostname: "my-provider-agent.public.ip"
+      annotations:
+        nginx.ingress.kubernetes.io/rewrite-target: /$1
+        nginx.ingress.kubernetes.io/use-regex: "true"
+      # -- Agent endpoints exposed by this ingress resource
+      endpoints:
+        - telematics2
+      tls:
+        enabled: true
+        secretName: my-provider-tls
+```
 ## Notice
 
 * see copyright notice in the top folder

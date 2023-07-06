@@ -87,18 +87,18 @@ WHERE {
 ```
 
 Currently, there are two principle methods of function bindings available
-* Class Binding (targetUri follows the pattern "class:<className/>#<methodName/>") 
-* REST Binding (targetUri follows the pattern "https?://<url>")
+* Class Binding ([Service Config](src/main/java/org/eclipse/tractusx/agents/remoting/config/ServiceConfig.java).targetUri follows the pattern "class:<className/>#<methodName/>") 
+* REST Binding ([Service Config](src/main/java/org/eclipse/tractusx/agents/remoting/config/ServiceConfig.java)targetUri follows the pattern "https?://<url>")
 
-For REST Binding, we support the following outgoing request formats (where the responses are alwayas interpreted as XML or JSON depending on the content type)
+For REST Binding, we support the following outgoing request formats/content types (being configured via [Service Config](src/main/java/org/eclipse/tractusx/agents/remoting/config/ServiceConfig.java).method). Note that responses are always interpreted as XML or JSON depending on the response content type.
 * GET: Input arguments are mapped to URL query parameters. 
-* POST-XML: Input Arguments are mapped into an XML document body. T
-* POST-JSON: Input Arguments are mapped into an JSON document body.
-* POST-JSON-MF: Input Arguments are mapped into JSON-based files send in a multi-form request
-* POST-XML-MF: Input Arguments are mapped into XML-based files send in a multi-form request
+* POST-XML: Input Arguments are mapped into an XML document body with content-type "application/xml" T
+* POST-JSON: Input Arguments are mapped into an JSON document body with content-type "application/json"
+* POST-JSON-MF: Input Arguments are mapped into JSON-based files send in a multi-part  request with content-type multipart/form-data (and XXX as boundary and "application/json" as Content-Disposition)
+* POST-XML-MF: Input Arguments are mapped into XML-based files send in a multi-part request with content-type multipart/form-data (and XXX as boundary and application/json as Content-Disposition)
 
-Invocations can be batched. Normally (ServiceConfig.batch is set to 1, no ArgumentConfig.formsBatchGroup is set to true) Remoting Agent will produce an outgoing REST call for each incoming tuple/binding. If ServiceConfig.batch is greater than 1 or
-there is some ArgumentConfig.formsBatchGroup set to true, several tuples/bindings can be sent in a single invocation (usually in an array or by using flexible argument paths using '{<iriofinput>}' path elements). In that case, we also expect the responses to contain several individual results which are mapped/joined with the original input bindings using the ResultConfig.correlationInput reference.
+Invocations can be batched. Normally ([Service Config](src/main/java/org/eclipse/tractusx/agents/remoting/config/ServiceConfig.java).batch is set to 1, no [Argument Config](src/main/java/org/eclipse/tractusx/agents/remoting/config/ArgumentConfig.java).formsBatchGroup is set to true) Remoting Agent will produce an outgoing REST call for each incoming tuple/binding. If [Service Config](src/main/java/org/eclipse/tractusx/agents/remoting/config/ServiceConfig.java).batch is greater than 1 or
+there is some [Argument Config](src/main/java/org/eclipse/tractusx/agents/remoting/config/ArgumentConfig.java).formsBatchGroup set to true, several tuples/bindings can be sent in a single invocation (usually in an array or by using flexible argument paths using '{<iriofinput>}' path elements). In that case, we also expect the responses to contain several individual results which are mapped/joined with the original input bindings using the ResultConfig.correlationInput reference.
 
 Invocation can be asynchronous. That means that the called backend will not return a proper response, just a successful notification code. Instead we send the public URL of the builtin [CallbackController](src/main/java/org/eclipse/tractusx/agents/remoting/callback/CallbackController.java) which is configured in the callbackAddress property of the remoting repository (and is transmitted in the callbackAddressProperty of the ServiceConfig). In order to correlate outgoing (batch) requests with asynchronous responses sent to the CallbackController, we rely on setting a unique request identifier specified in ServiceConfig.invocationIdProperty and comparing it with the content of the ResultConfig.callbackProperty
  

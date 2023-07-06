@@ -31,6 +31,7 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
+import com.fasterxml.jackson.databind.ObjectReader;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import org.apache.http.Header;
@@ -78,6 +79,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 public class Invocation {
 
     protected static Logger logger = LoggerFactory.getLogger(Invocation.class);
+    public static Pattern ARGUMENT_PATTERN=Pattern.compile("\\{(?<arg>[^\\{\\}]*)\\}");
 
     /** the config of the service invoked */
     public ServiceConfig service = null;
@@ -240,10 +242,10 @@ public class Invocation {
                     }
                 } else if (source instanceof JsonNode) {
                     JsonNode node = (JsonNode) source;
-                    if (!node.has(elem)) {
+                    if (!hasField(node,elem)) {
                         throw new SailException(String.format("No such path %s under object %s", elem, source));
                     }
-                    source = node.get(elem);
+                    source = getField(node,elem);
                 } else {
                     throw new SailException(String.format("Cannot access path %s under object %s", elem, source));
                 }
@@ -560,33 +562,11 @@ public class Invocation {
                                 if (logger.isTraceEnabled()) {
                                     logger.trace(String.format("About to process argument %s %s", argument.getKey(), argument.getValue()));
                                 }
-                                JsonNode render = resolve(binding,argument.getKey(),argument.getValue().getDefaultValue(),JsonNode.class);
-                                if(render!=null) {
-                                    String paths=argument.getValue().getArgumentName();
-                                    Pattern pattern=Pattern.compile("\\{(?<arg>.*)\\}");
-                                    Matcher matcher=pattern.matcher(paths);
-                                    StringBuilder resultPaths=new StringBuilder();
-                                    int end=0;
-                                    while(matcher.find()) {
-                                        resultPaths.append(paths.substring(end,matcher.start()));
-                                        String result=resolve(binding,matcher.group("arg"),"",String.class);
-                                        resultPaths.append(result);
-                                        end=matcher.end();
-                                    }
-                                    resultPaths.append(paths.substring(end));
-                                    setNode(objectMapper, finalinput, resultPaths.toString(), render);
-                                } else {
-                                    if(argument.getValue().isMandatory()) {
-                                      // TODO optional arguments
-                                      logger.warn(String.format("Mandatory argument %s has no binding. Leaving the hole tuple.", argument.getKey()));
-                                      isCorrect.set(false);
-                                    }                                
-                                }
+                                processArgument(objectMapper, finalinput, binding, isCorrect, argument.getKey(), argument.getValue());
                             });
                             if(isCorrect.get()) {
                                 array.add(input);
                             }
-                            input = objectMapper.createObjectNode();
                         }
 
                         String invocationId=key.stringValue()+String.format("&batch=%d",batchCount);
@@ -705,6 +685,39 @@ public class Invocation {
     }
 
     /**
+     * processes an argument binding into the output
+     * @param objectMapper json factory
+     * @param finalinput complete output
+     * @param binding current binding
+     * @param isCorrect wrapper around correctness flag
+     * @param argumentKey key to the argument
+     * @param argumentConfig config of the argument
+     */
+    protected void processArgument(ObjectMapper objectMapper, ObjectNode finalinput, MutableBindingSet binding, AtomicBoolean isCorrect, String argumentKey, ArgumentConfig argumentConfig) {
+        JsonNode render = resolve(binding, argumentKey, (JsonNode) argumentConfig.getDefaultValue(), JsonNode.class);
+        if(render!=null) {
+            String paths= argumentConfig.getArgumentName();
+            Matcher matcher=ARGUMENT_PATTERN.matcher(paths);
+            StringBuilder resultPaths=new StringBuilder();
+            int end=0;
+            while(matcher.find()) {
+                resultPaths.append(paths.substring(end,matcher.start()));
+                String result=resolve(binding,matcher.group("arg"),"",String.class);
+                resultPaths.append(result);
+                end=matcher.end();
+            }
+            resultPaths.append(paths.substring(end));
+            setNode(objectMapper, finalinput, resultPaths.toString(), render);
+        } else {
+            if(argumentConfig.isMandatory()) {
+              // TODO optional arguments
+              logger.warn(String.format("Mandatory argument %s has no binding. Leaving the hole tuple.", argumentKey));
+              isCorrect.set(false);
+            }
+        }
+    }
+
+    /**
      * resolves a given input predicate against a  binding
      * @param binding the binding
      * @param input predicate as uri string
@@ -713,7 +726,7 @@ public class Invocation {
      * @return found binding of predicate, null if not bound
      * @param <TargetClass>
      */
-    private <TargetClass> TargetClass resolve(MutableBindingSet binding, String input, Object defaultValue, Class<TargetClass> forClass) {
+    private <TargetClass> TargetClass resolve(MutableBindingSet binding, String input, TargetClass defaultValue, Class<TargetClass> forClass) {
         String key;
         Var variable = inputs.get(input);
         Value value=null;
@@ -730,6 +743,12 @@ public class Invocation {
         }
 
         if (defaultValue!=null) {
+            if(JsonNode.class.isAssignableFrom(forClass)) {
+                try {
+                    return (TargetClass) objectMapper.readTree(objectMapper.writeValueAsString(defaultValue));
+                } catch (JsonProcessingException e) {
+                }
+            }
             return (TargetClass) defaultValue;
         }
 
@@ -841,14 +860,32 @@ public class Invocation {
      */
     public static void setObject(ObjectMapper objectMapper, JsonNode traverse, String argField, JsonNode render) {
         if(traverse.isObject()) {
+            if(traverse.has(argField)) {
+                ObjectReader updater = objectMapper.readerForUpdating(traverse.get(argField));
+                try {
+                    render = updater.readValue(render);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
             ((ObjectNode) traverse).set(argField, render);
         } else if(traverse.isArray()) {
             ArrayNode traverseArray=(ArrayNode)  traverse;
             int targetIndex=Integer.valueOf(argField);
-            while(traverseArray.size()<=targetIndex) {
+            while(traverseArray.size()<targetIndex) {
                 traverseArray.add(objectMapper.createObjectNode());
             }
-            traverseArray.set(targetIndex, render);
+            if(traverseArray.size()==targetIndex) {
+                traverseArray.add(render);
+            } else {
+                ObjectReader updater = objectMapper.readerForUpdating(traverseArray.get(targetIndex));
+                try {
+                    render = updater.readValue(render);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+                traverseArray.set(targetIndex, render);
+            }
         }
     }
 
