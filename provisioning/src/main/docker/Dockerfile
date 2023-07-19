@@ -34,9 +34,9 @@ RUN mkdir -p /opt/ontop/jdbc && \
     chmod 755 /opt/ontop/entrypoint.sh && \
     chown -R ontop:ontop /opt/ontop
 
-COPY target/lib/guava-*.jar /opt/ontop/lib/.
-COPY target/lib/tomcat-embed-*.jar /opt/ontop/lib/.
-COPY target/lib/spring-*.jar /opt/ontop/lib/.
+COPY target/lib/guava-*.jar /opt/ontop/lib/
+COPY target/lib/tomcat-embed-*.jar /opt/ontop/lib/
+COPY target/lib/spring-*.jar /opt/ontop/lib/
 
 # Switch back
 USER ontop

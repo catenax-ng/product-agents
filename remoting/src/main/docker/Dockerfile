@@ -59,15 +59,15 @@ COPY resources/web/callback.xml /usr/local/tomcat/webapps/rdf4j-server/WEB-INF/.
 
 USER tomcat
 
-COPY target/original-remoting-agent-*-SNAPSHOT.jar /usr/local/tomcat/webapps/rdf4j-server/WEB-INF/lib/.
-COPY target/lib/guava-*.jar /usr/local/tomcat/webapps/rdf4j-server/WEB-INF/lib/.
-COPY target/lib/netty-*.jar /usr/local/tomcat/webapps/rdf4j-server/WEB-INF/lib/.
-COPY target/lib/jetty-*.jar /usr/local/tomcat/webapps/rdf4j-server/WEB-INF/lib/.
-COPY target/lib/spring-*.jar /usr/local/tomcat/webapps/rdf4j-server/WEB-INF/lib/.
-COPY target/lib/guava-*.jar /usr/local/tomcat/webapps/rdf4j-workbench/WEB-INF/lib/.
-COPY target/lib/netty-*.jar /usr/local/tomcat/webapps/rdf4j-workbench/WEB-INF/lib/.
-COPY target/lib/jetty-*.jar /usr/local/tomcat/webapps/rdf4j-workbench/WEB-INF/lib/.
-COPY target/lib/httpmime-*.jar /usr/local/tomcat/webapps/rdf4j-server/WEB-INF/lib/.
+COPY target/original-remoting-agent-*-SNAPSHOT.jar /usr/local/tomcat/webapps/rdf4j-server/WEB-INF/lib/
+COPY target/lib/guava-*.jar /usr/local/tomcat/webapps/rdf4j-server/WEB-INF/lib/
+COPY target/lib/netty-*.jar /usr/local/tomcat/webapps/rdf4j-server/WEB-INF/lib/
+COPY target/lib/jetty-*.jar /usr/local/tomcat/webapps/rdf4j-server/WEB-INF/lib/
+COPY target/lib/spring-*.jar /usr/local/tomcat/webapps/rdf4j-server/WEB-INF/lib/
+COPY target/lib/guava-*.jar /usr/local/tomcat/webapps/rdf4j-workbench/WEB-INF/lib/
+COPY target/lib/netty-*.jar /usr/local/tomcat/webapps/rdf4j-workbench/WEB-INF/lib/
+COPY target/lib/jetty-*.jar /usr/local/tomcat/webapps/rdf4j-workbench/WEB-INF/lib/
+COPY target/lib/httpmime-*.jar /usr/local/tomcat/webapps/rdf4j-server/WEB-INF/lib/
 
 WORKDIR /usr/local/tomcat/
 
