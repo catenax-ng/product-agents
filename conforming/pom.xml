@@ -10,7 +10,7 @@
     <parent>
         <groupId>org.eclipse.tractusx</groupId>
         <artifactId>agents</artifactId>
-        <version>1.9.4-SNAPSHOT</version>
+        <version>1.9.5-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
@@ -125,6 +125,12 @@
             <artifactId>validation-api</artifactId>
             <version>${beanvalidation-version}</version>
             <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>${guava.version}</version>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/org.eclipse.rdf4j/rdf4j-query -->

@@ -5,8 +5,8 @@ description: >-
   Tractus-X Provisioning Agent - Knowledge-Agents Compatible Data Binding Layer
 home: https://github.com/catenax-ng/product-knowledge/infrastructure/charts/provisioning-agent
 type: application
-appVersion: "1.9.4-SNAPSHOT"
-version: 1.9.4-SNAPSHOT
+appVersion: "1.9.5-SNAPSHOT"
+version: 1.9.5-SNAPSHOT
 icon: https://catenax-ng.github.io/product-knowledge/img/logo.svg
 maintainers: 
   - name: 'Catena-X Knowledge Agents Team'

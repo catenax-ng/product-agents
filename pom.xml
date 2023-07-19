@@ -9,7 +9,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.eclipse.tractusx</groupId>
     <artifactId>agents</artifactId>
-    <version>1.9.4-SNAPSHOT</version>
+    <version>1.9.5-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>Tractus-X Knowledge Agents Reference Implementations</name>
     <description>Provides Reference Implementations and Artifacts to Realize Semantic Dataspace Backends</description>
@@ -24,7 +24,7 @@
         <mockito.version>4.6.1</mockito.version>
         <failsafe.version>3.2.4</failsafe.version>
         <okhttp.version>4.9.3</okhttp.version>
-        <rdf4j.version>4.3.2</rdf4j.version>
+        <rdf4j.version>4.3.3</rdf4j.version>
         <slf4j.version>2.0.7</slf4j.version>
         <httpcomponents.version>4.5.14</httpcomponents.version>
         <jackson.version>2.15.2</jackson.version>
@@ -35,8 +35,12 @@
         <!-- Source characteristics -->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <servlet.version>3.1.0</servlet.version>
-        <spring.version>5.3.23</spring.version>
-        <spring.boot.version>2.7.5</spring.boot.version>
+        <spring.version>5.3.28</spring.version>
+        <spring.boot.version>2.7.13</spring.boot.version>
+        <guava.version>32.0.1-jre</guava.version>
+        <tomcat.version>9.0.78</tomcat.version>
+        <netty.version>4.1.94.Final</netty.version>
+        <jetty.version>9.4.51.v20230217</jetty.version>
         <!-- REPO -->
         <repo>ghcr.io/catenax-ng/product-agents/</repo>
         <platform>linux/amd64</platform>

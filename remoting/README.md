@@ -1,4 +1,12 @@
-# Tractus-X Remoting Agent
+# Tractus-X Remoting Agent (KA-RMT)
+
+KA-RMT is a module of the [Tractus-X Knowledge Agents Reference Implementations](../README.md).
+
+* see copyright notice in the top folder
+* see license file in the top folder
+* see authors file in the top folder
+
+## About this Module
 
 This is a folder providing a FOSS implementations of a Function Binding (aka Remoting) Agent.
 
@@ -111,15 +119,15 @@ mvn package
 ```
 
 This will generate 
-- a [standalone jar](target/remoting-agent-1.9.4-SNAPSHOT.jar) containing all necessary rdf4j components to build your own repository server.
-- a [pluging jar](target/original-remoting-agent-1.9.4-SNAPSHOT.jar) which maybe dropped into an rdf4j server for remoting support.
+- a [standalone jar](target/remoting-agent-1.9.5-SNAPSHOT.jar) containing all necessary rdf4j components to build your own repository server.
+- a [pluging jar](target/original-remoting-agent-1.9.5-SNAPSHOT.jar) which maybe dropped into an rdf4j server for remoting support.
 
 ### Run Locally
 
 The standalone jar](target/agents.remoting-0.5.2-SNAPSHOT.jar) contains an example application that runs a sample repository against a sample source
 
 ```console
-java -jar target/agents.remoting-1.9.4-SNAPSHOT.jar -Dorg.slf4j.simpleLogger.defaultLogLevel=DEBUG
+java -jar target/agents.remoting-1.9.5-SNAPSHOT.jar -Dorg.slf4j.simpleLogger.defaultLogLevel=DEBUG
 ```
 
 ### Containerizing
@@ -133,7 +141,7 @@ mvn install -Pwith-docker-image
 or invoke the following docker command after a successful package run
 
 ```console
-docker build -t ghcr.io/catenax-ng/product-agents/remoting-agent:1.9.4-SNAPSHOT -f src/main/docker/Dockerfile .
+docker build -t ghcr.io/catenax-ng/product-agents/remoting-agent:1.9.5-SNAPSHOT -f src/main/docker/Dockerfile .
 ```
 
 This will create a docker image including an extended rdf4j-server as well as an interactive rdf4j-workbench.
@@ -148,7 +156,7 @@ It can be added to your umbrella chart.yaml by the following snippet
 dependencies:
   - name: remoting-agent
     repository: https://catenax-ng.github.io/product-knowledge/infrastructure
-    version: 1.9.4-SNAPSHOT
+    version: 1.9.5-SNAPSHOT
     alias: my-remoting-agent
 ```
 

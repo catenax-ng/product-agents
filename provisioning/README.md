@@ -1,4 +1,12 @@
-# Tractus-X Provisioning Agent
+# Tractus-X Provisioning Agent (KA-PROV)
+
+KA-PROV is a module of the [Tractus-X Knowledge Agents Reference Implementations](../README.md).
+
+* see copyright notice in the top folder
+* see license file in the top folder
+* see authors file in the top folder
+
+## About this Module
 
 This is a folder providing a FOSS implementations of a Data Binding (aka Provisioning) Agent.
 
@@ -86,7 +94,7 @@ mvn package
 ```
 
 This will generate
-- a [pluging jar](target/provisioning-agent-1.9.4-SNAPSHOT.jar) which maybe dropped into an Ontop server (into the lib folder)
+- a [pluging jar](target/provisioning-agent-1.9.5-SNAPSHOT.jar) which maybe dropped into an Ontop server (into the lib folder)
 
 ### Containerizing (Provisioning Agent)
 
@@ -99,7 +107,7 @@ mvn install -Pwith-docker-image
 or invoke the following docker command after a successful package run
 
 ```console
-docker build -t ghcr.io/catenax-ng/product-agents/provisioning-agent:1.9.4-SNAPSHOT -f src/main/docker/Dockerfile .
+docker build -t ghcr.io/catenax-ng/product-agents/provisioning-agent:1.9.5-SNAPSHOT -f src/main/docker/Dockerfile .
 ```
 
 The image contains
@@ -119,7 +127,7 @@ docker run -p 8080:8080 \
   -v $(pwd)/resources/university-role1.obda:/input/mapping.obda \
   -v $(pwd)/resources/university-role1.properties:/input/settings.properties \
   -v $(pwd)/resources/university.sql:/tmp/university.sql \
-  ghcr.io/catenax-ng/product-agents/provisioning-agent:1.9.4-SNAPSHOT
+  ghcr.io/catenax-ng/product-agents/provisioning-agent:1.9.5-SNAPSHOT
 ````
 
 Afterwards, you should be able to access the [local SparQL endpoint](http://localhost:8080/) via
@@ -167,7 +175,7 @@ docker run -p 8080:8080 -p 8082:8082 \
   -e ONTOP_MAPPING_FILE="/input/role1.obda /input/role2.obda" \
   -e ONTOP_PROPERTIES_FILE="/input/role1.properties /input/role2.properties" \
   -e ONTOP_DEV_MODE="false false" \
-  ghcr.io/catenax-ng/product-agents/provisioning-agent:1.9.4-SNAPSHOT
+  ghcr.io/catenax-ng/product-agents/provisioning-agent:1.9.5-SNAPSHOT
 ````
 
 Accessing entities spanning two schemas using the first role/endpoint delivers a greater count
@@ -250,7 +258,7 @@ It can be added to your umbrella chart.yaml by the following snippet
 dependencies:
   - name: provisioning-agent
     repository: https://catenax-ng.github.io/product-knowledge/infrastructure
-    version: 1.9.4-SNAPSHOT
+    version: 1.9.5-SNAPSHOT
     alias: my-provider-agent
 ```
 
