@@ -124,10 +124,10 @@ This will generate
 
 ### Run Locally
 
-The standalone jar](target/agents.remoting-0.5.2-SNAPSHOT.jar) contains an example application that runs a sample repository against a sample source
+The standalone jar](target/remoting-agent-1.9.5-SNAPSHOT.jar) contains an example application that runs a sample repository against a sample source
 
 ```console
-java -jar target/agents.remoting-1.9.5-SNAPSHOT.jar -Dorg.slf4j.simpleLogger.defaultLogLevel=DEBUG
+java -jar target/remoting-agent-1.9.5-SNAPSHOT.jar -Dorg.slf4j.simpleLogger.defaultLogLevel=DEBUG
 ```
 
 ### Containerizing
@@ -145,6 +145,37 @@ docker build -t ghcr.io/catenax-ng/product-agents/remoting-agent:1.9.5-SNAPSHOT 
 ```
 
 This will create a docker image including an extended rdf4j-server as well as an interactive rdf4j-workbench.
+
+To run the docker image, you could invoke this command
+
+```console
+docker run -p 8081:8081 \
+  -v $(pwd)/src/test:/var/rdf4j/config \
+  ghcr.io/catenax-ng/product-agents/remoting-agent:1.9.5-SNAPSHOT
+````
+
+Afterwards, you should be able to access the [local SparQL endpoint](http://localhost:8081/) via
+the browser or by directly invoking a query
+
+```console
+curl --location --request POST 'http://localhost:8081/resources' \
+--header 'Content-Type: application/sparql-query' \
+--header 'Accept: application/json' \
+--data-raw 'PREFIX : <http://example.org/voc#>
+
+SELECT ?x
+WHERE {
+   ?x a :Professor .
+}'
+```
+
+You may manipulate any of the following environment variables to configure the image behaviour.
+Note that there is no builtin security (ssl/auth) for the exposed endpoints.
+This must be provided by hiding them in an appropriate service network layer.
+
+| ENVIRONMENT VARIABLE        | Required  | Example                                                                | Description                          | List |
+|---	                        |---	      |---	                                                                   |---                                   | ---  |
+| JAVA_TOOL_OPTIONS           |           | -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:8090   | JMV (Debugging option)               | X    | 
 
 ### Helm Chart
 
@@ -252,16 +283,6 @@ my-remoting-agent:
        cx-fx:dataType xsd:int.
         
 ```
-
-### Run the Container Locally
-
-see [the infrastructure](https://github.com/catenax-ng/product-knowledge/tree/main/infrastructure) folder how to configure a repository including a remoting source.
-
-## Notice
-
-* see copyright notice in the top folder
-* see license file in the top folder
-* see authors file in the top folder
 
 
 

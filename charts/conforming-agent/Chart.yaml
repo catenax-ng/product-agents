@@ -1,0 +1,12 @@
+---
+apiVersion: v2
+name: conforming-agent
+description: >-
+  Tractus-X Conforming Agent - Knowledge-Agents Testing Module
+home: https://github.com/catenax-ng/product-knowledge/infrastructure/charts/conforming-agent
+type: application
+appVersion: "1.9.5-SNAPSHOT"
+version: 1.9.5-SNAPSHOT
+icon: https://catenax-ng.github.io/product-knowledge/img/logo.svg
+maintainers: 
+  - name: 'Catena-X Knowledge Agents Team'
