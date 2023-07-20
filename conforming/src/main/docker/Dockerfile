@@ -4,17 +4,34 @@
 # See authors file in the top folder
 # See license file in the top folder
 #
-FROM openjdk:22-jdk-slim
+FROM alpine:3.18.2
+ARG JAR
+ARG LIB
 
-COPY target/conforming-agent-*.jar /app/lib/
+ARG APP_USER=agent
+ARG APP_UID=10100
+ARG APP_GID=30000
 
-RUN addgroup --system --gid 30000 agent \
-    && adduser --system --home /app --uid 10001 --gid 30000 agent \
-    && chown -R agent:agent /app
+RUN apk update && \
+    apk add openjdk17-jre-headless=17.0.7_p7-r1 --no-cache && \
+    rm -rf /var/cache/apk/*
 
+RUN addgroup --gid "$APP_GID" --system "$APP_USER"
+
+RUN adduser \
+     --shell /sbin/nologin \
+     --disabled-password \
+     --gecos "" \
+     --ingroup "$APP_USER" \
+     --no-create-home \
+     --uid "$APP_UID" \
+     "$APP_USER"
+
+USER "$APP_USER"
 WORKDIR /app
 VOLUME /tmp
-USER agent
+
+COPY target/conforming-agent-*.jar /app/lib/
 
 # TODO implement wget or curl-based health check
 HEALTHCHECK NONE
