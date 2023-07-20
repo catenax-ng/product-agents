@@ -52,7 +52,7 @@ RUN rm /opt/ontop/lib/guava-*.jar && \
     chmod 755 /opt/ontop/entrypoint.sh && \
     chown -R ontop:ontop /opt/ontop
 
-COPY --from=build /opt/ontop/lib/*.jar /opt/ontop/lib/.
+COPY --from=build /opt/ontop/lib/*.jar /opt/ontop/lib/
 
 # Switch back
 USER ontop
