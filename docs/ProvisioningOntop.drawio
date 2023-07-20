@@ -1,0 +1,72 @@
+<mxfile host="app.diagrams.net" modified="2023-07-20T06:37:28.929Z" agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/112.0.0.0 Safari/537.36" etag="O-j3X3T_TgC0_Z88hgmF" version="21.6.2" type="device">
+  <diagram name="Seite-1" id="9zZvAVQEgpC4ubSf6p6f">
+    <mxGraphModel dx="1434" dy="834" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="bTYyz8jTpvTfvXUMADVH-1" value="Semantic Web User&lt;br&gt;(Dataspace &lt;br&gt;Matchmaking Agent)" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;" vertex="1" parent="1">
+          <mxGeometry x="190" y="60" width="30" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="bTYyz8jTpvTfvXUMADVH-2" value="KA-BIND Profile Query&lt;br&gt;SELECT ?s ?p ?o WHERE { ?s ?p ?o. }" style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;darkOpacity=0.05;" vertex="1" parent="1">
+          <mxGeometry x="220" y="200" width="80" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="bTYyz8jTpvTfvXUMADVH-3" value="Data Virtualizer (Dremio, Druid) or Database (H2, PostgreSQL)" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;" vertex="1" parent="1">
+          <mxGeometry x="150" y="610" width="110" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="bTYyz8jTpvTfvXUMADVH-4" value="Optimized&lt;br&gt;SQL Query&lt;br&gt;in Target Dialect SELECT a, b, c FROM d" style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;darkOpacity=0.05;" vertex="1" parent="1">
+          <mxGeometry x="120" y="470" width="80" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="bTYyz8jTpvTfvXUMADVH-5" value="Provisioning Agent (Ontop VKP)" style="shape=module;align=left;spacingLeft=20;align=center;verticalAlign=top;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="80" y="330" width="260" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="bTYyz8jTpvTfvXUMADVH-6" value="MetadataProvider" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=26;fillColor=none;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="100" y="370" width="110" height="52" as="geometry" />
+        </mxCell>
+        <mxCell id="bTYyz8jTpvTfvXUMADVH-10" value="Normalizer" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=26;fillColor=none;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="220" y="370" width="110" height="52" as="geometry" />
+        </mxCell>
+        <mxCell id="bTYyz8jTpvTfvXUMADVH-11" value="Ontology&lt;br&gt;(OWL, TTL or XML)" style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;darkOpacity=0.05;" vertex="1" parent="1">
+          <mxGeometry x="400" y="100" width="80" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="bTYyz8jTpvTfvXUMADVH-12" value="Binding&lt;br&gt;(OBDA or R2RML)" style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;darkOpacity=0.05;" vertex="1" parent="1">
+          <mxGeometry x="400" y="410" width="80" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="bTYyz8jTpvTfvXUMADVH-13" value="Settings&lt;br&gt;(Properties)" style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;darkOpacity=0.05;" vertex="1" parent="1">
+          <mxGeometry x="400" y="260" width="80" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="bTYyz8jTpvTfvXUMADVH-14" value="" style="endArrow=none;html=1;rounded=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="bTYyz8jTpvTfvXUMADVH-5" target="bTYyz8jTpvTfvXUMADVH-13">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="390" y="480" as="sourcePoint" />
+            <mxPoint x="440" y="430" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="bTYyz8jTpvTfvXUMADVH-15" value="" style="endArrow=none;html=1;rounded=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="bTYyz8jTpvTfvXUMADVH-5" target="bTYyz8jTpvTfvXUMADVH-11">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="350" y="390" as="sourcePoint" />
+            <mxPoint x="410" y="320" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="bTYyz8jTpvTfvXUMADVH-16" value="" style="endArrow=none;html=1;rounded=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" target="bTYyz8jTpvTfvXUMADVH-12">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="340" y="380" as="sourcePoint" />
+            <mxPoint x="410" y="160" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="bTYyz8jTpvTfvXUMADVH-17" value="JDBC" style="endArrow=classic;html=1;rounded=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" edge="1" parent="1" source="bTYyz8jTpvTfvXUMADVH-5" target="bTYyz8jTpvTfvXUMADVH-3">
+          <mxGeometry x="-0.8938" y="20" width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="390" y="480" as="sourcePoint" />
+            <mxPoint x="440" y="430" as="targetPoint" />
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="bTYyz8jTpvTfvXUMADVH-18" value="SPARQL" style="endArrow=classic;html=1;rounded=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="bTYyz8jTpvTfvXUMADVH-1" target="bTYyz8jTpvTfvXUMADVH-5">
+          <mxGeometry x="-0.424" y="23" width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="390" y="480" as="sourcePoint" />
+            <mxPoint x="440" y="430" as="targetPoint" />
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

@@ -24,14 +24,16 @@ Commercial alternatives to the FOSS Provisioning Agent are:
 
 The FOSS Provisioning Agent uses the [OnTop Virtual Knowledge Graph](https://ontop-vkg.org/) system.
 
+![Provisioning Agent Architecture](../docs/ProvisioningOntop.drawio.svg)
+
 According to their homepage: "... exposes the content of arbitrary relational databases as knowledge graphs. These graphs are virtual, which means that data remains in the data sources instead of being moved to another database."
 
 Ontop operates on four standards: three W3C standards and one ANSI standard. It translates
 
-* incoming *Queries* in [SparQL 1.1](https://www.w3.org/TR/sparql11-query/)
-* using a *Mapping* in [R2RML](https://www.w3.org/TR/r2rml/) (or the slightly simpler Ontop Mapping Language - OBDA)
-* from an *Ontology* in [OWL 2 QL](https://www.w3.org/TR/owl2-profiles/#OWL_2_QL)
-* into [*SQL*](https://datacadamia.com/data/type/relation/sql/ansi) queries.
+* incoming *Queries* in a subset/profile of [SparQL 1.1](https://www.w3.org/TR/sparql11-query/). We call that subset KA-BIND.
+* using a *Binding* (in Ontop language, its also called a *Mapping*) in [R2RML](https://www.w3.org/TR/r2rml/) (or the slightly simpler Ontop Mapping Language - OBDA)
+* from an *Ontology* in [OWL 2 QL](https://www.w3.org/TR/owl2-profiles/#OWL_2_QL) interpretation (and stored either in a Terse Triple Language - TTL or an RDF XML format)
+* into largely optimized [*SQL*](https://datacadamia.com/data/type/relation/sql/ansi) queries.
 
 The [Ontop CLI](https://ontop-vkg.org/tutorial/endpoint/endpoint-cli.html) is a Java/Spring application which must
 be extended with an appropriate JDBC driver and that can host only one endpoint per port. We have hence extended the original docker entrypoint scripting [resources](resources/entrypoint.sh) such that multiple endpoints and ports can be hosted in a single container. The following environment properties which were originally single-valued can now be set to arrays (where the last entry behaves as the original process to which the container liveness checks are tied to):

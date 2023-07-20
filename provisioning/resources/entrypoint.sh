@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #
-# Entry script for provisioning agent/ontop with the ability to start multiple endpoints
+# Entry script for provisioning agent/ontop with the ability to start multiple endpoints in lazy mode and disable CORS
 # See copyright notice in the top folder
 # See authors file in the top folder
 # See license file in the top folder

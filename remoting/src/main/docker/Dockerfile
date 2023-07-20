@@ -4,6 +4,37 @@
 # See authors file in the top folder
 # See license file in the top folder
 #
+
+##
+# Build Container: Fixes diverse vulnerabilities in guava <32, netty, jetty, spring-framework <5.3.28 and spring-web (all 5 versions - need to exclude a deprecated package from the jar)
+##
+
+FROM openjdk:22-jdk-slim AS build
+
+COPY target/original-remoting-agent-*-SNAPSHOT.jar /opt/lib/
+COPY target/lib/guava-*.jar /opt/lib/
+COPY target/lib/netty-*.jar /opt/lib/
+COPY target/lib/jetty-*.jar /opt/lib/
+COPY target/lib/spring-*.jar /opt/lib/
+COPY target/lib/httpmime-*.jar /opt/lib/
+
+COPY resources/web/logging.properties /opt/conf/
+COPY resources/web/server.xml /opt/conf/
+COPY resources/web/web.xml /opt/conf/
+COPY resources/web/tomcat-users.xml /opt/conf/
+
+WORKDIR /tmp
+
+RUN  mv /opt/lib/spring-web-5.3.28.jar . && \
+     jar xvf spring-web-5.3.28.jar && \
+     rm -f spring-web-5.3.28.jar && \
+     rm -rf org/springframework/remoting/httpinvoker && \
+     jar cf /opt/lib/spring-web.jar *
+
+##
+# Runtime Container: Currently based on Tomcat 9 (and the "old" Java Servlet API until RDF4J upgrades)
+##
+
 FROM tomcat:9-jre11-temurin
 
 ENV JAVA_OPTS="-Xmx2g"
@@ -44,36 +75,25 @@ RUN	mkdir -p /var/rdf4j/server/conf && \
     rm /usr/local/tomcat/webapps/rdf4j-workbench/WEB-INF/lib/netty-*.jar && \
     rm /usr/local/tomcat/webapps/rdf4j-workbench/WEB-INF/lib/jetty-*.jar && \
     rm /usr/local/tomcat/webapps/rdf4j-workbench/WEB-INF/lib/snappy-*.jar && \
+    rm /usr/local/tomcat/conf/logging.properties && \
+    rm /usr/local/tomcat/conf/server.xml && \
+    rm /usr/local/tomcat/conf/tomcat-users.xml && \
+    rm /usr/local/tomcat/conf/web.xml && \
     wget -q "https://repo1.maven.org/maven2/commons-logging/commons-logging/1.2/commons-logging-1.2.jar" -O /usr/local/tomcat/webapps/rdf4j-server/WEB-INF/lib/commons-logging-1.2.jar && \
     wget -q "https://repo1.maven.org/maven2/org/xerial/snappy/snappy-java/1.1.10.2/snappy-java-1.1.10.2.jar" -O /usr/local/tomcat/webapps/rdf4j-server/WEB-INF/lib/snappy-java-1.1.10.2.jar && \
     cp /usr/local/tomcat/webapps/rdf4j-server/WEB-INF/lib/snappy-java-1.1.10.2.jar /usr/local/tomcat/webapps/rdf4j-workbench/WEB-INF/lib/. && \
     chown -R tomcat:tomcat /var/rdf4j /usr/local/tomcat && \
 	chmod 775 /usr/local/tomcat /usr/local/tomcat/bin /usr/local/tomcat/bin/catalina.sh /var/rdf4j/server 
 
-COPY resources/web/logging.properties /usr/local/tomcat/conf/logging.properties
-COPY resources/web/server.xml /usr/local/tomcat/conf/server.xml
-COPY resources/web/web.xml /usr/local/tomcat/conf/web.xml
-COPY resources/web/tomcat-users.xml /usr/local/tomcat/conf/tomcat-users.xml
+COPY --from=build /opt/lib/*.jar /usr/local/tomcat/webapps/rdf4j-server/WEB-INF/lib/
+COPY --from=build /opt/lib/*.jar /usr/local/tomcat/webapps/rdf4j-workbench/WEB-INF/lib/
+COPY --from=build /opt/conf/*.xml /opt/conf/*.properties /usr/local/tomcat/conf/
 COPY resources/web/rdf4j.xml /usr/local/tomcat/webapps/rdf4j-server/WEB-INF/web.xml
-COPY resources/web/callback.xml /usr/local/tomcat/webapps/rdf4j-server/WEB-INF/.
+COPY resources/web/callback.xml /usr/local/tomcat/webapps/rdf4j-server/WEB-INF/callback.xml
 
 USER tomcat
 
-COPY target/original-remoting-agent-*-SNAPSHOT.jar /usr/local/tomcat/webapps/rdf4j-server/WEB-INF/lib/
-COPY target/lib/guava-*.jar /usr/local/tomcat/webapps/rdf4j-server/WEB-INF/lib/
-COPY target/lib/netty-*.jar /usr/local/tomcat/webapps/rdf4j-server/WEB-INF/lib/
-COPY target/lib/jetty-*.jar /usr/local/tomcat/webapps/rdf4j-server/WEB-INF/lib/
-COPY target/lib/spring-*.jar /usr/local/tomcat/webapps/rdf4j-server/WEB-INF/lib/
-COPY target/lib/guava-*.jar /usr/local/tomcat/webapps/rdf4j-workbench/WEB-INF/lib/
-COPY target/lib/netty-*.jar /usr/local/tomcat/webapps/rdf4j-workbench/WEB-INF/lib/
-COPY target/lib/jetty-*.jar /usr/local/tomcat/webapps/rdf4j-workbench/WEB-INF/lib/
-COPY target/lib/httpmime-*.jar /usr/local/tomcat/webapps/rdf4j-server/WEB-INF/lib/
-
 WORKDIR /usr/local/tomcat/
-
-# never got this syntax to work with docker-compose
-#VOLUME /var/rdf4j
-#VOLUME /usr/local/tomcat/logs
 
 EXPOSE 8081
 
