@@ -40,6 +40,27 @@ public class AsyncTestController implements org.springframework.web.servlet.mvc.
             JsonNode callback;
             callback=objectMapper.readTree(request.getInputStream());
             System.out.println(String.format("Got an asynchronous request with object %s",callback));
+            JsonNode input=(JsonNode) Invocation.traversePath(callback,"content","endurancePredictorInputs","0");
+            String componentId=Invocation.convertObjectToString(Invocation.traversePath(input,"componentId"));
+            if(componentId.equals("urn:one")) {
+                if(!input.has("classifiedLoadSpectrumGearSet") || !input.has("classifiedLoadSpectrumGearOil")) {
+                    response.setStatus(400);
+                    byte[] responseBody = String.format("{ \"status\": \"component one needs GearSet and GearOil spectra\" }").getBytes();
+                    IOUtils.write(responseBody, response.getOutputStream());
+                    response.setContentType("application/json");
+                    response.setContentLength(responseBody.length);
+                    return null;
+                }
+            } else if (componentId.equals("urn:two")){
+                if(!input.has("classifiedLoadSpectrumClutch")) {
+                    response.setStatus(400);
+                    byte[] responseBody = String.format("{ \"status\": \"component two needs Clutch spectrum\" }").getBytes();
+                    IOUtils.write(responseBody, response.getOutputStream());
+                    response.setContentType("application/json");
+                    response.setContentLength(responseBody.length);
+                    return null;
+                }
+            }
             String callbackAddress=Invocation.convertObjectToString(Invocation.traversePath(callback,"header","respondAssetId"));
             String callId=Invocation.convertObjectToString(Invocation.traversePath(callback, "header","notificationID"));
             String callbackBody=String.format("{ \"header\": { \"referencedNotificationID\": \"%s\" }, \"content\": { \"requestRefId\": \"98f507d5-175d-4945-8d06-6aa1fcef9a0c\", \"endurancePredictorOutputs\": [ 0.721, 0.852, 0.432 ]}}",callId);
@@ -49,17 +70,17 @@ public class AsyncTestController implements org.springframework.web.servlet.mvc.
             post.setEntity(new StringEntity(callbackBody));
             CloseableHttpResponse callbackResponse=httpclient.execute(post);
             if(callbackResponse.getStatusLine().getStatusCode()>=200 && callbackResponse.getStatusLine().getStatusCode()<300) {
+                response.setStatus(200);
                 byte[] responseBody = String.format("{ \"status\": \"ok\" }").getBytes();
                 IOUtils.write(responseBody, response.getOutputStream());
                 response.setContentType("application/json");
                 response.setContentLength(responseBody.length);
-                response.setStatus(200);
             } else {
+                response.setStatus(400);
                 byte[] responseBody = String.format("{ \"status\": \"no callback possible\" }").getBytes();
                 IOUtils.write(responseBody, response.getOutputStream());
                 response.setContentType("application/json");
                 response.setContentLength(responseBody.length);
-                response.setStatus(400);
             }
         } catch(IOException jpe) {
             response.setStatus(500);

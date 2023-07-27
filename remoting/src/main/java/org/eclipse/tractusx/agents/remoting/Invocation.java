@@ -794,18 +794,25 @@ public class Invocation {
     /**
      * sets a given node under a possible recursive path
      * @param objectMapper factory
-     * @param finalinput target subject
+     * @param finalInput target subject
      * @param pathSpec a path sepcification
      * @param render the target object
      */
-    public static void setNode(ObjectMapper objectMapper, ObjectNode finalinput, String pathSpec, JsonNode render) {
+    public static void setNode(ObjectMapper objectMapper, ObjectNode finalInput, String pathSpec, JsonNode render) {
         String[] pathNames = pathSpec.split(",");
         for(String pathName : pathNames) {
             String[] argPath = pathName.split("\\.");
-            JsonNode traverse = finalinput;
+            JsonNode traverse = finalInput;
             int depth = 0;
             if (argPath.length==depth) {
-                finalinput.setAll((ObjectNode)render);
+                // https://jira.catena-x.net/browse/TEST-1170 make sure top-level updates are also merged and not overwritten
+                ObjectReader updater = objectMapper.readerForUpdating(finalInput);
+                try {
+                    render=updater.readValue(render);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+                finalInput.setAll((ObjectNode)render);
                 return;
             }
             for (String argField : argPath) {

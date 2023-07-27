@@ -31,6 +31,9 @@ import org.springframework.boot.test.web.server.LocalServerPort;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+/**
+ * Tests the asynchronous and batch grouping capabilities
+ */
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 public class AsyncRemotingTest {
 
