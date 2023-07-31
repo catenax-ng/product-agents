@@ -72,7 +72,16 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Tar gzip files for veracode upload
         run: |-
-          tar -czvf ${{ matrix.variant.dir }}/target/${{ matrix.variant.name }}.tar.gz ${{ matrix.variant.dir }}/target/lib/*.jar ${{ matrix.variant.dir }}/target/${{ matrix.variant.name }}-*.jar
+          if [ -d "${{ matrix.variant.dir }}/target/lib" ];
+          then
+            if [ -f "${{ matrix.variant.dir }}/target/original-${{ matrix.variant.name }}-*.jar" ];
+              tar -czvf ${{ matrix.variant.dir }}/target/${{ matrix.variant.name }}.tar.gz ${{ matrix.variant.dir }}/target/lib/*.jar ${{ matrix.variant.dir }}/target/original-${{ matrix.variant.name }}-*.jar
+            else
+              tar -czvf ${{ matrix.variant.dir }}/target/${{ matrix.variant.name }}.tar.gz ${{ matrix.variant.dir }}/target/lib/*.jar ${{ matrix.variant.dir }}/target/${{ matrix.variant.name }}-*.jar
+            fi
+          else 
+            tar -czvf ${{ matrix.variant.dir }}/target/${{ matrix.variant.name }}.tar.gz ${{ matrix.variant.dir }}/target/${{ matrix.variant.name }}-*.jar
+          fi
       - name: Veracode Pipeline-Scan
         id: pipeline-scan
         uses: veracode/Veracode-pipeline-scan-action@v1.0.8
