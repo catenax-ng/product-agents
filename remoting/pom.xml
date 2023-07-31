@@ -264,7 +264,7 @@
                  <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
                   <manifestEntries>
                     <Main-Class>org.eclipse.tractusx.agents.remoting.Application</Main-Class>
-                    <Build-Number>0.5.1</Build-Number>
+                    <Build-Number>1.9.5-SNAPSHOT</Build-Number>
                   </manifestEntries>
                   </transformer>
                   <transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>

@@ -197,8 +197,8 @@
                                 <transformer
                                         implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
                                     <manifestEntries>
-                                        <Main-Class>io.catenax.knowledge.agents.conforming.Application</Main-Class>
-                                        <Build-Number>0.5.1</Build-Number>
+                                        <Main-Class>org.eclipse.tractusx.agents.conforming.Bootstrap</Main-Class>
+                                        <Build-Number>1.9.5-SNAPSHOT</Build-Number>
                                     </manifestEntries>
                                 </transformer>
                                 <transformer

@@ -18,7 +18,7 @@
 #
 
 ---
-name: "Veracode"
+name: "Veracode SAST"
 
 on:
   workflow_dispatch:
@@ -72,16 +72,14 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Tar gzip files for veracode upload
         run: |-
-          tar -czvf ${{ matrix.variant.dir }}/target/${{ matrix.variant.name }}.tar.gz ${{ matrix.variant.dir }}/target/${{ matrix.variant.name }}-*.jar
-      - name: Veracode Upload And Scan
-        uses: veracode/veracode-uploadandscan-action@v1.0
+          tar -czvf ${{ matrix.variant.dir }}/target/${{ matrix.variant.name }}.tar.gz ${{ matrix.variant.dir }}/target/lib/*.jar ${{ matrix.variant.dir }}/target/${{ matrix.variant.name }}-*.jar
+      - name: Veracode Pipeline-Scan
+        id: pipeline-scan
+        uses: veracode/Veracode-pipeline-scan-action@v1.0.8
         if: |
           needs.secret-presence.outputs.ORG_VERACODE_API_ID && needs.secret-presence.outputs.ORG_VERACODE_API_KEY
-        continue-on-error: true
         with:
-          appname: knowledge-agents/${{ matrix.variant.name }}
-          createprofile: true
-          version: ${{ matrix.variant.name }}-${{ github.sha }}
-          filepath: ${{ matrix.variant.dir }}/target/${{ matrix.variant.name }}.tar.gz
-          vid: ${{ secrets.ORG_VERACODE_API_ID }}
-          vkey: ${{ secrets.ORG_VERACODE_API_KEY }}
+          vid: ${{ secrets.API_ID }}
+          vkey: ${{ secrets.API_KEY }}
+          file: ${{ matrix.variant.dir }}/target/${{ matrix.variant.name }}.tar.gz
+          fail_build: true
