@@ -35,7 +35,7 @@ RUN  mv /opt/lib/spring-web-5.3.28.jar . && \
 # Runtime Container: Currently based on Tomcat 9 (and the "old" Java Servlet API until RDF4J upgrades)
 ##
 
-FROM tomcat:9-jre11-temurin
+FROM tomcat:10-jre11-temurin
 
 ENV JAVA_OPTS="-Xmx2g"
 ENV CATALINA_OPTS="-Dorg.eclipse.rdf4j.appdata.basedir=/var/rdf4j"
