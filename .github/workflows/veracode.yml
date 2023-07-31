@@ -72,12 +72,20 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Tar gzip files for veracode upload
         run: |-
-          tar -czvf ${{ matrix.variant.dir }}/target/${{ matrix.variant.name }}.tar.gz ${{ matrix.variant.dir }}/target/${{ matrix.variant.name }}-*.jar
+          if [ -d "${{ matrix.variant.dir }}/target/lib" ]; then
+            if [ -f "${{ matrix.variant.dir }}/target/original-${{ matrix.variant.name }}-*.jar" ]; then
+              tar -czvf ${{ matrix.variant.dir }}/target/${{ matrix.variant.name }}.tar.gz ${{ matrix.variant.dir }}/target/lib/*.jar ${{ matrix.variant.dir }}/target/original-${{ matrix.variant.name }}-*.jar
+            else
+              tar -czvf ${{ matrix.variant.dir }}/target/${{ matrix.variant.name }}.tar.gz ${{ matrix.variant.dir }}/target/lib/*.jar ${{ matrix.variant.dir }}/target/${{ matrix.variant.name }}-*.jar
+            fi
+          else 
+            tar -czvf ${{ matrix.variant.dir }}/target/${{ matrix.variant.name }}.tar.gz ${{ matrix.variant.dir }}/target/${{ matrix.variant.name }}-*.jar
+          fi
       - name: Veracode Upload And Scan
         uses: veracode/veracode-uploadandscan-action@v1.0
         if: |
           needs.secret-presence.outputs.ORG_VERACODE_API_ID && needs.secret-presence.outputs.ORG_VERACODE_API_KEY
-        continue-on-error: true
+        continue-on-error: false
         with:
           appname: knowledge-agents/${{ matrix.variant.name }}
           createprofile: true
