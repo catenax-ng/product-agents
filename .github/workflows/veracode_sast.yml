@@ -87,7 +87,7 @@ jobs:
         if: |
           needs.secret-presence.outputs.ORG_VERACODE_API_ID && needs.secret-presence.outputs.ORG_VERACODE_API_KEY
         with:
-          vid: ${{ secrets.API_ID }}
-          vkey: ${{ secrets.API_KEY }}
+          vid: ${{ secrets.ORG_VERACODE_API_ID }}
+          vkey: ${{ secrets.ORG_VERACODE_API_KEY }}
           file: ${{ matrix.variant.dir }}/target/${{ matrix.variant.name }}.tar.gz
           fail_build: true
