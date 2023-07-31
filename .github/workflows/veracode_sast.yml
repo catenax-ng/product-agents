@@ -72,9 +72,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Tar gzip files for veracode upload
         run: |-
-          if [ -d "${{ matrix.variant.dir }}/target/lib" ];
-          then
-            if [ -f "${{ matrix.variant.dir }}/target/original-${{ matrix.variant.name }}-*.jar" ];
+          if [ -d "${{ matrix.variant.dir }}/target/lib" ]; then
+            if [ -f "${{ matrix.variant.dir }}/target/original-${{ matrix.variant.name }}-*.jar" ]; then
               tar -czvf ${{ matrix.variant.dir }}/target/${{ matrix.variant.name }}.tar.gz ${{ matrix.variant.dir }}/target/lib/*.jar ${{ matrix.variant.dir }}/target/original-${{ matrix.variant.name }}-*.jar
             else
               tar -czvf ${{ matrix.variant.dir }}/target/${{ matrix.variant.name }}.tar.gz ${{ matrix.variant.dir }}/target/lib/*.jar ${{ matrix.variant.dir }}/target/${{ matrix.variant.name }}-*.jar
