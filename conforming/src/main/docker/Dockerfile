@@ -4,7 +4,7 @@
 # See authors file in the top folder
 # See license file in the top folder
 #
-FROM alpine:3.18.2
+FROM alpine:3.18.3
 ARG JAR
 ARG LIB
 
