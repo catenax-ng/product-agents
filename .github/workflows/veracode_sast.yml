@@ -83,7 +83,7 @@ jobs:
           fi
       - name: Veracode Pipeline-Scan
         id: pipeline-scan
-        uses: veracode/Veracode-pipeline-scan-action@v1.0.8
+        uses: veracode/Veracode-pipeline-scan-action@v1.0.9
         if: |
           needs.secret-presence.outputs.ORG_VERACODE_API_ID && needs.secret-presence.outputs.ORG_VERACODE_API_KEY
         with:
