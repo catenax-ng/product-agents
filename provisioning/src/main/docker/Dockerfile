@@ -29,7 +29,7 @@ RUN  mv /opt/ontop/lib/spring-web-5.3.28.jar . && \
      rm -rf org/springframework/remoting/httpinvoker && \
      jar cf /opt/ontop/lib/spring-web.jar *
 
-FROM ontop/ontop:5.0.2
+FROM ontop/ontop:5.1.0
 
 # Switch to root
 USER root
